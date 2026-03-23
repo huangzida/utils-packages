@@ -1,6 +1,6 @@
 {
   "name": "@zid-utils/url-utils",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "URL utility functions for parsing and building URLs",
   "repository": "github:huangzida/utils-packages",
   "type": "module",

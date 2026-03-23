@@ -1,6 +1,6 @@
 {
   "name": "@zid-utils/string-utils",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "String utility functions for common operations",
   "repository": "github:huangzida/utils-packages",
   "type": "module",

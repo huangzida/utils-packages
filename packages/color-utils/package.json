@@ -1,6 +1,6 @@
 {
   "name": "@zid-utils/color-utils",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Color utility functions for conversion and manipulation",
   "repository": "github:huangzida/utils-packages",
   "type": "module",

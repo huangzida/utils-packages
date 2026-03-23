@@ -1,6 +1,6 @@
 {
   "name": "@zid-utils/object-utils",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Object utility functions for common operations",
   "repository": "github:huangzida/utils-packages",
   "type": "module",

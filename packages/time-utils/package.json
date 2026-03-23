@@ -1,6 +1,6 @@
 {
   "name": "@zid-utils/time-utils",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Time and date utility functions",
   "repository": "github:huangzida/utils-packages",
   "type": "module",
