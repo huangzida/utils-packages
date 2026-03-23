@@ -140,3 +140,30 @@ export const hmacSHA256 = (data: string, key: string): string => {
 export const hmacSHA512 = (data: string, key: string): string => {
   return CryptoJS.HmacSHA512(data, key).toString()
 }
+
+export type KeyLength = 16 | 24 | 32
+
+const CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+
+const generateRandomString = (length: number): string => {
+  const array = new Uint8Array(length)
+  crypto.getRandomValues(array)
+  return Array.from(array)
+    .map((byte) => CHARSET[byte % CHARSET.length])
+    .join('')
+}
+
+export const generateKey = (length: KeyLength = 16): string => {
+  return generateRandomString(length)
+}
+
+export const generateIv = (): string => {
+  return generateRandomString(16)
+}
+
+export const generateKeyIvPair = (keyLength: KeyLength = 16): { key: string; iv: string } => {
+  return {
+    key: generateKey(keyLength),
+    iv: generateIv(),
+  }
+}

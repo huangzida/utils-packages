@@ -13,6 +13,9 @@ import {
   hmac,
   hmacSHA256,
   hmacSHA512,
+  generateKey,
+  generateIv,
+  generateKeyIvPair,
   InvalidKeyError,
   InvalidIvError,
   InvalidCiphertextError,
@@ -265,6 +268,52 @@ describe('@zid-utils/crypto-utils', () => {
       const hmacResult = hmac('hello', { key: 'secret' })
       const hmacSHA256Result = hmacSHA256('hello', 'secret')
       expect(hmacResult).toBe(hmacSHA256Result)
+    })
+  })
+
+  describe('key generation', () => {
+    it('should generate 16-char key by default', () => {
+      const key = generateKey()
+      expect(key).toHaveLength(16)
+    })
+
+    it('should generate 24-char key', () => {
+      const key = generateKey(24)
+      expect(key).toHaveLength(24)
+    })
+
+    it('should generate 32-char key', () => {
+      const key = generateKey(32)
+      expect(key).toHaveLength(32)
+    })
+
+    it('should generate unique keys', () => {
+      const key1 = generateKey()
+      const key2 = generateKey()
+      expect(key1).not.toBe(key2)
+    })
+
+    it('should generate 16-char IV', () => {
+      const iv = generateIv()
+      expect(iv).toHaveLength(16)
+    })
+
+    it('should generate unique IVs', () => {
+      const iv1 = generateIv()
+      const iv2 = generateIv()
+      expect(iv1).not.toBe(iv2)
+    })
+
+    it('should generate key/IV pair', () => {
+      const { key, iv } = generateKeyIvPair()
+      expect(key).toHaveLength(16)
+      expect(iv).toHaveLength(16)
+    })
+
+    it('should generate valid key/IV pair for encryption', () => {
+      const { key, iv } = generateKeyIvPair()
+      const result = encrypt('test message', { key, iv })
+      expect(result.ok).toBe(true)
     })
   })
 })
