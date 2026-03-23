@@ -7,14 +7,15 @@ Monorepo for TypeScript utility packages extracted from xpanel-browser-umi4. Eac
 
 ## 📦 Packages
 
-| Package | Version | Description |
-|---------|---------|-------------|
-| [@zid-utils/regexps](./packages/regexps) |[![npm](https://img.shields.io/npm/v/@zid-utils/regexps)](https://www.npmjs.com/package/@zid-utils/regexps)|常用正则表达式验证器 |
-| [@zid-utils/time-utils](./packages/time-utils) |[![npm](https://img.shields.io/npm/v/@zid-utils/time-utils)](https://www.npmjs.com/package/@zid-utils/time-utils)|时间格式化工具函数 |
-| [@zid-utils/tree-utils](./packages/tree-utils) |[![npm](https://img.shields.io/npm/v/@zid-utils/tree-utils)](https://www.npmjs.com/package/@zid-utils/tree-utils)|树形数据结构操作 |
-| [@zid-utils/grid-utils](./packages/grid-utils) |[![npm](https://img.shields.io/npm/v/@zid-utils/grid-utils)](https://www.npmjs.com/package/@zid-utils/grid-utils)|二维数组(网格)操作 |
-| [@zid-utils/dom-utils](./packages/dom-utils) |[![npm](https://img.shields.io/npm/v/@zid-utils/dom-utils)](https://www.npmjs.com/package/@zid-utils/dom-utils)|DOM 查询封装 |
-| [@zid-utils/crypto-utils](./packages/crypto-utils) |[![npm](https://img.shields.io/npm/v/@zid-utils/crypto-utils)](https://www.npmjs.com/package/@zid-utils/crypto-utils)|AES 加密解密工具 |
+| Package                                            | Version                                                                                                               | Description                  |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| [@zid-utils/regexps](./packages/regexps)           | [![npm](https://img.shields.io/npm/v/@zid-utils/regexps)](https://www.npmjs.com/package/@zid-utils/regexps)           | 常用正则表达式验证器         |
+| [@zid-utils/time-utils](./packages/time-utils)     | [![npm](https://img.shields.io/npm/v/@zid-utils/time-utils)](https://www.npmjs.com/package/@zid-utils/time-utils)     | 时间格式化工具函数           |
+| [@zid-utils/tree-utils](./packages/tree-utils)     | [![npm](https://img.shields.io/npm/v/@zid-utils/tree-utils)](https://www.npmjs.com/package/@zid-utils/tree-utils)     | 树形数据结构操作             |
+| [@zid-utils/grid-utils](./packages/grid-utils)     | [![npm](https://img.shields.io/npm/v/@zid-utils/grid-utils)](https://www.npmjs.com/package/@zid-utils/grid-utils)     | 二维数组(网格)操作           |
+| [@zid-utils/dom-utils](./packages/dom-utils)       | [![npm](https://img.shields.io/npm/v/@zid-utils/dom-utils)](https://www.npmjs.com/package/@zid-utils/dom-utils)       | DOM 元素可见区域、滚动条检测 |
+| [@zid-utils/window-utils](./packages/window-utils) | [![npm](https://img.shields.io/npm/v/@zid-utils/window-utils)](https://www.npmjs.com/package/@zid-utils/window-utils) | 窗口操作、尺寸获取、滚动控制 |
+| [@zid-utils/crypto-utils](./packages/crypto-utils) | [![npm](https://img.shields.io/npm/v/@zid-utils/crypto-utils)](https://www.npmjs.com/package/@zid-utils/crypto-utils) | AES 加密解密工具             |
 
 ## 🎮 Playground
 
@@ -34,7 +35,7 @@ pnpm preview
 - **时间格式化** - 秒数转时间格式、补零等
 - **树形操作** - 查找节点、搜索、过滤、转换等
 - **网格操作** - 二维数组元素更新
-- **DOM 查询** - lc-shape 元素查询封装
+- **DOM 操作** - 元素可见区域、滚动条检测
 - **加解密** - AES-CBC 模式加解密
 
 ## 🚀 Quick Start
@@ -51,6 +52,7 @@ pnpm add @zid-utils/time-utils
 pnpm add @zid-utils/tree-utils
 pnpm add @zid-utils/grid-utils
 pnpm add @zid-utils/dom-utils
+pnpm add @zid-utils/window-utils
 pnpm add @zid-utils/crypto-utils
 ```
 
@@ -59,83 +61,124 @@ pnpm add @zid-utils/crypto-utils
 #### Regexps - 正则验证
 
 ```typescript
-import { isEmail, isUrl, isPhone, isIdCard, isChinese } from '@zid-utils/regexps'
+import {
+  isEmail,
+  isUrl,
+  isPhone,
+  isIdCard,
+  isChinese,
+} from "@zid-utils/regexps";
 
-isEmail('test@example.com')  // true
-isUrl('https://example.com') // true
-isPhone('13812345678')       // true
-isIdCard('110101199003074519') // true
-isChinese('你好')            // true
+isEmail("test@example.com"); // true
+isUrl("https://example.com"); // true
+isPhone("13812345678"); // true
+isIdCard("110101199003074519"); // true
+isChinese("你好"); // true
 ```
 
 #### Time Utils - 时间格式化
 
 ```typescript
-import { padZero, formatTime, formatTimeDetail } from '@zid-utils/time-utils'
+import { padZero, formatTime, formatTimeDetail } from "@zid-utils/time-utils";
 
-padZero(5, 3)              // "005"
-formatTime(3661)           // "01:01:01"
-formatTimeDetail(90061)     // { hours: "01", minutes: "01", seconds: "01", displayTime: "01:01:01" }
+padZero(5, 3); // "005"
+formatTime(3661); // "01:01:01"
+formatTimeDetail(90061); // { hours: "01", minutes: "01", seconds: "01", displayTime: "01:01:01" }
 ```
 
 #### Tree Utils - 树形操作
 
 ```typescript
-import { 
-  findNodeByKey, 
-  getLeafNodes, 
-  searchInTree, 
+import {
+  findNodeByKey,
+  getLeafNodes,
+  searchInTree,
   deleteNode,
   flattenTree,
-  transformTreeKeys 
-} from '@zid-utils/tree-utils'
+  transformTreeKeys,
+} from "@zid-utils/tree-utils";
 
 const tree = [
-  { key: '1', title: 'Root', children: [{ key: '1-1', title: 'Child', isLeaf: true }] }
-]
+  {
+    key: "1",
+    title: "Root",
+    children: [{ key: "1-1", title: "Child", isLeaf: true }],
+  },
+];
 
-findNodeByKey(tree, '1-1')           // 查找节点
-getLeafNodes(tree)                  // 获取所有叶子节点
-searchInTree(tree, 'Child')         // 搜索节点
-deleteNode(tree, '1-1')             // 删除节点
-flattenTree(tree)                   // 平铺为数组
-transformTreeKeys(tree, { key: 'id' }) // 转换键名
+findNodeByKey(tree, "1-1"); // 查找节点
+getLeafNodes(tree); // 获取所有叶子节点
+searchInTree(tree, "Child"); // 搜索节点
+deleteNode(tree, "1-1"); // 删除节点
+flattenTree(tree); // 平铺为数组
+transformTreeKeys(tree, { key: "id" }); // 转换键名
 ```
 
 #### Grid Utils - 网格操作
 
 ```typescript
-import { updateGridElement } from '@zid-utils/grid-utils'
+import { updateGridElement } from "@zid-utils/grid-utils";
 
 const grid = [
-  [{ id: 1, name: 'a' }, { id: 2, name: 'b' }],
-  [{ id: 3, name: 'c' }, { id: 4, name: 'd' }]
-]
+  [
+    { id: 1, name: "a" },
+    { id: 2, name: "b" },
+  ],
+  [
+    { id: 3, name: "c" },
+    { id: 4, name: "d" },
+  ],
+];
 
-updateGridElement(grid, el => el.id === 2, el => ({ ...el, name: 'updated' }))
+updateGridElement(
+  grid,
+  (el) => el.id === 2,
+  (el) => ({ ...el, name: "updated" }),
+);
 ```
 
 #### DOM Utils - DOM 操作
 
 ```typescript
-import { getLcShapeElement } from '@zid-utils/dom-utils'
+import {
+  getElementVisibleRect,
+  getScrollbarWidth,
+  needsScrollbar,
+} from "@zid-utils/dom-utils";
 
-const element = getLcShapeElement('my-shape-id')
+const rect = await getElementVisibleRect(element);
+const width = getScrollbarWidth();
+const hasScrollbar = needsScrollbar(container);
+```
+
+#### Window Utils - 窗口操作
+
+```typescript
+import {
+  openWindow,
+  closeWindow,
+  getWindowSize,
+  scrollToTop,
+} from "@zid-utils/window-utils";
+
+const size = getWindowSize();
+openWindow("https://example.com");
+scrollToTop();
 ```
 
 #### Crypto Utils - 加解密
 
 ```typescript
-import { encrypt, decrypt, createCrypto } from '@zid-utils/crypto-utils'
+import { encrypt, decrypt, createCrypto } from "@zid-utils/crypto-utils";
 
 // 方式一：直接调用
-encrypt('data', { key: 'your-16-char-key', iv: 'your-16-char-iv' })
-decrypt('ciphertext', { key: 'your-16-char-key', iv: 'your-16-char-iv' })
+encrypt("data", { key: "your-16-char-key", iv: "your-16-char-iv" });
+decrypt("ciphertext", { key: "your-16-char-key", iv: "your-16-char-iv" });
 
 // 方式二：创建可复用实例
-const crypto = createCrypto({ key: 'your-16-char-key', iv: 'your-16-char-iv' })
-crypto.encrypt('data')
-crypto.decrypt('ciphertext')
+const crypto = createCrypto({ key: "your-16-char-key", iv: "your-16-char-iv" });
+crypto.encrypt("data");
+crypto.decrypt("ciphertext");
 ```
 
 > ⚠️ **安全提示**: key 和 iv 必须都是 16 字符。建议从环境变量读取，不要硬编码在代码中。
@@ -193,7 +236,8 @@ utils-packages/
 │   ├── grid-utils/       # 网格操作
 │   ├── regexps/          # 正则验证
 │   ├── time-utils/       # 时间处理
-│   └── tree-utils/       # 树形数据
+│   ├── tree-utils/       # 树形数据
+│   └── window-utils/     # 窗口操作
 ├── index.html            # 交互式 Playground
 ├── package.json          # Workspace 配置
 ├── pnpm-workspace.yaml   # pnpm workspace 配置
