@@ -100,3 +100,43 @@ export const decodeBase64 = (data: string): CryptoResult<string> => {
     return { ok: false, error: new InvalidCiphertextError() }
   }
 }
+
+export type HashAlgorithm = 'MD5' | 'SHA1' | 'SHA256' | 'SHA512'
+
+export const hash = (data: string, algorithm: HashAlgorithm = 'SHA256'): string => {
+  return CryptoJS[algorithm](data).toString()
+}
+
+export const md5 = (data: string): string => {
+  return hash(data, 'MD5')
+}
+
+export const sha1 = (data: string): string => {
+  return hash(data, 'SHA1')
+}
+
+export const sha256 = (data: string): string => {
+  return hash(data, 'SHA256')
+}
+
+export const sha512 = (data: string): string => {
+  return hash(data, 'SHA512')
+}
+
+export interface HmacOptions {
+  key: string
+  algorithm?: HashAlgorithm
+}
+
+export const hmac = (data: string, options: HmacOptions): string => {
+  const { key, algorithm = 'SHA256' } = options
+  return CryptoJS.HmacSHA256(data, key).toString()
+}
+
+export const hmacSHA256 = (data: string, key: string): string => {
+  return CryptoJS.HmacSHA256(data, key).toString()
+}
+
+export const hmacSHA512 = (data: string, key: string): string => {
+  return CryptoJS.HmacSHA512(data, key).toString()
+}

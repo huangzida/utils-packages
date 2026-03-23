@@ -5,6 +5,14 @@ import {
   createCrypto,
   encodeBase64,
   decodeBase64,
+  hash,
+  md5,
+  sha1,
+  sha256,
+  sha512,
+  hmac,
+  hmacSHA256,
+  hmacSHA512,
   InvalidKeyError,
   InvalidIvError,
   InvalidCiphertextError,
@@ -174,6 +182,89 @@ describe('@zid-utils/crypto-utils', () => {
       const decoded = decodeBase64(encoded)
       expect(decoded.ok).toBe(true)
       expect(decoded.value).toBe(original)
+    })
+  })
+
+  describe('hash functions', () => {
+    it('should generate consistent MD5 hash', () => {
+      const hash1 = md5('hello')
+      const hash2 = md5('hello')
+      expect(hash1).toBe(hash2)
+      expect(hash1).toHaveLength(32)
+    })
+
+    it('should generate consistent SHA1 hash', () => {
+      const hash1 = sha1('hello')
+      const hash2 = sha1('hello')
+      expect(hash1).toBe(hash2)
+      expect(hash1).toHaveLength(40)
+    })
+
+    it('should generate consistent SHA256 hash', () => {
+      const hash1 = sha256('hello')
+      const hash2 = sha256('hello')
+      expect(hash1).toBe(hash2)
+      expect(hash1).toHaveLength(64)
+    })
+
+    it('should generate consistent SHA512 hash', () => {
+      const hash1 = sha512('hello')
+      const hash2 = sha512('hello')
+      expect(hash1).toBe(hash2)
+      expect(hash1).toHaveLength(128)
+    })
+
+    it('should generate different hashes for different inputs', () => {
+      const hash1 = sha256('hello')
+      const hash2 = sha256('world')
+      expect(hash1).not.toBe(hash2)
+    })
+
+    it('should use default SHA256 in hash function', () => {
+      const hashResult = hash('hello')
+      const sha256Result = sha256('hello')
+      expect(hashResult).toBe(sha256Result)
+    })
+
+    it('should support custom algorithm in hash function', () => {
+      const md5Result = hash('hello', 'MD5')
+      const sha1Result = hash('hello', 'SHA1')
+      expect(md5Result).toBe(md5('hello'))
+      expect(sha1Result).toBe(sha1('hello'))
+    })
+  })
+
+  describe('HMAC functions', () => {
+    it('should generate consistent HMAC-SHA256', () => {
+      const hmac1 = hmacSHA256('hello', 'secret')
+      const hmac2 = hmacSHA256('hello', 'secret')
+      expect(hmac1).toBe(hmac2)
+      expect(hmac1).toHaveLength(64)
+    })
+
+    it('should generate different HMAC with different keys', () => {
+      const hmac1 = hmacSHA256('hello', 'secret1')
+      const hmac2 = hmacSHA256('hello', 'secret2')
+      expect(hmac1).not.toBe(hmac2)
+    })
+
+    it('should generate different HMAC with different data', () => {
+      const hmac1 = hmacSHA256('hello', 'secret')
+      const hmac2 = hmacSHA256('world', 'secret')
+      expect(hmac1).not.toBe(hmac2)
+    })
+
+    it('should generate consistent HMAC-SHA512', () => {
+      const hmac1 = hmacSHA512('hello', 'secret')
+      const hmac2 = hmacSHA512('hello', 'secret')
+      expect(hmac1).toBe(hmac2)
+      expect(hmac1).toHaveLength(128)
+    })
+
+    it('should support custom options in hmac function', () => {
+      const hmacResult = hmac('hello', { key: 'secret' })
+      const hmacSHA256Result = hmacSHA256('hello', 'secret')
+      expect(hmacResult).toBe(hmacSHA256Result)
     })
   })
 })
