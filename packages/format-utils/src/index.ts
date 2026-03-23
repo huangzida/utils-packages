@@ -1,11 +1,5 @@
 export type Locale = "en-US" | "zh-CN" | "zh-HK";
 
-const LOCALE_CONFIG: Record<Locale, { thousands: string; decimal: string }> = {
-  "en-US": { thousands: ",", decimal: "." },
-  "zh-CN": { thousands: ",", decimal: "." },
-  "zh-HK": { thousands: ",", decimal: "." },
-};
-
 export interface NumberFormatOptions {
   decimals?: number;
   thousands?: string;

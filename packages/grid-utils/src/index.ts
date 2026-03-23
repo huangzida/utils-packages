@@ -1,3 +1,10 @@
+/**
+ * 更新网格中的元素
+ * @param grid - 二维网格数组
+ * @param matcher - 元素匹配函数
+ * @param updater - 元素更新函数
+ * @returns 更新后的网格
+ */
 export const updateGridElement = <T extends Record<string, any>>(
   grid: T[][],
   matcher: (element: T) => boolean,

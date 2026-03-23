@@ -1,6 +1,12 @@
+/**
+ * 下载选项接口
+ */
 export interface DownloadOptions<T = string> {
+  /** 文件名 */
   fileName?: string
+  /** 源（URL 或 Base64）*/
   source: T
+  /** 打开目标 */
   target?: string
 }
 
@@ -21,6 +27,12 @@ function openWindow(url: string, options: OpenWindowOptions = {}): void {
   window.open(url, target, features)
 }
 
+/**
+ * 触发文件下载
+ * @param href - 文件 URL 或 Blob URL
+ * @param fileName - 文件名
+ * @param revokeDelay - 延迟回收 URL 时间
+ */
 export function triggerDownload(
   href: string,
   fileName?: string,
@@ -49,6 +61,10 @@ function resolveFileName(url: string, fileName?: string): string {
   return fileName || url.slice(url.lastIndexOf('/') + 1) || DEFAULT_FILENAME
 }
 
+/**
+ * 从 URL 下载文件
+ * @param options - 下载选项
+ */
 export async function downloadFileFromUrl(options: DownloadOptions): Promise<void> {
   const { fileName, source, target = '_blank' } = options
 
@@ -76,6 +92,10 @@ export async function downloadFileFromUrl(options: DownloadOptions): Promise<voi
   openWindow(modifiedSource, { target })
 }
 
+/**
+ * 从 Base64 数据下载文件
+ * @param options - 下载选项
+ */
 export function downloadFileFromBase64(options: DownloadOptions): void {
   const { fileName, source } = options
 
@@ -87,6 +107,10 @@ export function downloadFileFromBase64(options: DownloadOptions): void {
   triggerDownload(source, resolvedFileName)
 }
 
+/**
+ * 从图片 URL 下载图片
+ * @param options - 下载选项
+ */
 export async function downloadFileFromImageUrl(options: DownloadOptions): Promise<void> {
   const { fileName, source } = options
 
@@ -94,6 +118,10 @@ export async function downloadFileFromImageUrl(options: DownloadOptions): Promis
   downloadFileFromBase64({ fileName, source: base64 })
 }
 
+/**
+ * 从 Blob 下载文件
+ * @param options - 下载选项
+ */
 export function downloadFileFromBlob(options: DownloadOptions<Blob>): void {
   const { fileName = DEFAULT_FILENAME, source } = options
 
@@ -105,6 +133,10 @@ export function downloadFileFromBlob(options: DownloadOptions<Blob>): void {
   triggerDownload(url, fileName)
 }
 
+/**
+ * 从 BlobPart 下载文件
+ * @param options - 下载选项
+ */
 export function downloadFileFromBlobPart(options: DownloadOptions<BlobPart>): void {
   const { fileName = DEFAULT_FILENAME, source } = options
 
@@ -117,6 +149,12 @@ export function downloadFileFromBlobPart(options: DownloadOptions<BlobPart>): vo
   triggerDownload(url, fileName)
 }
 
+/**
+ * 将图片 URL 转为 Base64
+ * @param url - 图片 URL
+ * @param mineType - MIME 类型
+ * @returns Base64 数据 URL
+ */
 export function urlToBase64(url: string, mineType?: string): Promise<string> {
   return new Promise((resolve, reject) => {
     const canvas = document.createElement('CANVAS') as HTMLCanvasElement | null
@@ -140,14 +178,17 @@ export function urlToBase64(url: string, mineType?: string): Promise<string> {
   })
 }
 
+/** 从 URL 下载文件 */
 export function downloadByUrl(url: string, fileName?: string): Promise<void> {
   return downloadFileFromUrl({ source: url, fileName })
 }
 
+/** 从 Blob 下载文件 */
 export function downloadByBlob(blob: Blob, fileName: string): void {
   downloadFileFromBlob({ source: blob, fileName })
 }
 
+/** 从 Base64 下载文件 */
 export function downloadByBase64(base64: string, fileName: string): void {
   downloadFileFromBase64({ source: base64, fileName })
 }

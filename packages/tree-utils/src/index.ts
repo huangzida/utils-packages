@@ -13,6 +13,12 @@ const defaultLogger: LoggerType = {
   error: (msg: string) => console.error("[tree-utils]", msg),
 };
 
+/**
+ * 获取树中的所有叶子节点
+ * @param treeData - 树形结构数据
+ * @param isLeafKey - 表示是否为叶子节点的键名
+ * @returns 叶子节点数组
+ */
 export const getLeafNodes = (
   treeData: Record<string, any>[],
   isLeafKey: string = "isLeaf",
@@ -36,6 +42,13 @@ export const getLeafNodes = (
   return collectLeafNodes(treeData);
 };
 
+/**
+ * 过滤树节点
+ * @param nodes - 节点数组
+ * @param callback - 过滤回调函数
+ * @param isOnlyFilterChildren - 是否只过滤子节点
+ * @returns 过滤后的树
+ */
 export const filterTreeNodes = (
   nodes: Record<string, any>[],
   callback: (node: Record<string, any>) => boolean,
@@ -63,6 +76,12 @@ export const filterTreeNodes = (
   }));
 };
 
+/**
+ * 根据 key 查找节点
+ * @param treeData - 树形数据
+ * @param key - 节点 key
+ * @returns 找到的节点或 null
+ */
 export const findNodeByKey = (
   treeData: TreeNode[],
   key: string | number,
@@ -82,6 +101,12 @@ export const findNodeByKey = (
   return null;
 };
 
+/**
+ * 在树中搜索节点
+ * @param tree - 树形数据
+ * @param searchValue - 搜索值
+ * @returns 匹配的节点数组
+ */
 export const searchInTree = (
   tree: TreeNode[],
   searchValue: string,
@@ -116,6 +141,11 @@ export const searchInTree = (
   return result;
 };
 
+/**
+ * 更新节点的 key
+ * @param sourceNode - 源节点
+ * @param targetNode - 目标节点
+ */
 export const updateKeys = (sourceNode: TreeNode, targetNode: TreeNode) => {
   sourceNode.key = `${targetNode.key}-${targetNode.children?.length}`;
   if (sourceNode.children) {
@@ -125,6 +155,13 @@ export const updateKeys = (sourceNode: TreeNode, targetNode: TreeNode) => {
   }
 };
 
+/**
+ * 在树中移动节点
+ * @param treeData - 树形数据
+ * @param sourceKey - 源节点 key
+ * @param targetKey - 目标节点 key
+ * @param logger - 日志记录器
+ */
 export const moveNodeInTree = (
   treeData: any[] | { key: string; children?: any[] },
   sourceKey: string,

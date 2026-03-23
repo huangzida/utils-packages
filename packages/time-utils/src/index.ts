@@ -1,7 +1,18 @@
+/**
+ * 数字前补零
+ * @param num - 数字
+ * @param length - 总长度（默认2）
+ * @returns 补零后的字符串
+ */
 export const padZero = (num: number, length: number = 2): string => {
   return num.toString().padStart(length, '0')
 }
 
+/**
+ * 格式化秒为时间字符串
+ * @param seconds - 秒数
+ * @returns 格式化的时间字符串
+ */
 export const formatTime = (seconds: number): string => {
   if (isNaN(seconds)) return '00:00'
 
@@ -16,13 +27,25 @@ export const formatTime = (seconds: number): string => {
   return `${padZero(mins)}:${padZero(secs)}`
 }
 
+/**
+ * 格式化时间详情接口
+ */
 export interface FormattedTimeDetail {
+  /** 小时 */
   hours: string
+  /** 分钟 */
   minutes: string
+  /** 秒 */
   seconds: string
+  /** 显示时间 */
   displayTime: string
 }
 
+/**
+ * 格式化秒为时间详情对象
+ * @param seconds - 秒数
+ * @returns 包含时分秒的对象
+ */
 export const formatTimeDetail = (seconds: number): FormattedTimeDetail => {
   const hours = Math.floor(seconds / 3600)
   const minutes = Math.floor((seconds % 3600) / 60)
@@ -39,6 +62,9 @@ export const formatTimeDetail = (seconds: number): FormattedTimeDetail => {
   }
 }
 
+/**
+ * 地区类型
+ */
 export type Locale = 'zh-CN' | 'en-US'
 
 const RELATIVE_TIME_STRINGS: Record<Locale, { justNow: string; ago: string; later: string }> = {
@@ -54,6 +80,12 @@ const RELATIVE_TIME_STRINGS: Record<Locale, { justNow: string; ago: string; late
   },
 }
 
+/**
+ * 格式化相对时间
+ * @param timestamp - 时间戳
+ * @param locale - 地区（默认 zh-CN）
+ * @returns 相对时间字符串
+ */
 export const formatRelativeTime = (
   timestamp: number,
   locale: Locale = 'zh-CN',

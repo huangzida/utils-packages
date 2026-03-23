@@ -13,10 +13,7 @@ export const unique = <T>(arr: T[]): T[] => {
  * @param key - The field name to use for comparison
  * @returns A new array containing only unique items by the specified field
  */
-export const uniqueByField = <T extends Record<string, any>>(
-  arr: T[],
-  key: keyof T,
-): T[] => {
+export const uniqueByField = <T extends Record<string, any>>(arr: T[], key: keyof T): T[] => {
   const seen = new Set()
   return arr.filter((item) => {
     const value = item[key]
@@ -50,16 +47,19 @@ export const chunk = <T>(arr: T[], size: number): T[][] => {
  */
 export const groupBy = <T>(
   arr: T[],
-  keyFn: (item: T) => string | number,
+  keyFn: (item: T) => string | number
 ): Record<string | number, T[]> => {
-  return arr.reduce((acc, item) => {
-    const key = keyFn(item)
-    if (!acc[key]) {
-      acc[key] = []
-    }
-    acc[key].push(item)
-    return acc
-  }, {} as Record<string | number, T[]>)
+  return arr.reduce(
+    (acc, item) => {
+      const key = keyFn(item)
+      if (!acc[key]) {
+        acc[key] = []
+      }
+      acc[key].push(item)
+      return acc
+    },
+    {} as Record<string | number, T[]>
+  )
 }
 
 /**
@@ -110,7 +110,7 @@ export const intersection = <T>(arr1: T[], arr2: T[]): T[] => {
 export const sortBy = <T>(
   arr: T[],
   keyFn: (item: T) => number | string,
-  order: 'asc' | 'desc' = 'asc',
+  order: 'asc' | 'desc' = 'asc'
 ): T[] => {
   return [...arr].sort((a, b) => {
     const aVal = keyFn(a)
@@ -151,10 +151,7 @@ export const zip = <T1, T2>(arr1: T1[], arr2: T2[]): [T1, T2][] => {
  * @param predicate - Function that returns true for elements to keep in the first array
  * @returns A tuple containing [passing elements, failing elements]
  */
-export const partition = <T>(
-  arr: T[],
-  predicate: (item: T) => boolean,
-): [T[], T[]] => {
+export const partition = <T>(arr: T[], predicate: (item: T) => boolean): [T[], T[]] => {
   const pass: T[] = []
   const fail: T[] = []
   for (const item of arr) {

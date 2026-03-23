@@ -1,26 +1,52 @@
+/**
+ * RGB 颜色接口
+ */
 export interface RGB {
+  /** 红色值 (0-255) */
   r: number
+  /** 绿色值 (0-255) */
   g: number
+  /** 蓝色值 (0-255) */
   b: number
 }
 
+/**
+ * RGBA 颜色接口
+ */
 export interface RGBA extends RGB {
+  /** 透明度 (0-1) */
   a: number
 }
 
+/**
+ * HSL 颜色接口
+ */
 export interface HSL {
+  /** 色相 (0-360) */
   h: number
+  /** 饱和度 (0-100) */
   s: number
+  /** 亮度 (0-100) */
   l: number
 }
 
+/**
+ * HSLA 颜色接口
+ */
 export interface HSLA extends HSL {
+  /** 透明度 (0-1) */
   a: number
 }
 
+/**
+ * HSV 颜色接口
+ */
 export interface HSV {
+  /** 色相 (0-360) */
   h: number
+  /** 饱和度 (0-100) */
   s: number
+  /** 明度 (0-100) */
   v: number
 }
 
@@ -46,10 +72,20 @@ const parseShortHexToRgb = (hex: string): RGB | null => {
     : null
 }
 
+/**
+ * 验证十六进制颜色格式
+ * @param hex - 十六进制颜色字符串
+ * @returns 是否有效
+ */
 export const isValidHex = (hex: string): boolean => {
   return /^#?([a-f\d]{6}|[a-f\d]{3})$/i.test(hex)
 }
 
+/**
+ * 验证 RGB 颜色值
+ * @param rgb - RGB 对象
+ * @returns 是否有效
+ */
 export const isValidRgb = (rgb: RGB): boolean => {
   return (
     rgb.r >= 0 &&
@@ -61,6 +97,11 @@ export const isValidRgb = (rgb: RGB): boolean => {
   )
 }
 
+/**
+ * 十六进制转 RGB
+ * @param hex - 十六进制颜色字符串
+ * @returns RGB 对象或 null
+ */
 export const hexToRgb = (hex: string): RGB | null => {
   if (!isValidHex(hex)) return null
 
@@ -71,6 +112,11 @@ export const hexToRgb = (hex: string): RGB | null => {
   return parseHexToRgb(hex)
 }
 
+/**
+ * RGB 转十六进制
+ * @param rgb - RGB 对象
+ * @returns 十六进制颜色字符串
+ */
 export const rgbToHex = (rgb: RGB): string => {
   const toHex = (n: number) => {
     const hex = Math.max(0, Math.min(255, Math.round(n))).toString(16)
@@ -79,6 +125,11 @@ export const rgbToHex = (rgb: RGB): string => {
   return `#${toHex(rgb.r)}${toHex(rgb.g)}${toHex(rgb.b)}`
 }
 
+/**
+ * RGB 转 HSL
+ * @param rgb - RGB 对象
+ * @returns HSL 对象
+ */
 export const rgbToHsl = (rgb: RGB): HSL => {
   const r = rgb.r / 255
   const g = rgb.g / 255
@@ -115,6 +166,11 @@ export const rgbToHsl = (rgb: RGB): HSL => {
   }
 }
 
+/**
+ * HSL 转 RGB
+ * @param hsl - HSL 对象
+ * @returns RGB 对象
+ */
 export const hslToRgb = (hsl: HSL): RGB => {
   const h = hsl.h / 360
   const s = hsl.s / 100
@@ -144,15 +200,31 @@ export const hslToRgb = (hsl: HSL): RGB => {
   }
 }
 
+/**
+ * 十六进制转 HSL
+ * @param hex - 十六进制颜色字符串
+ * @returns HSL 对象或 null
+ */
 export const hexToHsl = (hex: string): HSL | null => {
   const rgb = hexToRgb(hex)
   return rgb ? rgbToHsl(rgb) : null
 }
 
+/**
+ * HSL 转十六进制
+ * @param hsl - HSL 对象
+ * @returns 十六进制颜色字符串
+ */
 export const hslToHex = (hsl: HSL): string => {
   return rgbToHex(hslToRgb(hsl))
 }
 
+/**
+ * 提亮颜色
+ * @param color - 颜色字符串
+ * @param amount - 提亮量
+ * @returns 提亮后的颜色
+ */
 export const lighten = (color: string, amount: number): string => {
   const hsl = /^#/.test(color) ? hexToHsl(color) : null
   if (!hsl) return color
@@ -164,6 +236,12 @@ export const lighten = (color: string, amount: number): string => {
   })
 }
 
+/**
+ * 加深颜色
+ * @param color - 颜色字符串
+ * @param amount - 加深量
+ * @returns 加深后的颜色
+ */
 export const darken = (color: string, amount: number): string => {
   const hsl = /^#/.test(color) ? hexToHsl(color) : null
   if (!hsl) return color
@@ -175,6 +253,12 @@ export const darken = (color: string, amount: number): string => {
   })
 }
 
+/**
+ * 提高颜色饱和度
+ * @param color - 颜色字符串
+ * @param amount - 饱和度增加量
+ * @returns 调整后的颜色
+ */
 export const saturate = (color: string, amount: number): string => {
   const hsl = /^#/.test(color) ? hexToHsl(color) : null
   if (!hsl) return color
@@ -186,6 +270,12 @@ export const saturate = (color: string, amount: number): string => {
   })
 }
 
+/**
+ * 降低颜色饱和度
+ * @param color - 颜色字符串
+ * @param amount - 饱和度降低量
+ * @returns 调整后的颜色
+ */
 export const desaturate = (color: string, amount: number): string => {
   const hsl = /^#/.test(color) ? hexToHsl(color) : null
   if (!hsl) return color
@@ -197,6 +287,12 @@ export const desaturate = (color: string, amount: number): string => {
   })
 }
 
+/**
+ * 增加颜色透明度
+ * @param color - 颜色字符串
+ * @param amount - 透明度 (0-1)
+ * @returns RGBA 字符串
+ */
 export const fadeIn = (color: string, amount: number): string => {
   const rgb = hexToRgb(color)
   if (!rgb) return color
@@ -204,6 +300,12 @@ export const fadeIn = (color: string, amount: number): string => {
   return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${Math.min(1, amount)}`
 }
 
+/**
+ * 获取两个颜色的对比度
+ * @param color1 - 颜色1
+ * @param color2 - 颜色2
+ * @returns 对比度值
+ */
 export const getContrastRatio = (color1: string, color2: string): number => {
   const rgb1 = hexToRgb(color1)
   const rgb2 = hexToRgb(color2)
@@ -225,6 +327,11 @@ export const getContrastRatio = (color1: string, color2: string): number => {
   return (lighter + 0.05) / (darker + 0.05)
 }
 
+/**
+ * 判断是否为深色
+ * @param color - 颜色字符串
+ * @returns 是否为深色
+ */
 export const isDark = (color: string): boolean => {
   const rgb = hexToRgb(color)
   if (!rgb) return false
@@ -233,10 +340,22 @@ export const isDark = (color: string): boolean => {
   return luminance < 0.5
 }
 
+/**
+ * 判断是否为浅色
+ * @param color - 颜色字符串
+ * @returns 是否为浅色
+ */
 export const isLight = (color: string): boolean => {
   return !isDark(color)
 }
 
+/**
+ * 混合两种颜色
+ * @param color1 - 颜色1
+ * @param color2 - 颜色2
+ * @param weight - 混合权重 (0-1)，0=全色1，1=全色2
+ * @returns 混合后的颜色
+ */
 export const mix = (color1: string, color2: string, weight: number = 0.5): string => {
   const rgb1 = hexToRgb(color1)
   const rgb2 = hexToRgb(color2)
@@ -251,6 +370,10 @@ export const mix = (color1: string, color2: string, weight: number = 0.5): strin
   })
 }
 
+/**
+ * 生成随机颜色
+ * @returns 十六进制颜色字符串
+ */
 export const randomColor = (): string => {
   return rgbToHex({
     r: Math.floor(Math.random() * 256),
@@ -259,6 +382,11 @@ export const randomColor = (): string => {
   })
 }
 
+/**
+ * 颜色名称转十六进制
+ * @param name - 颜色名称（如 'red', 'blue'）
+ * @returns 十六进制颜色或 null
+ */
 export const nameToHex = (name: string): string | null => {
   const colors: Record<string, string> = {
     red: '#FF0000',
