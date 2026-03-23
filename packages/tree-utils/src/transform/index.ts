@@ -1,8 +1,5 @@
-export { default as map } from 'tree-lodash';
-export { default as filter } from 'tree-lodash';
-
-export {
-  transformTreeKeys,
-  transformTreeNodes,
-  searchInTree,
-} from '../index';
+export { default as map } from './map';
+export { default as filter } from './filter';
+export { transformTreeKeys } from './transformTreeKeys';
+export { transformTreeNodes } from './transformTreeNodes';
+export { searchInTree } from './searchInTree';

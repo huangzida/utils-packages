@@ -1,16 +1,15 @@
-export { default as find } from 'tree-lodash';
-export { default as some } from 'tree-lodash';
-
+export { default as find } from './find';
+export { default as some } from './some';
+export { getLeafNodes } from './getLeafNodes';
+export { findNodeByKey } from './findNodeByKey';
+export { findNodeById } from './findNodeById';
+export { findNodeByMatcher } from './findNodeByMatcher';
+export { nodeExistsInTree } from './nodeExistsInTree';
+export { findParentOf } from './findParentOf';
 export {
-  getLeafNodes,
-  findNodeByKey,
-  findNodeById,
-  findNodeByMatcher,
-  nodeExistsInTree,
-  findParentOf,
   getNodePath,
-  getNodeDepth,
-  getNodeBreadcrumb,
-  getTreeStats,
   type PathNode,
-} from '../index';
+} from './getNodePath';
+export { getNodeDepth } from './getNodeDepth';
+export { getNodeBreadcrumb } from './getNodeBreadcrumb';
+export { getTreeStats } from './getTreeStats';

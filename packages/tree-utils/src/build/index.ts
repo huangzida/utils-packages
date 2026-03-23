@@ -1,1 +1,1 @@
-export { default as fromArray } from 'tree-lodash';
+export { default as fromArray } from './fromArray';

@@ -1,7 +1,8 @@
+export { findFirstLeaf } from './findFirstLeaf';
+export { traverseTreeValues } from './traverseTreeValues';
+export { filterCheckedLeafKeys } from './filterCheckedLeafKeys';
+export { collectLeafValuesByKey } from './collectLeafValuesByKey';
 export {
-  findFirstLeaf,
-  traverseTreeValues,
-  filterCheckedLeafKeys,
-  collectLeafValuesByKey,
   convertGroupsToTreeData,
-} from '../index';
+  type TreeGroup,
+} from './convertGroupsToTreeData';
