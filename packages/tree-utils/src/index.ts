@@ -164,13 +164,13 @@ export const moveNodeInTree = (
   );
 
   if (!sourceNode || !targetNode) {
-    logger.error?.("源节点或目标节点不存在");
-    return;
+    logger.error?.('Source or target node not found')
+    return
   }
 
   if (sourceNode.children && sourceNode.children.length > 0) {
-    logger.error?.("源节点不是叶子节点，无法直接移动");
-    return;
+    logger.error?.('Source node is not a leaf node, cannot move')
+    return
   }
 
   const sourceParent = getParentNode(
