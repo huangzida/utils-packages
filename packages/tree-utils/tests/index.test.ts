@@ -11,6 +11,10 @@ import {
   filterTreeNodes,
   filterCheckedLeafKeys,
   deleteNode,
+  getNodePath,
+  getNodeDepth,
+  getNodeBreadcrumb,
+  getTreeStats,
   TreeNode,
   findNode,
   findNodeInTree,
@@ -259,6 +263,103 @@ describe('@zid-utils/tree-utils', () => {
     it('should return original array for non-existent key', () => {
       const result = deleteNode(mockTree, 'non-existent')
       expect(result).toEqual(mockTree)
+    })
+  })
+
+  describe('path tracking', () => {
+    const tree = [
+      {
+        key: '1',
+        title: 'Root',
+        children: [
+          {
+            key: '1-1',
+            title: 'Child 1',
+            children: [{ key: '1-1-1', title: 'Grandchild' }],
+          },
+          { key: '1-2', title: 'Child 2' },
+        ],
+      },
+      { key: '2', title: 'Root 2' },
+    ] as any[]
+
+    describe('getNodePath', () => {
+      it('should return path for root node', () => {
+        const path = getNodePath(tree, '1')
+        expect(path).not.toBeNull()
+        expect(path!).toHaveLength(1)
+        expect(path![0].path).toBe('1')
+      })
+
+      it('should return path for nested node', () => {
+        const path = getNodePath(tree, '1-1-1')
+        expect(path).not.toBeNull()
+        expect(path!).toHaveLength(3)
+        expect(path![0].path).toBe('1')
+        expect(path![1].path).toBe('1/1-1')
+        expect(path![2].path).toBe('1/1-1/1-1-1')
+      })
+
+      it('should return null for non-existent node', () => {
+        const path = getNodePath(tree, 'non-existent')
+        expect(path).toBeNull()
+      })
+
+      it('should include correct depth and index', () => {
+        const path = getNodePath(tree, '1-1')
+        expect(path![1].depth).toBe(1)
+        expect(path![1].index).toBe(0)
+        expect(path![1].parent).not.toBeNull()
+        expect(path![1].parent!.node.key).toBe('1')
+      })
+    })
+
+    describe('getNodeDepth', () => {
+      it('should return correct depth for root node', () => {
+        const depth = getNodeDepth(tree, '1')
+        expect(depth).toBe(0)
+      })
+
+      it('should return correct depth for nested node', () => {
+        const depth = getNodeDepth(tree, '1-1-1')
+        expect(depth).toBe(2)
+      })
+
+      it('should return -1 for non-existent node', () => {
+        const depth = getNodeDepth(tree, 'non-existent')
+        expect(depth).toBe(-1)
+      })
+    })
+
+    describe('getNodeBreadcrumb', () => {
+      it('should return breadcrumb nodes', () => {
+        const breadcrumb = getNodeBreadcrumb(tree, '1-1-1')
+        expect(breadcrumb).toHaveLength(3)
+        expect(breadcrumb[0].key).toBe('1')
+        expect(breadcrumb[1].key).toBe('1-1')
+        expect(breadcrumb[2].key).toBe('1-1-1')
+      })
+
+      it('should return empty array for non-existent node', () => {
+        const breadcrumb = getNodeBreadcrumb(tree, 'non-existent')
+        expect(breadcrumb).toEqual([])
+      })
+    })
+
+    describe('getTreeStats', () => {
+      it('should return correct tree statistics', () => {
+        const stats = getTreeStats(tree)
+        expect(stats.totalNodes).toBe(5)
+        expect(stats.maxDepth).toBe(2)
+        expect(stats.leafCount).toBe(3)
+      })
+
+      it('should handle empty tree', () => {
+        const stats = getTreeStats([])
+        expect(stats.totalNodes).toBe(0)
+        expect(stats.maxDepth).toBe(0)
+        expect(stats.leafCount).toBe(0)
+      })
     })
   })
 })
