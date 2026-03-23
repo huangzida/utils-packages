@@ -444,6 +444,15 @@ import { foreach } from '@zid-utils/tree-utils';
 foreach(tree, callback, { strategy: 'breadth' });
 ```
 
+## 相关库推荐
+
+### 文件系统场景
+- [@httpx/treeu](https://github.com/belgattitude/httpx/tree/main/packages/treeu) - 轻量级 DFS 搜索和路径映射，适合深层嵌套树的性能优化
+
+### 其他选择
+- [tree-model](https://github.com/joaonuno/tree-model) - 模型驱动的树操作
+- [js-tree](https://github.com/guigrpa/js-tree) - React 集成友好的树组件
+
 ## License
 
 MIT
