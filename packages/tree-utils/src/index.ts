@@ -6,7 +6,12 @@ export type {
   TreeUtilsConfig,
 } from './types'
 
-import type { TreeNode } from './types'
+import type { TreeNode, Logger as LoggerType } from './types'
+
+const defaultLogger: LoggerType = {
+  warn: (msg: string) => console.warn('[tree-utils]', msg),
+  error: (msg: string) => console.error('[tree-utils]', msg),
+}
 
 export const getLeafNodes = (
   treeData: Record<string, any>[],
@@ -227,6 +232,7 @@ export const moveNodeInTree = (
   treeData: any[] | { key: string; children?: any[] },
   sourceKey: string,
   targetKey: string,
+  logger: LoggerType = defaultLogger,
 ): void => {
   function findNode(nodes: any[] | undefined, key: string): any | null {
     if (!nodes) return null
@@ -261,12 +267,12 @@ export const moveNodeInTree = (
   )
 
   if (!sourceNode || !targetNode) {
-    console.error('源节点或目标节点不存在')
+    logger.error?.('源节点或目标节点不存在')
     return
   }
 
   if (sourceNode.children && sourceNode.children.length > 0) {
-    console.error('源节点不是叶子节点，无法直接移动')
+    logger.error?.('源节点不是叶子节点，无法直接移动')
     return
   }
 
@@ -467,9 +473,10 @@ export const transformTreeKeys = (
   treeData: Record<string, any>[],
   keyMapping: Record<string, string>,
   childrenKey: string = 'children',
+  logger: LoggerType = defaultLogger,
 ): Record<string, any>[] => {
   if (!Array.isArray(treeData)) {
-    console.warn('transformTreeKeys: treeData must be an array')
+    logger.warn?.('transformTreeKeys: treeData must be an array')
     return []
   }
 
@@ -490,6 +497,7 @@ export const transformTreeKeys = (
           value,
           keyMapping,
           childrenKey,
+          logger,
         )
       } else {
         transformedNode[newKey] = value
@@ -506,9 +514,10 @@ export const transformTreeNodes = (
   treeData: Record<string, any>[],
   transformer: (node: Record<string, any>) => Record<string, any>,
   childrenKey: string = 'children',
+  logger: LoggerType = defaultLogger,
 ): Record<string, any>[] => {
   if (!Array.isArray(treeData)) {
-    console.warn('transformTreeNodes: treeData must be an array')
+    logger.warn?.('transformTreeNodes: treeData must be an array')
     return []
   }
 
@@ -521,7 +530,7 @@ export const transformTreeNodes = (
     const nodeWithTransformedChildren = {
       ...node,
       ...(Array.isArray(children) && {
-        [childrenKey]: transformTreeNodes(children, transformer, childrenKey),
+        [childrenKey]: transformTreeNodes(children, transformer, childrenKey, logger),
       }),
     }
 
