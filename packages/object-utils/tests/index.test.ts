@@ -5,6 +5,7 @@ import {
   pick,
   omit,
   get,
+  getNestedValue,
   set,
   has,
   flatten,
@@ -20,6 +21,7 @@ import {
   keyBy,
   difference,
   intersection,
+  bindMethods,
 } from '../src/index'
 
 describe('@zid-utils/object-utils', () => {
@@ -227,6 +229,30 @@ describe('@zid-utils/object-utils', () => {
     it('should return keys with same values', () => {
       const result = intersection({ a: 1, b: 2 }, { a: 1, b: 3 })
       expect(result).toEqual({ a: 1 })
+    })
+  })
+
+  describe('getNestedValue', () => {
+    it('should be an alias for get', () => {
+      expect(getNestedValue({ a: { b: { c: 1 } } }, 'a.b.c')).toBe(1)
+    })
+
+    it('should return default for missing path', () => {
+      expect(getNestedValue({ a: { b: 1 } }, 'a.c', 'default')).toBe('default')
+    })
+  })
+
+  describe('bindMethods', () => {
+    it('should bind methods to instance', () => {
+      const obj = {
+        value: 10,
+        getValue() {
+          return this.value
+        },
+      }
+      const bound = bindMethods(obj, ['getValue'])
+      const fn = bound.getValue
+      expect(fn()).toBe(10)
     })
   })
 })

@@ -106,6 +106,14 @@ export const get = <T = any>(
   return result as T
 }
 
+export const getNestedValue = <T = any>(
+  obj: Record<string, any>,
+  path: string,
+  defaultValue?: T,
+): T | undefined => {
+  return get(obj, path, defaultValue)
+}
+
 export const set = (
   obj: Record<string, any>,
   path: string,
@@ -306,4 +314,17 @@ export const intersection = <T extends Record<string, any>>(
     }
   }
   return result
+}
+
+export function bindMethods<T extends Record<string, any>>(
+  instance: T,
+  methodNames: (keyof T)[],
+): T {
+  for (const name of methodNames) {
+    const method = instance[name]
+    if (typeof method === 'function') {
+      ;(instance as any)[name] = method.bind(instance)
+    }
+  }
+  return instance
 }
