@@ -1,3 +1,11 @@
+export type {
+  TreeNode,
+  TreeNodeInfo,
+  FindOptions,
+  Logger,
+  TreeUtilsConfig,
+} from './types'
+
 export interface TreeNode {
   key?: string | number
   title?: string | number
@@ -384,11 +392,11 @@ export const addLeafProperties = <T extends { children?: T[] }>(
   })
 }
 
-export const findNode = (nodes: any[], id: string): any => {
+export const findNodeById = (nodes: any[], id: string): any => {
   for (let node of nodes) {
     if (node.id === id) return node
-    if (node.children.length) {
-      const found = findNode(node.children, id)
+    if (node.children && node.children.length) {
+      const found = findNodeById(node.children, id)
       if (found) return found
     }
   }
@@ -416,19 +424,22 @@ export const filterCheckedLeafKeys = (treeData: any[]): string[] => {
   return result
 }
 
-export const findNodeInTree = (nodes: any[], searchValue: string): boolean => {
+export const nodeExistsInTree = (
+  nodes: any[],
+  searchValue: string,
+): boolean => {
   return nodes.some((node) => {
     if (node.value === searchValue || node.title === searchValue) {
       return true
     }
     if (node.children && Array.isArray(node.children)) {
-      return findNodeInTree(node.children, searchValue)
+      return nodeExistsInTree(node.children, searchValue)
     }
     return false
   })
 }
 
-export const findNodeAndCollectLeafValues = (
+export const collectLeafValuesByKey = (
   nodes: any[],
   targetValue: string,
   isLeafKey: string = 'isLeaf',
@@ -447,7 +458,7 @@ export const findNodeAndCollectLeafValues = (
     }
 
     if (node.children && Array.isArray(node.children)) {
-      const result = findNodeAndCollectLeafValues(
+      const result = collectLeafValuesByKey(
         node.children,
         targetValue,
         isLeafKey,
@@ -529,13 +540,13 @@ export const transformTreeNodes = (
   return treeData.map(transformNode)
 }
 
-export const findTreeNode = (nodes: any[], targetKey: string): any => {
+export const findParentOf = (nodes: any[], targetKey: string): any => {
   for (const node of nodes) {
     if (node.children?.some((child: any) => child.key === targetKey)) {
       return node
     }
     if (node.children) {
-      const found = findTreeNode(node.children, targetKey)
+      const found = findParentOf(node.children, targetKey)
       if (found) return found
     }
   }
@@ -590,4 +601,11 @@ export const updateNodeByMatcher = <T extends Record<string, any>>(
 
     return node
   })
+}
+
+export {
+  findNodeById as findNode,
+  nodeExistsInTree as findNodeInTree,
+  collectLeafValuesByKey as findNodeAndCollectLeafValues,
+  findParentOf as findTreeNode,
 }
