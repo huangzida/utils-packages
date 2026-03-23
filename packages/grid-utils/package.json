@@ -1,6 +1,6 @@
 {
   "name": "@zid-utils/grid-utils",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Grid layout utility functions",
   "repository": "github:huangzida/utils-packages",
   "type": "module",
