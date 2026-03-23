@@ -1,0 +1,36 @@
+{
+  "name": "@zid-utils/format-utils",
+  "version": "0.0.0",
+  "description": "Number and currency formatting utilities",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --clean --dts",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "format",
+    "number",
+    "currency",
+    "utils",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.0.2",
+    "vitest": "^1.5.0",
+    "typescript": "^5.4.5"
+  }
+}
