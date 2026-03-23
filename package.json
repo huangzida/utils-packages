@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "typecheck": "tsc -b",
     "release": "tsx scripts/release.ts",
+    "release:push": "AUTO_PUSH=true pnpm release",
     "test": "vitest run",
     "test:watch": "vitest",
     "preview": "serve . -l 3000"
