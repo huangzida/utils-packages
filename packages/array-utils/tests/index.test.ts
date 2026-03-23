@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   unique,
+  uniqueByField,
   chunk,
   groupBy,
   flatten,
@@ -26,6 +27,17 @@ describe('@zid-utils/array-utils', () => {
 
     it('should handle empty array', () => {
       expect(unique([])).toEqual([])
+    })
+  })
+
+  describe('uniqueByField', () => {
+    it('should remove duplicates by field', () => {
+      const arr = [{ id: 1, name: 'a' }, { id: 2, name: 'b' }, { id: 1, name: 'c' }]
+      expect(uniqueByField(arr, 'id')).toEqual([{ id: 1, name: 'a' }, { id: 2, name: 'b' }])
+    })
+
+    it('should handle empty array', () => {
+      expect(uniqueByField([], 'id')).toEqual([])
     })
   })
 

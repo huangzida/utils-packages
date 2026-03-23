@@ -704,3 +704,91 @@ export const getTreeStats = <T extends Record<string, any>>(
   traverse(treeData, 0)
   return { totalNodes, maxDepth, leafCount }
 }
+
+export const mapTree = <T extends Record<string, any>>(
+  treeData: T[],
+  mapper: (node: T, parent?: T) => T,
+  childrenKey: string = 'children',
+): T[] => {
+  const traverse = (nodes: T[], parent?: T): T[] => {
+    return nodes.map((node) => {
+      const mappedNode = mapper(node, parent)
+      const children = node[childrenKey]
+      if (children && Array.isArray(children) && children.length > 0) {
+        return {
+          ...mappedNode,
+          [childrenKey]: traverse(children, node),
+        }
+      }
+      return mappedNode
+    })
+  }
+
+  return traverse(treeData)
+}
+
+export const findFirstLeaf = <T extends Record<string, any>>(
+  treeData: T[],
+  childrenKey: string = 'children',
+): T | null => {
+  for (const node of treeData) {
+    const children = node[childrenKey] as T[] | undefined
+    if (!children || children.length === 0) {
+      return node
+    }
+    const leaf = findFirstLeaf(children, childrenKey)
+    if (leaf) return leaf
+  }
+  return null
+}
+
+export const traverseTreeValues = <T extends Record<string, any>, V>(
+  treeData: T[],
+  key: keyof T,
+  childrenKey: string = 'children',
+): V[] => {
+  const result: V[] = []
+
+  const traverse = (nodes: T[]) => {
+    for (const node of nodes) {
+      if (key in node) {
+        result.push(node[key] as V)
+      }
+      const children = node[childrenKey]
+      if (children && Array.isArray(children) && children.length > 0) {
+        traverse(children)
+      }
+    }
+  }
+
+  traverse(treeData)
+  return result
+}
+
+export interface TreeGroup {
+  label: string
+  value: string | number
+  children?: any[]
+}
+
+export const convertGroupsToTreeData = <T extends Record<string, any>>(
+  groups: T[],
+  groupKey: keyof T = 'group' as keyof T,
+  childrenKey: string = 'children',
+): TreeGroup[] => {
+  const groupMap = new Map<string, TreeGroup>()
+
+  for (const item of groups) {
+    const groupName = String(item[groupKey] || '')
+    if (!groupMap.has(groupName)) {
+      groupMap.set(groupName, {
+        label: groupName,
+        value: groupName,
+        children: [],
+      })
+    }
+    groupMap.get(groupName)!.children!.push(item)
+  }
+
+  return Array.from(groupMap.values())
+}

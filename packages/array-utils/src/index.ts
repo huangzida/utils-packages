@@ -2,6 +2,21 @@ export const unique = <T>(arr: T[]): T[] => {
   return [...new Set(arr)]
 }
 
+export const uniqueByField = <T extends Record<string, any>>(
+  arr: T[],
+  key: keyof T,
+): T[] => {
+  const seen = new Set()
+  return arr.filter((item) => {
+    const value = item[key]
+    if (seen.has(value)) {
+      return false
+    }
+    seen.add(value)
+    return true
+  })
+}
+
 export const chunk = <T>(arr: T[], size: number): T[][] => {
   const result: T[][] = []
   for (let i = 0; i < arr.length; i += size) {
