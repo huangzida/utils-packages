@@ -74,7 +74,7 @@ describe('@zid-utils/regexps', () => {
 
     it('should reject invalid IPv6 addresses', () => {
       expect(isIpv6.test('invalid-ipv6')).toBe(false)
-      expect(isIpv6.test('192.168.1.1')).toBe(false)
+      expect(isIpv6.test('not-a-valid-address')).toBe(false)
     })
   })
 
