@@ -1,0 +1,26 @@
+{
+  "name": "@zid-utils/regexps",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --out-dir dist --clean",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.2",
+    "vitest": "^1.5.0",
+    "typescript": "^5.4.5"
+  }
+}

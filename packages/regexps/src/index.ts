@@ -1,0 +1,128 @@
+export const isEmail =
+  /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i
+
+export const isUrl =
+  /^(?:https?|ftp):\/\/(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z0-9\u{00a1}-\u{ffff}]+-)*[a-z0-9\u{00a1}-\u{ffff}]+)(?:\.(?:[a-z0-9\u{00a1}-\u{ffff}]+-)*[a-z0-9\u{00a1}-\u{ffff}]+)*(?:\.(?:[a-z\u{00a1}-\u{ffff}]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/iu
+
+export const isIpv4 =
+  /^(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/
+
+export const isIpv6 =
+  /^((([0-9a-f]{1,4}:){7}([0-9a-f]{1,4}|:))|(([0-9a-f]{1,4}:){6}(:[0-9a-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9a-f]{1,4}:){5}(((:[0-9a-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9a-f]{1,4}:){4}(((:[0-9a-f]{1,4}){1,3})|((:[0-9a-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9a-f]{1,4}:){3}(((:[0-9a-f]{1,4}){1,4})|((:[0-9a-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9a-f]{1,4}:){2}(((:[0-9a-f]{1,4}){1,5})|((:[0-9a-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9a-f]{1,4}:){1}(((:[0-9a-f]{1,4}){1,6})|((:[0-9a-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9a-f]{1,4}){1,7})|((:[0-9a-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))$/i
+
+export const isUuid =
+  /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
+
+export const isNanoid = /^[\w\-\\+\\!\\#\\$\\%\\&]{21}$/
+
+export const isByte =
+  /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/gm
+
+export const isHostname =
+  /^(?=.{1,253}\.?$)[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[-0-9a-z]{0,61}[0-9a-z])?)*\.?$/i
+
+export const isPhone = /^(0|86|17951)?(1\d{10})$/
+
+export const isNumeric = /^\d+$/
+
+export const isIdCard =
+  /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/
+
+export const isZipCode = /^[1-9]\d{5}(?!\d)$/
+
+export const isChinese = /^[\u4e00-\u9fa5]+$/
+
+export const matchRgba = /\d+(\d*\.?\d*)/g
+
+export const matchHsla = /\d+(\.\d+)?%/g
+
+export const matchHex = /^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/
+
+export const hasDigitAndLetter = /^(?=.*\d)(?=.*[a-zA-Z])/
+
+export const hasDigitsLettersWithCase = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/
+
+export interface ValidationItem {
+  key: string
+  desc: string
+  validator: (value: string) => boolean
+}
+
+export const baseValidMap: ValidationItem[] = [
+  {
+    key: 'any',
+    desc: 'lowcode.any.character',
+    validator: () => true,
+  },
+  {
+    key: 'onlyChinese',
+    desc: 'lowcode.only.chinese.input',
+    validator: (value: string) => isChinese.test(value),
+  },
+  {
+    key: 'onlyNumber',
+    desc: 'lowcode.only.number.input',
+    validator: (value: string) => isNumeric.test(value),
+  },
+  {
+    key: 'onlyEmail',
+    desc: 'lowcode.only.email.input',
+    validator: (value: string) => isEmail.test(value),
+  },
+  {
+    key: 'onlyUrl',
+    desc: 'lowcode.only.url.input',
+    validator: (value: string) => isUrl.test(value),
+  },
+  {
+    key: 'onlyIpv4',
+    desc: 'lowcode.only.ipv4.input',
+    validator: (value: string) => isIpv4.test(value),
+  },
+  {
+    key: 'onlyIpv6',
+    desc: 'lowcode.only.ipv6.input',
+    validator: (value: string) => isIpv6.test(value),
+  },
+  {
+    key: 'onlyAlphanumeric',
+    desc: 'lowcode.only.letter.number.underscore.input',
+    validator: (value: string) => /^\w+$/.test(value),
+  },
+  {
+    key: 'onlyAlphaNumeric',
+    desc: 'lowcode.only.letter.number.input',
+    validator: (value: string) => /^[a-zA-Z0-9]+$/.test(value),
+  },
+  {
+    key: 'onlyPhone',
+    desc: 'lowcode.only.phone.number.input',
+    validator: (value: string) => isPhone.test(value),
+  },
+  {
+    key: 'onlyIdCard',
+    desc: 'lowcode.only.id.number.input',
+    validator: (value: string) => isIdCard.test(value),
+  },
+  {
+    key: 'onlyZipCode',
+    desc: 'lowcode.only.postal.code.input',
+    validator: (value: string) => isZipCode.test(value),
+  },
+  {
+    key: 'hasDigitAndLetter',
+    desc: 'lowcode.must.contain.number.letter.combination',
+    validator: (value: string) => hasDigitAndLetter.test(value),
+  },
+  {
+    key: 'hasDigitsLettersWithCase',
+    desc: 'lowcode.must.contain.number.uppercase.lowercase.letter.combination',
+    validator: (value: string) => hasDigitsLettersWithCase.test(value),
+  },
+]
+
+export const validOfMap = (key: string, text: string): boolean | string => {
+  const validItem = baseValidMap.find((item) => item.key === key)
+  if (!validItem) return true
+  return validItem.validator(text) || validItem.desc
+}
