@@ -26,13 +26,13 @@ export const getLeafNodes = (
   function collectLeafNodes(
     nodes: Record<string, any>[],
   ): Record<string, any>[] {
-    let leafNodes: Record<string, any>[] = [];
+    const leafNodes: Record<string, any>[] = [];
 
-    for (let node of nodes) {
+    for (const node of nodes) {
       if (node[isLeafKey] === true) {
         leafNodes.push(node);
       } else if (node.children) {
-        leafNodes = leafNodes.concat(collectLeafNodes(node.children));
+        leafNodes.push(...collectLeafNodes(node.children));
       }
     }
 
@@ -170,7 +170,7 @@ export const moveNodeInTree = (
 ): void => {
   function findNode(nodes: any[] | undefined, key: string): any | null {
     if (!nodes) return null;
-    for (let node of nodes) {
+    for (const node of nodes) {
       if (node.key === key) return node;
       if (node.children) {
         const found = findNode(node.children, key);
@@ -181,7 +181,7 @@ export const moveNodeInTree = (
   }
 
   function getParentNode(nodes: any[], node: any): any | null {
-    for (let parent of nodes) {
+    for (const parent of nodes) {
       if (parent.children && parent.children.includes(node)) {
         return parent;
       }
@@ -365,7 +365,7 @@ export const addLeafProperties = <T extends { children?: T[] }>(
  * @returns 找到的节点或 null
  */
 export const findNodeById = (nodes: any[], id: string): any => {
-  for (let node of nodes) {
+  for (const node of nodes) {
     if (node.id === id) return node;
     if (node.children && node.children.length) {
       const found = findNodeById(node.children, id);

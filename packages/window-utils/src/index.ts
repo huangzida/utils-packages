@@ -64,7 +64,7 @@ export function focusWindow(): void {
 
 /** 检查窗口是否聚焦 */
 export function isWindowFocused(): boolean {
-  return window.focused !== false;
+  return typeof document !== 'undefined' ? document.hasFocus() : true;
 }
 
 /** 获取窗口尺寸 */
