@@ -265,7 +265,7 @@ export const unflatten = (
  */
 export const isEmpty = (obj: Record<string, any>): boolean => {
   if (obj == null) return true
-  if (typeof obj === 'string') return obj.length === 0
+  if (typeof obj === 'string') return (obj as string).length === 0
   if (Array.isArray(obj)) return obj.length === 0
   if (typeof obj === 'object') {
     return Object.keys(obj).length === 0

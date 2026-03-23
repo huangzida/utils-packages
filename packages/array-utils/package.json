@@ -2,6 +2,7 @@
   "name": "@zid-utils/array-utils",
   "version": "0.0.0",
   "description": "Array utility functions for common operations",
+  "repository": "github:huangzida/utils-packages",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",

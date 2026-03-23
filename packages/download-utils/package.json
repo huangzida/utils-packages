@@ -2,6 +2,7 @@
   "name": "@zid-utils/download-utils",
   "version": "0.0.0",
   "description": "File download utility functions",
+  "repository": "github:huangzida/utils-packages",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",

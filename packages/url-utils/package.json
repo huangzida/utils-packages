@@ -2,6 +2,7 @@
   "name": "@zid-utils/url-utils",
   "version": "0.0.0",
   "description": "URL utility functions for parsing and building URLs",
+  "repository": "github:huangzida/utils-packages",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",

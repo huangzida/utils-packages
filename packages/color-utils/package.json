@@ -2,6 +2,7 @@
   "name": "@zid-utils/color-utils",
   "version": "0.0.0",
   "description": "Color utility functions for conversion and manipulation",
+  "repository": "github:huangzida/utils-packages",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
