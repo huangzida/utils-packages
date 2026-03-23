@@ -1,7 +1,7 @@
 {
-  "name": "@zid-utils/download-utils",
+  "name": "@zid-utils/fetch-utils",
   "version": "0.0.4",
-  "description": "File download utility functions",
+  "description": "File fetch utility functions",
   "repository": "github:huangzida/utils-packages",
   "type": "module",
   "main": "./dist/index.js",
@@ -21,7 +21,7 @@
     "test": "vitest run"
   },
   "keywords": [
-    "download",
+    "fetch",
     "utils",
     "typescript"
   ],
