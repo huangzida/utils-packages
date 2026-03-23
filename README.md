@@ -7,15 +7,24 @@ Monorepo for TypeScript utility packages extracted from xpanel-browser-umi4. Eac
 
 ## 📦 Packages
 
-| Package                                            | Version                                                                                                               | Description                  |
-| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
-| [@zid-utils/regexps](./packages/regexps)           | [![npm](https://img.shields.io/npm/v/@zid-utils/regexps)](https://www.npmjs.com/package/@zid-utils/regexps)           | 常用正则表达式验证器         |
-| [@zid-utils/time-utils](./packages/time-utils)     | [![npm](https://img.shields.io/npm/v/@zid-utils/time-utils)](https://www.npmjs.com/package/@zid-utils/time-utils)     | 时间格式化工具函数           |
-| [@zid-utils/tree-utils](./packages/tree-utils)     | [![npm](https://img.shields.io/npm/v/@zid-utils/tree-utils)](https://www.npmjs.com/package/@zid-utils/tree-utils)     | 树形数据结构操作             |
-| [@zid-utils/grid-utils](./packages/grid-utils)     | [![npm](https://img.shields.io/npm/v/@zid-utils/grid-utils)](https://www.npmjs.com/package/@zid-utils/grid-utils)     | 二维数组(网格)操作           |
-| [@zid-utils/dom-utils](./packages/dom-utils)       | [![npm](https://img.shields.io/npm/v/@zid-utils/dom-utils)](https://www.npmjs.com/package/@zid-utils/dom-utils)       | DOM 元素可见区域、滚动条检测 |
-| [@zid-utils/window-utils](./packages/window-utils) | [![npm](https://img.shields.io/npm/v/@zid-utils/window-utils)](https://www.npmjs.com/package/@zid-utils/window-utils) | 窗口操作、尺寸获取、滚动控制 |
-| [@zid-utils/crypto-utils](./packages/crypto-utils) | [![npm](https://img.shields.io/npm/v/@zid-utils/crypto-utils)](https://www.npmjs.com/package/@zid-utils/crypto-utils) | AES 加密解密工具             |
+| Package                                                | Version                                                                                                                   | Description                  |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| [@zid-utils/regexps](./packages/regexps)               | [![npm](https://img.shields.io/npm/v/@zid-utils/regexps)](https://www.npmjs.com/package/@zid-utils/regexps)               | 常用正则表达式验证器         |
+| [@zid-utils/time-utils](./packages/time-utils)         | [![npm](https://img.shields.io/npm/v/@zid-utils/time-utils)](https://www.npmjs.com/package/@zid-utils/time-utils)         | 时间格式化工具函数           |
+| [@zid-utils/tree-utils](./packages/tree-utils)         | [![npm](https://img.shields.io/npm/v/@zid-utils/tree-utils)](https://www.npmjs.com/package/@zid-utils/tree-utils)         | 树形数据结构操作             |
+| [@zid-utils/grid-utils](./packages/grid-utils)         | [![npm](https://img.shields.io/npm/v/@zid-utils/grid-utils)](https://www.npmjs.com/package/@zid-utils/grid-utils)         | 二维数组(网格)操作           |
+| [@zid-utils/dom-utils](./packages/dom-utils)           | [![npm](https://img.shields.io/npm/v/@zid-utils/dom-utils)](https://www.npmjs.com/package/@zid-utils/dom-utils)           | DOM 元素可见区域、滚动条检测 |
+| [@zid-utils/window-utils](./packages/window-utils)     | [![npm](https://img.shields.io/npm/v/@zid-utils/window-utils)](https://www.npmjs.com/package/@zid-utils/window-utils)     | 窗口操作、尺寸获取、滚动控制 |
+| [@zid-utils/crypto-utils](./packages/crypto-utils)     | [![npm](https://img.shields.io/npm/v/@zid-utils/crypto-utils)](https://www.npmjs.com/package/@zid-utils/crypto-utils)     | AES 加密解密工具             |
+| [@zid-utils/array-utils](./packages/array-utils)       | [![npm](https://img.shields.io/npm/v/@zid-utils/array-utils)](https://www.npmjs.com/package/@zid-utils/array-utils)       | 数组操作工具函数             |
+| [@zid-utils/object-utils](./packages/object-utils)     | [![npm](https://img.shields.io/npm/v/@zid-utils/object-utils)](https://www.npmjs.com/package/@zid-utils/object-utils)     | 对象操作工具函数             |
+| [@zid-utils/string-utils](./packages/string-utils)     | [![npm](https://img.shields.io/npm/v/@zid-utils/string-utils)](https://www.npmjs.com/package/@zid-utils/string-utils)     | 字符串操作工具函数           |
+| [@zid-utils/url-utils](./packages/url-utils)           | [![npm](https://img.shields.io/npm/v/@zid-utils/url-utils)](https://www.npmjs.com/package/@zid-utils/url-utils)           | URL 操作工具函数             |
+| [@zid-utils/format-utils](./packages/format-utils)     | [![npm](https://img.shields.io/npm/v/@zid-utils/format-utils)](https://www.npmjs.com/package/@zid-utils/format-utils)     | 数字、货币、百分比格式化     |
+| [@zid-utils/color-utils](./packages/color-utils)       | [![npm](https://img.shields.io/npm/v/@zid-utils/color-utils)](https://www.npmjs.com/package/@zid-utils/color-utils)       | 颜色转换工具函数             |
+| [@zid-utils/diff-utils](./packages/diff-utils)         | [![npm](https://img.shields.io/npm/v/@zid-utils/diff-utils)](https://www.npmjs.com/package/@zid-utils/diff-utils)         | 对象差异比较工具             |
+| [@zid-utils/state-utils](./packages/state-utils)       | [![npm](https://img.shields.io/npm/v/@zid-utils/state-utils)](https://www.npmjs.com/package/@zid-utils/state-utils)       | 状态管理工具                 |
+| [@zid-utils/download-utils](./packages/download-utils) | [![npm](https://img.shields.io/npm/v/@zid-utils/download-utils)](https://www.npmjs.com/package/@zid-utils/download-utils) | 文件下载工具                 |
 
 ## 🎮 Playground
 
@@ -36,7 +45,17 @@ pnpm preview
 - **树形操作** - 查找节点、搜索、过滤、转换等
 - **网格操作** - 二维数组元素更新
 - **DOM 操作** - 元素可见区域、滚动条检测
+- **窗口操作** - 打开窗口、尺寸获取、滚动控制
 - **加解密** - AES-CBC 模式加解密
+- **数组操作** - 去重、分组、排序、洗牌等
+- **对象操作** - 深拷贝、深度合并、属性选择等
+- **字符串操作** - 大小写转换、HTML转义、模板等
+- **URL 操作** - 参数解析、域名提取等
+- **格式化** - 数字、货币、百分比格式化
+- **颜色转换** - HEX/RGB/HSL 相互转换
+- **差异比较** - 对象深比较、差异计算
+- **状态管理** - 响应式状态处理器
+- **文件下载** - URL/Blob/Base64 下载
 
 ## 🚀 Quick Start
 
@@ -54,6 +73,15 @@ pnpm add @zid-utils/grid-utils
 pnpm add @zid-utils/dom-utils
 pnpm add @zid-utils/window-utils
 pnpm add @zid-utils/crypto-utils
+pnpm add @zid-utils/array-utils
+pnpm add @zid-utils/object-utils
+pnpm add @zid-utils/string-utils
+pnpm add @zid-utils/url-utils
+pnpm add @zid-utils/format-utils
+pnpm add @zid-utils/color-utils
+pnpm add @zid-utils/diff-utils
+pnpm add @zid-utils/state-utils
+pnpm add @zid-utils/download-utils
 ```
 
 ### 使用示例
@@ -231,12 +259,21 @@ pnpm release
 ```
 utils-packages/
 ├── packages/
+│   ├── array-utils/      # 数组操作
+│   ├── color-utils/      # 颜色转换
 │   ├── crypto-utils/     # AES 加密解密
+│   ├── diff-utils/       # 对象差异比较
 │   ├── dom-utils/        # DOM 操作
+│   ├── download-utils/   # 文件下载
+│   ├── format-utils/     # 格式化工具
 │   ├── grid-utils/       # 网格操作
+│   ├── object-utils/     # 对象操作
 │   ├── regexps/          # 正则验证
+│   ├── state-utils/      # 状态管理
+│   ├── string-utils/     # 字符串操作
 │   ├── time-utils/       # 时间处理
 │   ├── tree-utils/       # 树形数据
+│   ├── url-utils/        # URL 操作
 │   └── window-utils/     # 窗口操作
 ├── index.html            # 交互式 Playground
 ├── package.json          # Workspace 配置
