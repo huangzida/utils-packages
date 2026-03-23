@@ -9,7 +9,7 @@
     "format": "prettier --write .",
     "lint": "eslint .",
     "typecheck": "tsc -b",
-    "release": "bumpp -r --no-push",
+    "release": "bumpp -r",
     "test": "vitest run",
     "test:watch": "vitest",
     "preview": "serve . -l 3000"

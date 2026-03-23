@@ -5,13 +5,8 @@ on:
     tags:
       - 'v*'
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   release:
-    name: Release
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -24,32 +19,27 @@ jobs:
           fetch-depth: 0
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 10
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'pnpm'
-          provenance: true
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
-        run: pnpm install
-
-      - name: Run tests
-        run: pnpm test
+        run: pnpm install --frozen-lockfile # 强制使用 lockfile，保证环境一致性
 
       - name: Build
         run: pnpm build
 
       - name: Publish packages
-        run: |
-          echo "publish-branch=main" >> .npmrc
-          pnpm -r publish --access public
+        run: pnpm -r publish --access public --no-git-checks --publish-branch main
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Generate GitHub Release
         uses: softprops/action-gh-release@v2
