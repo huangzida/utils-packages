@@ -1,6 +1,6 @@
 {
   "name": "@zid-utils/fetch-utils",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "File fetch utility functions",
   "repository": "github:huangzida/utils-packages",
   "type": "module",

@@ -1,6 +1,6 @@
 {
   "name": "@zid-utils/tree-utils",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Tree data structure utility functions",
   "repository": "github:huangzida/utils-packages",
   "type": "module",
