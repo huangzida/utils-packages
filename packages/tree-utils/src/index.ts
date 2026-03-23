@@ -6,16 +6,7 @@ export type {
   TreeUtilsConfig,
 } from './types'
 
-export interface TreeNode {
-  key?: string | number
-  title?: string | number
-  children?: TreeNode[]
-  isLeaf?: boolean
-  disabled?: boolean
-  selectable?: boolean
-  checked?: boolean
-  [key: string]: any
-}
+import type { TreeNode } from './types'
 
 export const getLeafNodes = (
   treeData: Record<string, any>[],
