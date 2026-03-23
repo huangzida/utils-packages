@@ -278,19 +278,37 @@ async function main() {
         console.warn(`  ⚠️  Tag 已存在: ${tag}`);
       }
     }
+
+    const autoPush = process.env.AUTO_PUSH === 'true';
+    if (autoPush) {
+      try {
+        execSync('git push --tags', { encoding: 'utf-8' });
+        console.log('  ✅ git push --tags');
+
+        execSync('git push', { encoding: 'utf-8' });
+        console.log('  ✅ git push');
+      } catch {
+        console.warn('  ⚠️  Push 失败，请手动 push');
+      }
+    }
   } catch (error) {
     console.error('  ❌ Git 操作失败:', error);
   }
 
   console.log('\n' + '='.repeat(60));
-  console.log('✅ 发布准备完成!\n');
+  console.log('✅ 发布完成!\n');
   console.log('发布的包:');
   results.forEach(r => {
     console.log(`  • ${r.name}: ${r.from} → ${r.to}`);
   });
-  console.log('\n请手动验证后执行:');
-  console.log('  git push --tags');
-  console.log('  git push');
+
+  if (process.env.AUTO_PUSH === 'true') {
+    console.log('\n🔄 已自动 push 到远程仓库');
+  } else {
+    console.log('\n请手动验证后执行:');
+    console.log('  git push --tags');
+    console.log('  git push');
+  }
   console.log('='.repeat(60) + '\n');
 }
 
