@@ -227,6 +227,11 @@ export const moveNodeInTree = (
   targetNode.children.push(sourceNode);
 };
 
+/**
+ * 克隆节点到目标节点
+ * @param sourceNode - 源节点
+ * @param targetNode - 目标节点
+ */
 export const cloneNode = (sourceNode: TreeNode, targetNode: TreeNode) => {
   const clonedNode = { ...sourceNode };
   if (targetNode.children) {
@@ -236,6 +241,13 @@ export const cloneNode = (sourceNode: TreeNode, targetNode: TreeNode) => {
   }
 };
 
+/**
+ * 复制树节点
+ * @param treeData - 树形数据
+ * @param key - 要复制的节点 key
+ * @param targetKey - 目标节点 key
+ * @returns 复制后的树
+ */
 export const copyNode = (
   treeData: TreeNode[],
   key: string | number,
@@ -254,6 +266,12 @@ export const copyNode = (
   return treeData;
 };
 
+/**
+ * 根据 key 更新节点标题
+ * @param tree - 树形数据
+ * @param targetKey - 目标节点 key
+ * @param newTitle - 新标题
+ */
 export const updateNodeTitleByKey = (
   tree: TreeNode[],
   targetKey: string,
@@ -271,6 +289,12 @@ export const updateNodeTitleByKey = (
   }
 };
 
+/**
+ * 删除树节点
+ * @param treeData - 树形数据
+ * @param key - 要删除的节点 key
+ * @returns 删除后的树
+ */
 export const deleteNode = (
   treeData: TreeNode[],
   key: string | number,
@@ -290,6 +314,12 @@ export const deleteNode = (
   return delNode([...treeData]);
 };
 
+/**
+ * 扁平化树结构
+ * @param tree - 树形数据
+ * @param filter - 过滤函数
+ * @returns 扁平化后的数组
+ */
 export const flattenTree = <T extends { children?: T[] }>(
   tree: T[],
   filter: (node: T) => boolean = () => true,
@@ -309,6 +339,11 @@ export const flattenTree = <T extends { children?: T[] }>(
   return result;
 };
 
+/**
+ * 为树节点添加叶子属性
+ * @param treeData - 树形数据
+ * @returns 添加了 isLeaf 属性的树
+ */
 export const addLeafProperties = <T extends { children?: T[] }>(
   treeData: T[],
 ): T[] => {
@@ -323,6 +358,12 @@ export const addLeafProperties = <T extends { children?: T[] }>(
   });
 };
 
+/**
+ * 根据 ID 查找节点
+ * @param nodes - 节点数组
+ * @param id - 节点 ID
+ * @returns 找到的节点或 null
+ */
 export const findNodeById = (nodes: any[], id: string): any => {
   for (let node of nodes) {
     if (node.id === id) return node;
@@ -334,6 +375,11 @@ export const findNodeById = (nodes: any[], id: string): any => {
   return null;
 };
 
+/**
+ * 获取选中的叶子节点 key
+ * @param treeData - 树形数据
+ * @returns 选中的叶子节点 key 数组
+ */
 export const filterCheckedLeafKeys = (treeData: any[]): string[] => {
   const result: string[] = [];
 
@@ -355,6 +401,12 @@ export const filterCheckedLeafKeys = (treeData: any[]): string[] => {
   return result;
 };
 
+/**
+ * 检查节点是否存在于树中
+ * @param nodes - 节点数组
+ * @param searchValue - 搜索值
+ * @returns 是否存在
+ */
 export const nodeExistsInTree = (
   nodes: any[],
   searchValue: string,
@@ -370,6 +422,13 @@ export const nodeExistsInTree = (
   });
 };
 
+/**
+ * 收集叶子节点的值
+ * @param nodes - 节点数组
+ * @param targetValue - 目标值
+ * @param isLeafKey - 叶子节点标识键
+ * @returns 叶子节点值数组或 null
+ */
 export const collectLeafValuesByKey = (
   nodes: any[],
   targetValue: string,
@@ -403,6 +462,14 @@ export const collectLeafValuesByKey = (
   return null;
 };
 
+/**
+ * 转换树节点的键
+ * @param treeData - 树形数据
+ * @param keyMapping - 键映射关系
+ * @param childrenKey - 子节点键名
+ * @param logger - 日志记录器
+ * @returns 转换后的树
+ */
 export const transformTreeKeys = (
   treeData: Record<string, any>[],
   keyMapping: Record<string, string>,
@@ -444,6 +511,14 @@ export const transformTreeKeys = (
   return treeData.map(transformNode);
 };
 
+/**
+ * 转换树节点
+ * @param treeData - 树形数据
+ * @param transformer - 转换函数
+ * @param childrenKey - 子节点键名
+ * @param logger - 日志记录器
+ * @returns 转换后的树
+ */
 export const transformTreeNodes = (
   treeData: Record<string, any>[],
   transformer: (node: Record<string, any>) => Record<string, any>,
@@ -479,6 +554,12 @@ export const transformTreeNodes = (
   return treeData.map(transformNode);
 };
 
+/**
+ * 查找节点的父节点
+ * @param nodes - 节点数组
+ * @param targetKey - 目标节点 key
+ * @returns 父节点或 null
+ */
 export const findParentOf = (nodes: any[], targetKey: string): any => {
   for (const node of nodes) {
     if (node.children?.some((child: any) => child.key === targetKey)) {
@@ -492,6 +573,13 @@ export const findParentOf = (nodes: any[], targetKey: string): any => {
   return null;
 };
 
+/**
+ * 根据匹配器查找节点
+ * @param nodes - 节点数组
+ * @param matcher - 匹配函数
+ * @param childrenKey - 子节点键名
+ * @returns 找到的节点或 null
+ */
 export const findNodeByMatcher = (
   nodes: any[],
   matcher: (node: any) => boolean,
@@ -511,6 +599,14 @@ export const findNodeByMatcher = (
   return null;
 };
 
+/**
+ * 根据匹配器更新节点
+ * @param nodes - 节点数组
+ * @param matcher - 匹配函数
+ * @param updater - 更新函数
+ * @param childrenKey - 子节点键名
+ * @returns 更新后的节点数组
+ */
 export const updateNodeByMatcher = <T extends Record<string, any>>(
   nodes: T[],
   matcher: (node: T) => boolean,
@@ -549,14 +645,30 @@ export {
   findParentOf as findTreeNode,
 };
 
+/**
+ * 路径节点接口
+ */
 export interface PathNode<T> {
+  /** 节点 */
   node: T;
+  /** 深度 */
   depth: number;
+  /** 索引 */
   index: number;
+  /** 父节点 */
   parent: PathNode<T> | null;
+  /** 路径 */
   path: string;
 }
 
+/**
+ * 获取节点的路径
+ * @param treeData - 树形数据
+ * @param targetKey - 目标节点 key
+ * @param keyField - key 字段名
+ * @param childrenKey - 子节点键名
+ * @returns 路径节点数组或 null
+ */
 export const getNodePath = <T extends Record<string, any>>(
   treeData: T[],
   targetKey: string | number,
@@ -603,6 +715,14 @@ export const getNodePath = <T extends Record<string, any>>(
   return findPath(treeData, targetKey, []);
 };
 
+/**
+ * 获取节点深度
+ * @param treeData - 树形数据
+ * @param targetKey - 目标节点 key
+ * @param keyField - key 字段名
+ * @param childrenKey - 子节点键名
+ * @returns 节点深度，-1 表示未找到
+ */
 export const getNodeDepth = <T extends Record<string, any>>(
   treeData: T[],
   targetKey: string | number,
@@ -613,6 +733,14 @@ export const getNodeDepth = <T extends Record<string, any>>(
   return path ? path.length - 1 : -1;
 };
 
+/**
+ * 获取节点的导航路径
+ * @param treeData - 树形数据
+ * @param targetKey - 目标节点 key
+ * @param keyField - key 字段名
+ * @param childrenKey - 子节点键名
+ * @returns 节点数组
+ */
 export const getNodeBreadcrumb = <T extends Record<string, any>>(
   treeData: T[],
   targetKey: string | number,
@@ -623,6 +751,12 @@ export const getNodeBreadcrumb = <T extends Record<string, any>>(
   return path ? path.map((p) => p.node) : [];
 };
 
+/**
+ * 获取树的统计信息
+ * @param treeData - 树形数据
+ * @param childrenKey - 子节点键名
+ * @returns 统计信息对象
+ */
 export const getTreeStats = <T extends Record<string, any>>(
   treeData: T[],
   childrenKey: string = "children",
@@ -649,6 +783,13 @@ export const getTreeStats = <T extends Record<string, any>>(
   return { totalNodes, maxDepth, leafCount };
 };
 
+/**
+ * 映射树节点
+ * @param treeData - 树形数据
+ * @param mapper - 映射函数
+ * @param childrenKey - 子节点键名
+ * @returns 映射后的树
+ */
 export const mapTree = <T extends Record<string, any>>(
   treeData: T[],
   mapper: (node: T, parent?: T) => T,
@@ -671,6 +812,12 @@ export const mapTree = <T extends Record<string, any>>(
   return traverse(treeData);
 };
 
+/**
+ * 查找第一个叶子节点
+ * @param treeData - 树形数据
+ * @param childrenKey - 子节点键名
+ * @returns 叶子节点或 null
+ */
 export const findFirstLeaf = <T extends Record<string, any>>(
   treeData: T[],
   childrenKey: string = "children",
@@ -686,6 +833,13 @@ export const findFirstLeaf = <T extends Record<string, any>>(
   return null;
 };
 
+/**
+ * 遍历树节点的值
+ * @param treeData - 树形数据
+ * @param key - 要提取的键
+ * @param childrenKey - 子节点键名
+ * @returns 值数组
+ */
 export const traverseTreeValues = <T extends Record<string, any>, V>(
   treeData: T[],
   key: keyof T,
@@ -709,12 +863,25 @@ export const traverseTreeValues = <T extends Record<string, any>, V>(
   return result;
 };
 
+/**
+ * 树分组接口
+ */
 export interface TreeGroup {
+  /** 标签 */
   label: string;
+  /** 值 */
   value: string | number;
+  /** 子节点 */
   children?: any[];
 }
 
+/**
+ * 将分组数据转换为树形数据
+ * @param groups - 分组数组
+ * @param groupKey - 分组键
+ * @param childrenKey - 子节点键名
+ * @returns 树形数据
+ */
 export const convertGroupsToTreeData = <T extends Record<string, any>>(
   groups: T[],
   groupKey: keyof T = "group" as keyof T,
