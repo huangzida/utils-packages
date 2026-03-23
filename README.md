@@ -1,15 +1,15 @@
 # ⚡ Utils Packages
 
-Monorepo for TypeScript utility packages extracted from xpanel-browser-umi4. Each package is self-contained and published to npm independently.
+Monorepo for TypeScript utility packages. Each package is self-contained and published to npm independently.
 
 [![pnpm](https://img.shields.io/badge/pnpm-9.0.0+-blue.svg)](https://pnpm.io/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.4-blue.svg)](https://www.typescriptlang.org/)
 
 ## 📦 Packages
 
-| Package                                                | Version                                                                                                                   | Description                  |
-| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
-| [@zid-utils/regexps](./packages/regexps)               | [![npm](https://img.shields.io/npm/v/@zid-utils/regexps)](https://www.npmjs.com/package/@zid-utils/regexps)               | 常用正则表达式验证器         |
+| Package                                              | Version                                                                                                                   | Description                  |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| [@zid-utils/regexps](./packages/regexps)             | [![npm](https://img.shields.io/npm/v/@zid-utils/regexps)](https://www.npmjs.com/package/@zid-utils/regexps)               | 常用正则表达式验证器         |
 | [@zid-utils/time-utils](./packages/time-utils)         | [![npm](https://img.shields.io/npm/v/@zid-utils/time-utils)](https://www.npmjs.com/package/@zid-utils/time-utils)         | 时间格式化工具函数           |
 | [@zid-utils/tree-utils](./packages/tree-utils)         | [![npm](https://img.shields.io/npm/v/@zid-utils/tree-utils)](https://www.npmjs.com/package/@zid-utils/tree-utils)         | 树形数据结构操作             |
 | [@zid-utils/grid-utils](./packages/grid-utils)         | [![npm](https://img.shields.io/npm/v/@zid-utils/grid-utils)](https://www.npmjs.com/package/@zid-utils/grid-utils)         | 二维数组(网格)操作           |
@@ -24,7 +24,7 @@ Monorepo for TypeScript utility packages extracted from xpanel-browser-umi4. Eac
 | [@zid-utils/color-utils](./packages/color-utils)       | [![npm](https://img.shields.io/npm/v/@zid-utils/color-utils)](https://www.npmjs.com/package/@zid-utils/color-utils)       | 颜色转换工具函数             |
 | [@zid-utils/diff-utils](./packages/diff-utils)         | [![npm](https://img.shields.io/npm/v/@zid-utils/diff-utils)](https://www.npmjs.com/package/@zid-utils/diff-utils)         | 对象差异比较工具             |
 | [@zid-utils/state-utils](./packages/state-utils)       | [![npm](https://img.shields.io/npm/v/@zid-utils/state-utils)](https://www.npmjs.com/package/@zid-utils/state-utils)       | 状态管理工具                 |
-| [@zid-utils/download-utils](./packages/download-utils) | [![npm](https://img.shields.io/npm/v/@zid-utils/download-utils)](https://www.npmjs.com/package/@zid-utils/download-utils) | 文件下载工具                 |
+| [@zid-utils/fetch-utils](./packages/fetch-utils)     | [![npm](https://img.shields.io/npm/v/@zid-utils/fetch-utils)](https://www.npmjs.com/package/@zid-utils/fetch-utils)     | 文件获取工具                 |
 
 ## 🎮 Playground
 
@@ -47,7 +47,7 @@ pnpm preview
 - **DOM 操作** - 元素可见区域、滚动条检测
 - **窗口操作** - 打开窗口、尺寸获取、滚动控制
 - **加解密** - AES-CBC 模式加解密
-- **数组操作** - 去重、分组、排序、洗牌等
+- **数组操作** - 去重、分组、排序，洗牌等
 - **对象操作** - 深拷贝、深度合并、属性选择等
 - **字符串操作** - 大小写转换、HTML转义、模板等
 - **URL 操作** - 参数解析、域名提取等
@@ -55,7 +55,7 @@ pnpm preview
 - **颜色转换** - HEX/RGB/HSL 相互转换
 - **差异比较** - 对象深比较、差异计算
 - **状态管理** - 响应式状态处理器
-- **文件下载** - URL/Blob/Base64 下载
+- **文件获取** - URL/Blob/Base64 获取
 
 ## 🚀 Quick Start
 
@@ -81,7 +81,7 @@ pnpm add @zid-utils/format-utils
 pnpm add @zid-utils/color-utils
 pnpm add @zid-utils/diff-utils
 pnpm add @zid-utils/state-utils
-pnpm add @zid-utils/download-utils
+pnpm add @zid-utils/fetch-utils
 ```
 
 ### 使用示例
@@ -220,6 +220,9 @@ pnpm install
 # 运行测试
 pnpm test
 
+# 类型检查
+pnpm typecheck
+
 # 构建所有包
 pnpm build
 
@@ -232,27 +235,33 @@ pnpm lint
 
 ## 📝 Publishing
 
-本项目使用 [changesets](https://github.com/changesets/changesets) 管理版本和发布。
+本项目使用 [bumpp](https://github.com/antfu/bumpp) 管理版本和发布。
 
 ### 发布流程
 
-1. 修改代码后，创建 changeset 文件：
-
-```bash
-pnpm changeset
-```
-
-2. 选择要发布的包和版本类型（patch/minor/major）
-
-3. 提交代码并合并到 main 分支
-
-4. GitHub Actions 会自动发布到 npm
-
-### 手动发布
+1. 运行发布命令，选择要更新的包和版本：
 
 ```bash
 pnpm release
 ```
+
+2. bumpp 会自动：
+   - 更新选中包的版本号
+   - 创建 git commit
+   - 创建 git tag
+
+3. 手动推送到 GitHub 触发 CI：
+
+```bash
+git push --follow-tags
+```
+
+4. GitHub Actions 会自动：
+   - 安装依赖
+   - 运行测试
+   - 构建包
+   - 发布到 npm
+   - 生成 GitHub Release
 
 ## 📂 项目结构
 
@@ -264,8 +273,8 @@ utils-packages/
 │   ├── crypto-utils/     # AES 加密解密
 │   ├── diff-utils/       # 对象差异比较
 │   ├── dom-utils/        # DOM 操作
-│   ├── download-utils/   # 文件下载
-│   ├── format-utils/     # 格式化工具
+│   ├── fetch-utils/      # 文件获取
+│   ├── format-utils/      # 格式化工具
 │   ├── grid-utils/       # 网格操作
 │   ├── object-utils/     # 对象操作
 │   ├── regexps/          # 正则验证
@@ -278,7 +287,7 @@ utils-packages/
 ├── index.html            # 交互式 Playground
 ├── package.json          # Workspace 配置
 ├── pnpm-workspace.yaml   # pnpm workspace 配置
-└── .changeset/           # Changesets 配置
+└── .github/workflows/    # CI/CD 配置
 ```
 
 ## 📄 License

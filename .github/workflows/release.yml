@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # 关键：必须设置为 0 才能获取所有历史以生成 Changelog
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -31,7 +31,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile # 强制使用 lockfile，保证环境一致性
+        run: pnpm install --frozen-lockfile
 
       - name: Build
         run: pnpm build
@@ -41,9 +41,8 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Generate GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          generate_release_notes: true
+      - name: Generate Changelog and GitHub Release
+        # 使用 changelogithub 自动解析 commit 并创建/更新 Release
+        run: npx changelogithub
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
