@@ -84,9 +84,9 @@ pnpm add @zid-utils/state-utils
 pnpm add @zid-utils/fetch-utils
 ```
 
-### 使用示例
+## 📖 使用示例
 
-#### Regexps - 正则验证
+### Regexps - 正则验证
 
 ```typescript
 import {
@@ -104,7 +104,7 @@ isIdCard("110101199003074519"); // true
 isChinese("你好"); // true
 ```
 
-#### Time Utils - 时间格式化
+### Time Utils - 时间格式化
 
 ```typescript
 import { padZero, formatTime, formatTimeDetail } from "@zid-utils/time-utils";
@@ -114,7 +114,7 @@ formatTime(3661); // "01:01:01"
 formatTimeDetail(90061); // { hours: "01", minutes: "01", seconds: "01", displayTime: "01:01:01" }
 ```
 
-#### Tree Utils - 树形操作
+### Tree Utils - 树形操作
 
 ```typescript
 import {
@@ -142,7 +142,7 @@ flattenTree(tree); // 平铺为数组
 transformTreeKeys(tree, { key: "id" }); // 转换键名
 ```
 
-#### Grid Utils - 网格操作
+### Grid Utils - 网格操作
 
 ```typescript
 import { updateGridElement } from "@zid-utils/grid-utils";
@@ -165,7 +165,7 @@ updateGridElement(
 );
 ```
 
-#### DOM Utils - DOM 操作
+### DOM Utils - DOM 操作
 
 ```typescript
 import {
@@ -179,7 +179,7 @@ const width = getScrollbarWidth();
 const hasScrollbar = needsScrollbar(container);
 ```
 
-#### Window Utils - 窗口操作
+### Window Utils - 窗口操作
 
 ```typescript
 import {
@@ -194,7 +194,7 @@ openWindow("https://example.com");
 scrollToTop();
 ```
 
-#### Crypto Utils - 加解密
+### Crypto Utils - 加解密
 
 ```typescript
 import { encrypt, decrypt, createCrypto } from "@zid-utils/crypto-utils";
@@ -210,6 +210,160 @@ crypto.decrypt("ciphertext");
 ```
 
 > ⚠️ **安全提示**: key 和 iv 必须都是 16 字符。建议从环境变量读取，不要硬编码在代码中。
+
+### Array Utils - 数组操作
+
+```typescript
+import {
+  unique,
+  uniqueByField,
+  chunk,
+  groupBy,
+  shuffle,
+  sortBy,
+} from "@zid-utils/array-utils";
+
+unique([1, 2, 2, 3]); // [1, 2, 3]
+uniqueByField([{a: 1}, {a: 2}, {a: 1}], 'a'); // [{a: 1}, {a: 2}]
+chunk([1, 2, 3, 4, 5], 2); // [[1, 2], [3, 4], [5]]
+groupBy([{type: 'a', val: 1}, {type: 'b', val: 2}], item => item.type);
+shuffle([1, 2, 3, 4, 5]); // 随机排列
+sortBy([{n: 3}, {n: 1}, {n: 2}], 'n'); // [{n: 1}, {n: 2}, {n: 3}]
+```
+
+### Object Utils - 对象操作
+
+```typescript
+import {
+  deepClone,
+  deepMerge,
+  pick,
+  omit,
+  isEmpty,
+} from "@zid-utils/object-utils";
+
+deepClone({ a: { b: 1 } }); // 深拷贝
+deepMerge({ a: 1 }, { b: 2 }); // { a: 1, b: 2 }
+pick({ a: 1, b: 2, c: 3 }, ['a', 'c']); // { a: 1, c: 3 }
+omit({ a: 1, b: 2, c: 3 }, ['b']); // { a: 1, c: 3 }
+isEmpty({}); // true
+isEmpty({ a: 1 }); // false
+```
+
+### String Utils - 字符串操作
+
+```typescript
+import {
+  capitalize,
+  camelCase,
+  kebabCase,
+  snakeCase,
+  escapeHtml,
+  template,
+} from "@zid-utils/string-utils";
+
+capitalize("hello"); // "Hello"
+camelCase("hello-world"); // "helloWorld"
+kebabCase("helloWorld"); // "hello-world"
+snakeCase("helloWorld"); // "hello_world"
+escapeHtml("<div>"); // "&lt;div&gt;"
+template("Hello {{name}}!", { name: "World" }); // "Hello World!"
+```
+
+### URL Utils - URL 操作
+
+```typescript
+import {
+  parseUrl,
+  buildUrl,
+  getUrlParam,
+  getDomain,
+} from "@zid-utils/url-utils";
+
+parseUrl("https://example.com/path?a=1&b=2");
+buildUrl("https://example.com", { a: "1", b: "2" }); // "https://example.com?a=1&b=2"
+getUrlParam("https://example.com?a=1", "a"); // "1"
+getDomain("https://www.example.com/path"); // "www.example.com"
+```
+
+### Format Utils - 格式化
+
+```typescript
+import {
+  formatNumber,
+  formatCurrency,
+  formatPercent,
+  formatBytes,
+} from "@zid-utils/format-utils";
+
+formatNumber(1234567); // "1,234,567"
+formatCurrency(1234.56, "CNY"); // "¥1,234.56"
+formatPercent(0.756); // "75.6%"
+formatBytes(1024); // "1.00 KB"
+formatBytes(1024 * 1024); // "1.00 MB"
+```
+
+### Color Utils - 颜色转换
+
+```typescript
+import {
+  hexToRgb,
+  rgbToHex,
+  rgbToHsl,
+  hslToRgb,
+} from "@zid-utils/color-utils";
+
+hexToRgb("#FF5733"); // { r: 255, g: 87, b: 51 }
+rgbToHex(255, 87, 51); // "#ff5733"
+rgbToHsl(255, 87, 51); // { h: 11, s: 100, l: 60 }
+hslToRgb(11, 100, 60); // { r: 255, g: 87, b: 51 }
+```
+
+### Diff Utils - 差异比较
+
+```typescript
+import {
+  arraysEqual,
+  deepEqual,
+  diff,
+} from "@zid-utils/diff-utils";
+
+arraysEqual([1, 2, 3], [1, 2, 3]); // true
+deepEqual({ a: 1 }, { a: 1 }); // true
+diff({ a: 1, b: 2 }, { a: 1, b: 3 }); // { b: 3 }
+```
+
+### State Utils - 状态管理
+
+```typescript
+import { StateHandler } from "@zid-utils/state-utils";
+
+const state = new StateHandler(0, (v) => v >= 0);
+
+state.getValue(); // 0
+state.setValue(10);
+state.getValue(); // 10
+
+state.subscribe((value) => {
+  console.log("State changed:", value);
+});
+
+state.update((prev) => prev + 1); // 触发订阅，值为 11
+```
+
+### Fetch Utils - 文件获取
+
+```typescript
+import {
+  downloadByUrl,
+  downloadByBlob,
+  downloadByBase64,
+} from "@zid-utils/fetch-utils";
+
+downloadByUrl("https://example.com/file.pdf", "document.pdf");
+downloadByBlob(blob, "document.pdf");
+downloadByBase64(base64Data, "document.pdf", "application/pdf");
+```
 
 ## 🛠️ Development
 
@@ -249,14 +403,9 @@ pnpm release
    - 更新选中包的版本号
    - 创建 git commit
    - 创建 git tag
+   - 推送 commit 和 tag 到 GitHub
 
-3. 手动推送到 GitHub 触发 CI：
-
-```bash
-git push --follow-tags
-```
-
-4. GitHub Actions 会自动：
+3. GitHub Actions 会自动：
    - 安装依赖
    - 运行测试
    - 构建包
