@@ -1,0 +1,35 @@
+{
+  "name": "@zid-utils/diff-utils",
+  "version": "0.0.0",
+  "description": "Object and array diff utilities",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --clean --dts",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "diff",
+    "compare",
+    "utils",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.0.2",
+    "vitest": "^1.5.0",
+    "typescript": "^5.4.5"
+  }
+}
