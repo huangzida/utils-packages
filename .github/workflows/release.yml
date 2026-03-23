@@ -45,7 +45,9 @@ jobs:
         run: pnpm build
 
       - name: Publish packages
-        run: pnpm -r publish --access public
+        run: |
+          echo "publish-branch=main" >> .npmrc
+          pnpm -r publish --access public
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 

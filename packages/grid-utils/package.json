@@ -1,7 +1,8 @@
 {
   "name": "@zid-utils/grid-utils",
   "version": "0.0.1",
-  "private": true,
+  "description": "Grid layout utility functions",
+  "repository": "github:huangzida/utils-packages",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
