@@ -13,8 +13,6 @@ import {
   isHostname,
   isNanoid,
   isByte,
-  matchRgba,
-  matchHsla,
   matchHex,
   hasDigitAndLetter,
   hasDigitsLettersWithCase,

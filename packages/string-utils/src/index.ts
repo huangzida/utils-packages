@@ -335,6 +335,7 @@ export const replaceAll = (
  * @returns 移除不可打印字符后的字符串
  */
 export const removeNonPrintable = (str: string): string => {
+  // eslint-disable-next-line no-control-regex
   return str.replace(/[\x00-\x1F\x7F]/g, '')
 }
 

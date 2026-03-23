@@ -1,0 +1,21 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/array-utils" },
+    { "path": "./packages/color-utils" },
+    { "path": "./packages/crypto-utils" },
+    { "path": "./packages/diff-utils" },
+    { "path": "./packages/dom-utils" },
+    { "path": "./packages/download-utils" },
+    { "path": "./packages/format-utils" },
+    { "path": "./packages/grid-utils" },
+    { "path": "./packages/object-utils" },
+    { "path": "./packages/regexps" },
+    { "path": "./packages/state-utils" },
+    { "path": "./packages/string-utils" },
+    { "path": "./packages/time-utils" },
+    { "path": "./packages/tree-utils" },
+    { "path": "./packages/url-utils" },
+    { "path": "./packages/window-utils" }
+  ]
+}

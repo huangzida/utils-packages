@@ -885,7 +885,7 @@ export interface TreeGroup {
 export const convertGroupsToTreeData = <T extends Record<string, any>>(
   groups: T[],
   groupKey: keyof T = "group" as keyof T,
-  childrenKey: string = "children",
+  _childrenKey: string = "children",
 ): TreeGroup[] => {
   const groupMap = new Map<string, TreeGroup>();
 

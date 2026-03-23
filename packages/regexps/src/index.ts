@@ -41,7 +41,7 @@ export const isUuid =
 /**
  * 验证 Nanoid 格式（21 个字符）
  */
-export const isNanoid = /^[\w\-\\+\\!\#\$\\%\\&\*\/\=\?\^_\`\{\|\}\~\-]{21}$/
+export const isNanoid = /^[\w\-+!#$%&*\/=?^_`{|}~-]{21}$/
 
 /**
  * 验证 Base64 编码字符串

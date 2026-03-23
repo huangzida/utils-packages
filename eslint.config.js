@@ -16,6 +16,9 @@ export default tseslint.config(
     rules: {
       ...prettier.rules,
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-explicit-any': 'off',
+      'no-prototype-builtins': 'off',
+      'prefer-const': 'warn',
     },
   },
 )

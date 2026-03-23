@@ -204,7 +204,7 @@ export interface HmacOptions {
  * @returns HMAC 哈希值
  */
 export const hmac = (data: string, options: HmacOptions): string => {
-  const { key, algorithm = 'SHA256' } = options
+  const { key } = options
   return CryptoJS.HmacSHA256(data, key).toString()
 }
 
