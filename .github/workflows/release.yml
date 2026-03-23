@@ -44,10 +44,7 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Publish
-        uses: changesets/action@v1
-        with:
-          publish: pnpm release
+      - name: Publish packages
+        run: pnpm -r publish --access public
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
