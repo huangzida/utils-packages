@@ -1,6 +1,6 @@
 {
   "name": "@zid-utils/array-utils",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Array utility functions for common operations",
   "repository": "github:huangzida/utils-packages",
   "type": "module",

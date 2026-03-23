@@ -1,6 +1,6 @@
 {
   "name": "@zid-utils/dom-utils",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "DOM utility functions",
   "repository": "github:huangzida/utils-packages",
   "type": "module",
