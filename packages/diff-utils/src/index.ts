@@ -1,3 +1,9 @@
+/**
+ * 比较两个数组是否相等（考虑重复元素）
+ * @param a - 第一个数组
+ * @param b - 第二个数组
+ * @returns 是否相等
+ */
 export function arraysEqual<T>(a: T[], b: T[]): boolean {
   if (a.length !== b.length) return false
   const counter = new Map<T, number>()
@@ -18,6 +24,12 @@ type DiffResult<T> = Partial<{
   [K in keyof T]: T[K] extends object ? DiffResult<T[K]> : T[K]
 }>
 
+/**
+ * 比较两个对象的差异
+ * @param obj1 - 源对象
+ * @param obj2 - 目标对象
+ * @returns 差异对象或 null
+ */
 export function diff<T extends Record<string, unknown>>(
   obj1: T,
   obj2: T,
@@ -62,10 +74,21 @@ export function diff<T extends Record<string, unknown>>(
   return result as DiffResult<T> | null
 }
 
+/**
+ * 检查值是否为普通对象
+ * @param value - 待检查的值
+ * @returns 是否为普通对象
+ */
 export function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
+/**
+ * 深度比较两个值是否相等
+ * @param a - 第一个值
+ * @param b - 第二个值
+ * @returns 是否相等
+ */
 export function deepEqual(a: unknown, b: unknown): boolean {
   if (a === b) return true
   if (typeof a !== typeof b) return false
