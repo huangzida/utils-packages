@@ -7,8 +7,6 @@ import {
   findParentOf,
   nodeExistsInTree,
   collectLeafValuesByKey,
-  flattenTree,
-  filterTreeNodes,
   filterCheckedLeafKeys,
   deleteNode,
   getNodePath,
@@ -16,10 +14,12 @@ import {
   getNodeBreadcrumb,
   getTreeStats,
   TreeNode,
-  findNode,
-  findNodeInTree,
-  findNodeAndCollectLeafValues,
-  findTreeNode,
+  transformTreeKeys,
+  transformTreeNodes,
+  addLeafProperties,
+  findFirstLeaf,
+  traverseTreeValues,
+  convertGroupsToTreeData,
 } from '../src/index'
 
 const mockTree: TreeNode[] = [
@@ -78,7 +78,7 @@ describe('@zid-utils/tree-utils', () => {
     })
   })
 
-  describe('findNodeById (alias: findNode)', () => {
+  describe('findNodeById', () => {
     const treeWithId = [
       { id: 'id-1', title: 'Node 1' },
       { id: 'id-2', title: 'Node 2', children: [{ id: 'id-2-1', title: 'Child' }] },
@@ -99,12 +99,6 @@ describe('@zid-utils/tree-utils', () => {
     it('should return null for non-existent id', () => {
       const node = findNodeById(treeWithId, 'non-existent')
       expect(node).toBeNull()
-    })
-
-    it('should support legacy findNode alias', () => {
-      const node = findNode(treeWithId, 'id-2')
-      expect(node).not.toBeNull()
-      expect(node?.title).toBe('Node 2')
     })
   })
 
@@ -127,7 +121,7 @@ describe('@zid-utils/tree-utils', () => {
     })
   })
 
-  describe('findParentOf (alias: findTreeNode)', () => {
+  describe('findParentOf', () => {
     it('should find parent of target node', () => {
       const parent = findParentOf(mockTree, '1-1')
       expect(parent).not.toBeNull()
@@ -144,15 +138,9 @@ describe('@zid-utils/tree-utils', () => {
       const parent = findParentOf(mockTree, '1')
       expect(parent).toBeNull()
     })
-
-    it('should support legacy findTreeNode alias', () => {
-      const parent = findTreeNode(mockTree, '1-2')
-      expect(parent).not.toBeNull()
-      expect(parent?.key).toBe('1')
-    })
   })
 
-  describe('nodeExistsInTree (alias: findNodeInTree)', () => {
+  describe('nodeExistsInTree', () => {
     const tree = [
       { title: 'Node 1', value: 'value-1' },
       { title: 'Node 2', children: [{ title: 'Child' }] },
@@ -173,13 +161,9 @@ describe('@zid-utils/tree-utils', () => {
     it('should return false when node does not exist', () => {
       expect(nodeExistsInTree(tree, 'Non-existent')).toBe(false)
     })
-
-    it('should support legacy findNodeInTree alias', () => {
-      expect(findNodeInTree(tree, 'Node 2')).toBe(true)
-    })
   })
 
-  describe('collectLeafValuesByKey (alias: findNodeAndCollectLeafValues)', () => {
+  describe('collectLeafValuesByKey', () => {
     const tree = [
       {
         value: 'parent-1',
@@ -203,30 +187,6 @@ describe('@zid-utils/tree-utils', () => {
     it('should return null for non-existent value', () => {
       const values = collectLeafValuesByKey(tree, 'non-existent')
       expect(values).toBeNull()
-    })
-
-    it('should support legacy alias', () => {
-      const values = findNodeAndCollectLeafValues(tree, 'parent-1')
-      expect(values).toEqual(['child-1', 'child-2'])
-    })
-  })
-
-  describe('flattenTree', () => {
-    it('should flatten tree into array', () => {
-      const flat = flattenTree(mockTree)
-      expect(flat).toHaveLength(6)
-    })
-
-    it('should filter nodes', () => {
-      const flat = flattenTree(mockTree, (n) => n.isLeaf === true)
-      expect(flat).toHaveLength(3)
-    })
-  })
-
-  describe('filterTreeNodes', () => {
-    it('should filter nodes by callback', () => {
-      const filtered = filterTreeNodes(mockTree, (n) => n.key !== '1-1')
-      expect(filtered[0].children).toHaveLength(1)
     })
   })
 
@@ -360,6 +320,95 @@ describe('@zid-utils/tree-utils', () => {
         expect(stats.maxDepth).toBe(0)
         expect(stats.leafCount).toBe(0)
       })
+    })
+  })
+
+  describe('transformTreeKeys', () => {
+    it('should transform tree keys', () => {
+      const tree = [{ title: 'Test', key: '1' }] as any[]
+      const result = transformTreeKeys(tree, { title: 'label', key: 'id' })
+      expect(result[0]).toHaveProperty('label')
+      expect(result[0]).toHaveProperty('id')
+      expect(result[0]).not.toHaveProperty('title')
+    })
+
+    it('should transform nested children keys', () => {
+      const tree = [{ title: 'Parent', children: [{ title: 'Child' }] }] as any[]
+      const result = transformTreeKeys(tree, { title: 'label' })
+      expect(result[0].children[0]).toHaveProperty('label')
+    })
+  })
+
+  describe('transformTreeNodes', () => {
+    it('should transform tree nodes', () => {
+      const tree = [{ title: 'Test', key: '1' }] as any[]
+      const result = transformTreeNodes(tree, (node) => ({
+        ...node,
+        newField: 'value',
+      }))
+      expect(result[0]).toHaveProperty('newField')
+      expect(result[0].newField).toBe('value')
+    })
+  })
+
+  describe('addLeafProperties', () => {
+    it('should add leaf properties to nodes', () => {
+      const tree = [
+        {
+          key: '1',
+          children: [{ key: '1-1' }],
+        },
+        { key: '2' },
+      ] as any[]
+
+      const result = addLeafProperties(tree)
+
+      expect(result[0].isLeaf).toBe(false)
+      expect(result[0].children[0].isLeaf).toBe(true)
+      expect(result[1].isLeaf).toBe(true)
+    })
+  })
+
+  describe('findFirstLeaf', () => {
+    it('should find first leaf node', () => {
+      const leaf = findFirstLeaf(mockTree)
+      expect(leaf).not.toBeNull()
+      expect(leaf?.isLeaf).toBe(true)
+    })
+
+    it('should return null for empty tree', () => {
+      const leaf = findFirstLeaf([])
+      expect(leaf).toBeNull()
+    })
+  })
+
+  describe('traverseTreeValues', () => {
+    it('should traverse and collect values', () => {
+      const tree = [
+        { title: 'Node 1', children: [{ title: 'Node 2' }] },
+      ] as any[]
+
+      const values = traverseTreeValues(tree, 'title')
+      expect(values).toContain('Node 1')
+      expect(values).toContain('Node 2')
+    })
+  })
+
+  describe('convertGroupsToTreeData', () => {
+    it('should convert groups to tree data', () => {
+      const groups = [
+        { name: 'Group A', id: 1 },
+        { name: 'Group A', id: 2 },
+        { name: 'Group B', id: 3 },
+      ] as any[]
+
+      const result = convertGroupsToTreeData(groups, 'name')
+
+      expect(result).toHaveLength(2)
+      expect(result[0].label).toBe('Group A')
+      expect(result[0].children).toHaveLength(2)
+      expect(result[1].label).toBe('Group B')
+      expect(result[1].children).toHaveLength(1)
     })
   })
 })

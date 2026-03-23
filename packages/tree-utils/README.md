@@ -129,24 +129,77 @@ import { findNodeByKey } from '@zid-utils/tree-utils';
 const node = findNodeByKey(tree, '1-1');
 ```
 
+#### findNodeById
+
+根据 id 查找节点。
+
+```typescript
+import { findNodeById } from '@zid-utils/tree-utils';
+
+const node = findNodeById(tree, 'node-id');
+```
+
+#### findNodeByMatcher
+
+根据匹配器查找节点。
+
+```typescript
+import { findNodeByMatcher } from '@zid-utils/tree-utils';
+
+const node = findNodeByMatcher(tree, (n) => n.title === 'Target');
+```
+
+#### nodeExistsInTree
+
+检查节点是否存在于树中。
+
+```typescript
+import { nodeExistsInTree } from '@zid-utils/tree-utils';
+
+const exists = nodeExistsInTree(tree, 'node-title');
+```
+
+#### findParentOf
+
+查找节点的父节点。
+
+```typescript
+import { findParentOf } from '@zid-utils/tree-utils';
+
+const parent = findParentOf(tree, 'child-key');
+```
+
 #### getNodePath
 
 获取节点路径。
 
 ```typescript
-import { getNodePath } from '@zid-utils/tree-utils';
+import { getNodePath, type PathNode } from '@zid-utils/tree-utils';
 
 const path = getNodePath(tree, '1-2', 'key', 'children');
+// 返回 PathNode[] 包含路径信息
+```
+
+#### getNodeDepth
+
+获取节点深度。
+
+```typescript
+import { getNodeDepth } from '@zid-utils/tree-utils';
+
+const depth = getNodeDepth(tree, '1-2-1');
+// 返回节点所在层级（根节点为0）
 ```
 
 #### getNodeBreadcrumb
 
-获取面包屑路径。
+获取面包屑路径（所有祖先节点）。
 
 ```typescript
 import { getNodeBreadcrumb } from '@zid-utils/tree-utils';
 
-const breadcrumb = getNodeBreadcrumb(tree, '1-2');
+const breadcrumb = getNodeBreadcrumb(tree, '1-2-1');
+// 返回从根到目标的所有节点
 ```
 
 #### getTreeStats
@@ -157,10 +210,20 @@ const breadcrumb = getNodeBreadcrumb(tree, '1-2');
 import { getTreeStats } from '@zid-utils/tree-utils';
 
 const stats = getTreeStats(tree);
-// { totalNodes: 3, maxDepth: 1, leafCount: 2 }
+// { totalNodes: 10, maxDepth: 3, leafCount: 5 }
 ```
 
 ### 节点操作
+
+#### updateKeys
+
+更新节点的 key。
+
+```typescript
+import { updateKeys } from '@zid-utils/tree-utils';
+
+updateKeys(sourceNode, targetNode);
+```
 
 #### updateNodeTitleByKey
 
@@ -170,6 +233,20 @@ const stats = getTreeStats(tree);
 import { updateNodeTitleByKey } from '@zid-utils/tree-utils';
 
 updateNodeTitleByKey(tree, '1-1', 'New Title');
+```
+
+#### updateNodeByMatcher
+
+根据匹配器更新节点。
+
+```typescript
+import { updateNodeByMatcher } from '@zid-utils/tree-utils';
+
+const newTree = updateNodeByMatcher(
+  tree,
+  (node) => node.key === 'target',
+  (node) => ({ ...node, title: 'Updated' })
+);
 ```
 
 #### moveNodeInTree
@@ -182,6 +259,26 @@ import { moveNodeInTree } from '@zid-utils/tree-utils';
 moveNodeInTree(tree, 'source-key', 'target-key');
 ```
 
+#### cloneNode
+
+克隆节点。
+
+```typescript
+import { cloneNode } from '@zid-utils/tree-utils';
+
+cloneNode(sourceNode, targetNode);
+```
+
+#### copyNode
+
+复制节点（带副本标识）。
+
+```typescript
+import { copyNode } from '@zid-utils/tree-utils';
+
+const newTree = copyNode(tree, 'source-key', 'target-key');
+```
+
 #### deleteNode
 
 删除节点。
@@ -190,6 +287,17 @@ moveNodeInTree(tree, 'source-key', 'target-key');
 import { deleteNode } from '@zid-utils/tree-utils';
 
 const newTree = deleteNode(tree, 'key-to-delete');
+```
+
+#### addLeafProperties
+
+为节点添加叶子属性。
+
+```typescript
+import { addLeafProperties } from '@zid-utils/tree-utils';
+
+const newTree = addLeafProperties(tree);
+// 自动设置 isLeaf 和 disabled 属性
 ```
 
 ### 树转换
@@ -220,6 +328,16 @@ const newTree = transformTreeNodes(tree, (node) => ({
 }));
 ```
 
+#### searchInTree
+
+在树中搜索节点。
+
+```typescript
+import { searchInTree } from '@zid-utils/tree-utils';
+
+const results = searchInTree(tree, 'search-term');
+```
+
 ### 工具函数
 
 #### findFirstLeaf
@@ -232,6 +350,16 @@ import { findFirstLeaf } from '@zid-utils/tree-utils';
 const leaf = findFirstLeaf(tree);
 ```
 
+#### traverseTreeValues
+
+遍历树中特定键的值。
+
+```typescript
+import { traverseTreeValues } from '@zid-utils/tree-utils';
+
+const values = traverseTreeValues(tree, 'title');
+```
+
 #### filterCheckedLeafKeys
 
 过滤选中的叶子节点 key。
@@ -240,6 +368,27 @@ const leaf = findFirstLeaf(tree);
 import { filterCheckedLeafKeys } from '@zid-utils/tree-utils';
 
 const keys = filterCheckedLeafKeys(tree);
+```
+
+#### collectLeafValuesByKey
+
+收集叶子节点的值。
+
+```typescript
+import { collectLeafValuesByKey } from '@zid-utils/tree-utils';
+
+const values = collectLeafValuesByKey(tree, 'parent-value');
+```
+
+#### convertGroupsToTreeData
+
+将分组数据转换为树形结构。
+
+```typescript
+import { convertGroupsToTreeData, type TreeGroup } from '@zid-utils/tree-utils';
+
+const tree = convertGroupsToTreeData(items, 'category');
+// 返回 TreeGroup[] 类型
 ```
 
 ## 类型定义
@@ -263,11 +412,21 @@ interface TreeNode {
 
 ```typescript
 interface PathNode<T> {
-  node: T;
-  depth: number;
-  index: number;
-  parent: PathNode<T> | null;
-  path: string;
+  node: T;           // 节点数据
+  depth: number;      // 深度（根节点为0）
+  index: number;      // 在兄弟节点中的索引
+  parent: PathNode<T> | null;  // 父节点
+  path: string;       // 路径字符串，如 'root/child/grandchild'
+}
+```
+
+### TreeGroup
+
+```typescript
+interface TreeGroup {
+  label: string;
+  value: string | number;
+  children?: any[];
 }
 ```
 
