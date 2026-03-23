@@ -1,17 +1,17 @@
 /**
- * Returns a new array with duplicate values removed.
- * @param arr - The array to remove duplicates from
- * @returns A new array containing only unique values
+ * 返回去重后的新数组
+ * @param arr - 待去重的数组
+ * @returns 去重后的新数组
  */
 export const unique = <T>(arr: T[]): T[] => {
   return [...new Set(arr)]
 }
 
 /**
- * Returns a new array with duplicate values removed based on a specific field.
- * @param arr - The array to remove duplicates from
- * @param key - The field name to use for comparison
- * @returns A new array containing only unique items by the specified field
+ * 根据指定字段去重
+ * @param arr - 待去重的数组
+ * @param key - 字段名
+ * @returns 去重后的新数组
  */
 export const uniqueByField = <T extends Record<string, any>>(arr: T[], key: keyof T): T[] => {
   const seen = new Set()
@@ -26,10 +26,10 @@ export const uniqueByField = <T extends Record<string, any>>(arr: T[], key: keyo
 }
 
 /**
- * Splits an array into chunks of the specified size.
- * @param arr - The array to split
- * @param size - The size of each chunk
- * @returns An array of chunks
+ * 将数组分块
+ * @param arr - 待分块的数组
+ * @param size - 每块大小
+ * @returns 分块后的数组
  */
 export const chunk = <T>(arr: T[], size: number): T[][] => {
   const result: T[][] = []
@@ -40,10 +40,10 @@ export const chunk = <T>(arr: T[], size: number): T[][] => {
 }
 
 /**
- * Groups array elements by a key function.
- * @param arr - The array to group
- * @param keyFn - Function that returns the key to group by
- * @returns An object with keys mapped to arrays of items
+ * 按键函数分组
+ * @param arr - 待分组的数组
+ * @param keyFn - 分组键函数
+ * @returns 分组后的对象
  */
 export const groupBy = <T>(
   arr: T[],
@@ -63,9 +63,9 @@ export const groupBy = <T>(
 }
 
 /**
- * Flattens a nested array to a single level recursively.
- * @param arr - The nested array to flatten
- * @returns A new flattened array
+ * 递归扁平化嵌套数组
+ * @param arr - 嵌套数组
+ * @returns 扁平化后的数组
  */
 export const flatten = <T>(arr: (T | T[])[]): T[] => {
   return arr.reduce<T[]>((acc, item) => {
@@ -79,10 +79,10 @@ export const flatten = <T>(arr: (T | T[])[]): T[] => {
 }
 
 /**
- * Returns elements that exist in the first array but not in the second.
- * @param arr1 - The source array
- * @param arr2 - The array with elements to exclude
- * @returns An array with elements from arr1 not present in arr2
+ * 返回存在于第一个数组但不在第二个数组中的元素
+ * @param arr1 - 源数组
+ * @param arr2 - 排除数组
+ * @returns 差集
  */
 export const difference = <T>(arr1: T[], arr2: T[]): T[] => {
   const set2 = new Set(arr2)
@@ -90,10 +90,10 @@ export const difference = <T>(arr1: T[], arr2: T[]): T[] => {
 }
 
 /**
- * Returns elements that exist in both arrays.
- * @param arr1 - The first array
- * @param arr2 - The second array
- * @returns An array with elements common to both arrays
+ * 返回两个数组的交集
+ * @param arr1 - 第一个数组
+ * @param arr2 - 第二个数组
+ * @returns 交集
  */
 export const intersection = <T>(arr1: T[], arr2: T[]): T[] => {
   const set2 = new Set(arr2)
@@ -101,11 +101,11 @@ export const intersection = <T>(arr1: T[], arr2: T[]): T[] => {
 }
 
 /**
- * Sorts an array by a key function.
- * @param arr - The array to sort
- * @param keyFn - Function that returns the value to sort by
- * @param order - Sort order: 'asc' for ascending (default), 'desc' for descending
- * @returns A new sorted array
+ * 按键函数排序
+ * @param arr - 待排序数组
+ * @param keyFn - 排序键函数
+ * @param order - 排序顺序（asc 升序，desc 降序）
+ * @returns 排序后的新数组
  */
 export const sortBy = <T>(
   arr: T[],
@@ -121,9 +121,9 @@ export const sortBy = <T>(
 }
 
 /**
- * Shuffles an array randomly using Fisher-Yates algorithm.
- * @param arr - The array to shuffle
- * @returns A new array with elements in random order
+ * Fisher-Yates 洗牌算法随机打乱数组
+ * @param arr - 待打乱数组
+ * @returns 打乱后的新数组
  */
 export const shuffle = <T>(arr: T[]): T[] => {
   const result = [...arr]
@@ -135,10 +135,10 @@ export const shuffle = <T>(arr: T[]): T[] => {
 }
 
 /**
- * Combines two arrays into an array of tuples.
- * @param arr1 - The first array
- * @param arr2 - The second array
- * @returns An array of tuples containing pairs of elements from both arrays
+ * 合并两个数组为元组数组
+ * @param arr1 - 第一个数组
+ * @param arr2 - 第二个数组
+ * @returns 元组数组
  */
 export const zip = <T1, T2>(arr1: T1[], arr2: T2[]): [T1, T2][] => {
   const len = Math.min(arr1.length, arr2.length)
@@ -146,10 +146,10 @@ export const zip = <T1, T2>(arr1: T1[], arr2: T2[]): [T1, T2][] => {
 }
 
 /**
- * Partitions an array into two arrays based on a predicate.
- * @param arr - The array to partition
- * @param predicate - Function that returns true for elements to keep in the first array
- * @returns A tuple containing [passing elements, failing elements]
+ * 按谓词函数分区数组
+ * @param arr - 待分区数组
+ * @param predicate - 谓词函数
+ * @returns [通过谓词的元素, 未通过的元素]
  */
 export const partition = <T>(arr: T[], predicate: (item: T) => boolean): [T[], T[]] => {
   const pass: T[] = []
@@ -165,10 +165,10 @@ export const partition = <T>(arr: T[], predicate: (item: T) => boolean): [T[], T
 }
 
 /**
- * Returns a random sample of elements from an array.
- * @param arr - The array to sample from
- * @param count - The number of elements to sample (default: 1)
- * @returns An array of randomly selected elements
+ * 随机抽取数组元素
+ * @param arr - 源数组
+ * @param count - 抽取数量
+ * @returns 抽取的元素数组
  */
 export const sample = <T>(arr: T[], count: number = 1): T[] => {
   const shuffled = shuffle(arr)
@@ -176,11 +176,11 @@ export const sample = <T>(arr: T[], count: number = 1): T[] => {
 }
 
 /**
- * Generates an array of numbers from start to end with an optional step.
- * @param start - The starting number (inclusive)
- * @param end - The ending number (exclusive)
- * @param step - The increment between numbers (default: 1)
- * @returns An array of numbers
+ * 生成数字序列
+ * @param start - 起始值（包含）
+ * @param end - 结束值（不包含）
+ * @param step - 步长
+ * @returns 数字数组
  */
 export const range = (start: number, end: number, step: number = 1): number[] => {
   const result: number[] = []
