@@ -1,5 +1,5 @@
-export { default as find } from './find';
-export { default as some } from './some';
+export { default as find } from 'tree-lodash';
+export { default as some } from 'tree-lodash';
 export { getLeafNodes } from './getLeafNodes';
 export { findNodeByKey } from './findNodeByKey';
 export { findNodeById } from './findNodeById';
@@ -13,3 +13,8 @@ export {
 export { getNodeDepth } from './getNodeDepth';
 export { getNodeBreadcrumb } from './getNodeBreadcrumb';
 export { getTreeStats } from './getTreeStats';
+export {
+  findByKeyPath,
+  type KeyPathOptions,
+} from './findByKeyPath';
+export { hasKeyPath } from './hasKeyPath';

@@ -53,3 +53,15 @@ export { traverseTreeValues } from "./utils/traverseTreeValues";
 export { filterCheckedLeafKeys } from "./utils/filterCheckedLeafKeys";
 export { collectLeafValuesByKey } from "./utils/collectLeafValuesByKey";
 export { convertGroupsToTreeData } from "./utils/convertGroupsToTreeData";
+
+// path 模块
+export { getKeyPathParts } from "./path/getKeyPathParts";
+export { joinKeyPath } from "./path/joinKeyPath";
+export { getParentKeyPath } from "./path/getParentKeyPath";
+export { getKeyPathDepth } from "./path/getKeyPathDepth";
+export { autoGenerateKeyPath } from "./path/autoGenerateKeyPath";
+export { buildKeyPathMap } from "./path/buildKeyPathMap";
+
+// keyPath 查询
+export { findByKeyPath } from "./query/findByKeyPath";
+export { hasKeyPath } from "./query/hasKeyPath";

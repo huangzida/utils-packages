@@ -20,6 +20,14 @@ import {
   findFirstLeaf,
   traverseTreeValues,
   convertGroupsToTreeData,
+  findByKeyPath,
+  hasKeyPath,
+  getKeyPathParts,
+  joinKeyPath,
+  getParentKeyPath,
+  getKeyPathDepth,
+  autoGenerateKeyPath,
+  buildKeyPathMap,
 } from '../src/index'
 
 const mockTree: TreeNode[] = [
@@ -409,6 +417,152 @@ describe('@zid-utils/tree-utils', () => {
       expect(result[0].children).toHaveLength(2)
       expect(result[1].label).toBe('Group B')
       expect(result[1].children).toHaveLength(1)
+    })
+  })
+
+  describe('KeyPath Functions', () => {
+    const keyPathTree = [
+      {
+        key: 'a',
+        children: [
+          {
+            key: 'b',
+            children: [{ key: 'c' }],
+          },
+          { key: 'd' },
+        ],
+      },
+      { key: 'e' },
+    ] as any[]
+
+    describe('findByKeyPath', () => {
+      it('should find node by key path', () => {
+        const node = findByKeyPath(keyPathTree, 'a.b.c')
+        expect(node).not.toBeNull()
+        expect(node?.key).toBe('c')
+      })
+
+      it('should return null for non-existent path', () => {
+        const node = findByKeyPath(keyPathTree, 'a.x')
+        expect(node).toBeNull()
+      })
+
+      it('should support custom separator', () => {
+        const node = findByKeyPath(keyPathTree, 'a>b>c', { separator: '>' })
+        expect(node?.key).toBe('c')
+      })
+
+      it('should support custom key property', () => {
+        const tree = [{ id: 'a', children: [{ id: 'b' }] }]
+        const node = findByKeyPath(tree, 'a.b', { keyKey: 'id' })
+        expect(node?.id).toBe('b')
+      })
+    })
+
+    describe('hasKeyPath', () => {
+      it('should return true for existing path', () => {
+        const result = hasKeyPath(keyPathTree, 'a.b')
+        expect(result).toBe(true)
+      })
+
+      it('should return false for non-existing path', () => {
+        const result = hasKeyPath(keyPathTree, 'a.x')
+        expect(result).toBe(false)
+      })
+    })
+
+    describe('getKeyPathParts', () => {
+      it('should split path by separator', () => {
+        const parts = getKeyPathParts('a.b.c')
+        expect(parts).toEqual(['a', 'b', 'c'])
+      })
+
+      it('should support custom separator', () => {
+        const parts = getKeyPathParts('a>b>c', '>')
+        expect(parts).toEqual(['a', 'b', 'c'])
+      })
+
+      it('should return empty array for empty path', () => {
+        const parts = getKeyPathParts('')
+        expect(parts).toEqual([])
+      })
+    })
+
+    describe('joinKeyPath', () => {
+      it('should join parts with default separator', () => {
+        const path = joinKeyPath(['a', 'b', 'c'])
+        expect(path).toBe('a.b.c')
+      })
+
+      it('should support custom separator', () => {
+        const path = joinKeyPath(['a', 'b'], '/')
+        expect(path).toBe('a/b')
+      })
+    })
+
+    describe('getParentKeyPath', () => {
+      it('should return parent path', () => {
+        const parent = getParentKeyPath('a.b.c')
+        expect(parent).toBe('a.b')
+      })
+
+      it('should return null for root path', () => {
+        const parent = getParentKeyPath('a')
+        expect(parent).toBeNull()
+      })
+
+      it('should support custom separator', () => {
+        const parent = getParentKeyPath('a>b>c', '>')
+        expect(parent).toBe('a>b')
+      })
+    })
+
+    describe('getKeyPathDepth', () => {
+      it('should return correct depth', () => {
+        const depth = getKeyPathDepth('a.b.c')
+        expect(depth).toBe(3)
+      })
+
+      it('should return 1 for single key', () => {
+        const depth = getKeyPathDepth('a')
+        expect(depth).toBe(1)
+      })
+    })
+
+    describe('autoGenerateKeyPath', () => {
+      it('should generate keyPath for all nodes', () => {
+        const tree = [{ key: 'a', children: [{ key: 'b' }] }] as any[]
+        const result = autoGenerateKeyPath(tree)
+
+        expect(result[0].keyPath).toBe('a')
+        expect(result[0].children[0].keyPath).toBe('a.b')
+      })
+
+      it('should not modify original data', () => {
+        const original = [{ key: 'a' }] as any[]
+        autoGenerateKeyPath(original)
+        expect(original[0].keyPath).toBeUndefined()
+      })
+
+      it('should support custom separator', () => {
+        const tree = [{ key: 'a', children: [{ key: 'b' }] }] as any[]
+        const result = autoGenerateKeyPath(tree, { separator: '/' })
+        expect(result[0].keyPath).toBe('a')
+        expect(result[0].children[0].keyPath).toBe('a/b')
+      })
+    })
+
+    describe('buildKeyPathMap', () => {
+      it('should build map from tree with keyPath', () => {
+        const tree = [
+          { keyPath: 'a', value: 1 },
+          { keyPath: 'a.b', value: 2 },
+        ] as any[]
+        const map = buildKeyPathMap(tree)
+
+        expect(map.get('a')).toEqual({ keyPath: 'a', value: 1 })
+        expect(map.get('a.b')).toEqual({ keyPath: 'a.b', value: 2 })
+      })
     })
   })
 })

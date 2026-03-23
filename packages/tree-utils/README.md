@@ -391,6 +391,123 @@ const tree = convertGroupsToTreeData(items, 'category');
 // 返回 TreeGroup[] 类型
 ```
 
+## KeyPath 路径操作
+
+基于 key 层级路径的查询和操作函数。
+
+### findByKeyPath
+
+根据 key 层级路径查找节点。
+
+```typescript
+import { findByKeyPath } from '@zid-utils/tree-utils';
+
+const tree = [{
+  key: 'user',
+  children: [{
+    key: 'profile',
+    children: [{ key: 'address' }]
+  }]
+}];
+
+const node = findByKeyPath(tree, 'user.profile.address');
+// node = { key: 'address', ... }
+```
+
+### hasKeyPath
+
+检查路径是否存在。
+
+```typescript
+import { hasKeyPath } from '@zid-utils/tree-utils';
+
+const exists = hasKeyPath(tree, 'user.profile');
+// true
+```
+
+### autoGenerateKeyPath
+
+自动为每个节点生成 keyPath 属性。
+
+```typescript
+import { autoGenerateKeyPath } from '@zid-utils/tree-utils';
+
+const result = autoGenerateKeyPath(tree);
+// result = [
+//   { key: 'a', keyPath: 'a', children: [...] },
+//   { key: 'a.b', keyPath: 'a.b', ... }
+// ]
+```
+
+### buildKeyPathMap
+
+构建 keyPath 到节点的 Map（用于 O(1) 查询）。
+
+```typescript
+import { autoGenerateKeyPath, buildKeyPathMap } from '@zid-utils/tree-utils';
+
+const treeWithPath = autoGenerateKeyPath(tree);
+const map = buildKeyPathMap(treeWithPath);
+
+const node = map.get('user.profile.address'); // O(1)
+```
+
+### getKeyPathParts
+
+解析路径为数组。
+
+```typescript
+import { getKeyPathParts } from '@zid-utils/tree-utils';
+
+const parts = getKeyPathParts('a.b.c'); // ['a', 'b', 'c']
+const parts = getKeyPathParts('a>b>c', '>'); // ['a', 'b', 'c']
+```
+
+### joinKeyPath
+
+拼接路径片段。
+
+```typescript
+import { joinKeyPath } from '@zid-utils/tree-utils';
+
+const path = joinKeyPath(['a', 'b', 'c']); // 'a.b.c'
+const path = joinKeyPath(['a', 'b'], '/'); // 'a/b'
+```
+
+### getParentKeyPath
+
+获取父路径。
+
+```typescript
+import { getParentKeyPath } from '@zid-utils/tree-utils';
+
+const parent = getParentKeyPath('a.b.c'); // 'a.b'
+const parent = getParentKeyPath('a'); // null
+```
+
+### getKeyPathDepth
+
+获取路径深度。
+
+```typescript
+import { getKeyPathDepth } from '@zid-utils/tree-utils';
+
+const depth = getKeyPathDepth('a.b.c'); // 3
+```
+
+### 配置选项
+
+所有 KeyPath 函数支持以下配置选项：
+
+```typescript
+interface KeyPathOptions {
+  separator?: string;   // 路径分隔符，默认 '.'
+  keyKey?: string;     // key 属性名，默认 'key'
+  childrenKey?: string; // children 属性名，默认 'children'
+  keyPathKey?: string;  // 生成的 keyPath 属性名，默认 'keyPath'
+}
+```
+
 ## 类型定义
 
 ### TreeNode
