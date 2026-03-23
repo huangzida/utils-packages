@@ -84,3 +84,19 @@ export {
   InvalidCiphertextError,
 }
 export type { CryptoResult }
+
+export const encodeBase64 = (data: string): string => {
+  return CryptoJS.enc.Utf8.parse(data).toString(CryptoJS.enc.Base64)
+}
+
+export const decodeBase64 = (data: string): CryptoResult<string> => {
+  try {
+    const decoded = CryptoJS.enc.Base64.parse(data).toString(CryptoJS.enc.Utf8)
+    if (!decoded) {
+      return { ok: false, error: new InvalidCiphertextError() }
+    }
+    return { ok: true, value: decoded }
+  } catch {
+    return { ok: false, error: new InvalidCiphertextError() }
+  }
+}

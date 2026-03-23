@@ -3,6 +3,8 @@ import {
   encrypt,
   decrypt,
   createCrypto,
+  encodeBase64,
+  decodeBase64,
   InvalidKeyError,
   InvalidIvError,
   InvalidCiphertextError,
@@ -135,6 +137,43 @@ describe('@zid-utils/crypto-utils', () => {
 
       expect(decrypted1.value).toBe(data1)
       expect(decrypted2.value).toBe(data2)
+    })
+  })
+
+  describe('Base64 encoding/decoding', () => {
+    it('should encode string to base64', () => {
+      const encoded = encodeBase64('Hello World')
+      expect(encoded).toBe('SGVsbG8gV29ybGQ=')
+    })
+
+    it('should encode empty string', () => {
+      const encoded = encodeBase64('')
+      expect(encoded).toBe('')
+    })
+
+    it('should encode special characters', () => {
+      const encoded = encodeBase64('你好世界')
+      expect(encoded).toBeTruthy()
+    })
+
+    it('should decode base64 string correctly', () => {
+      const result = decodeBase64('SGVsbG8gV29ybGQ=')
+      expect(result.ok).toBe(true)
+      expect(result.value).toBe('Hello World')
+    })
+
+    it('should return error for invalid base64', () => {
+      const result = decodeBase64('not-valid-base64!!!')
+      expect(result.ok).toBe(false)
+      expect(result.error).toBeInstanceOf(InvalidCiphertextError)
+    })
+
+    it('should encode and decode roundtrip', () => {
+      const original = 'Test String 123!@#'
+      const encoded = encodeBase64(original)
+      const decoded = decodeBase64(encoded)
+      expect(decoded.ok).toBe(true)
+      expect(decoded.value).toBe(original)
     })
   })
 })
