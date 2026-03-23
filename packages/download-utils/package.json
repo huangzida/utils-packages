@@ -1,6 +1,6 @@
 {
   "name": "@zid-utils/download-utils",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "File download utility functions",
   "repository": "github:huangzida/utils-packages",
   "type": "module",

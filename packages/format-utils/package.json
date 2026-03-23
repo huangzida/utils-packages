@@ -1,6 +1,6 @@
 {
   "name": "@zid-utils/format-utils",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Number and currency formatting utilities",
   "repository": "github:huangzida/utils-packages",
   "type": "module",

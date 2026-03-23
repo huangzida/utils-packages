@@ -1,6 +1,6 @@
 {
   "name": "@zid-utils/window-utils",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Window and browser utility functions",
   "repository": "github:huangzida/utils-packages",
   "type": "module",

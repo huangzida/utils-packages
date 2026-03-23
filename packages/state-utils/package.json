@@ -1,6 +1,6 @@
 {
   "name": "@zid-utils/state-utils",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "State management utilities",
   "repository": "github:huangzida/utils-packages",
   "type": "module",

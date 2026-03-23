@@ -1,6 +1,6 @@
 {
   "name": "@zid-utils/regexps",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Regular expression patterns and utilities",
   "repository": "github:huangzida/utils-packages",
   "type": "module",

@@ -1,6 +1,6 @@
 {
   "name": "utils-packages",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "type": "module",
   "description": "Monorepo for utility packages",
@@ -9,7 +9,7 @@
     "format": "prettier --write .",
     "lint": "eslint .",
     "typecheck": "tsc -b",
-    "release": "bumpp --all",
+    "release": "bumpp -r --no-push",
     "test": "vitest run",
     "test:watch": "vitest",
     "preview": "serve . -l 3000"
