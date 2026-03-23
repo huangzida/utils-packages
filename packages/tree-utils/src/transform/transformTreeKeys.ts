@@ -5,6 +5,20 @@ const defaultLogger: Logger = {
   error: (msg: string) => console.error("[tree-utils]", msg),
 };
 
+/**
+ * 转换树节点的键名
+ * @param treeData - 树形数据数组
+ * @param keyMapping - 键映射规则，例如 { title: 'label', key: 'id' }
+ * @param childrenKey - 子节点字段名（默认 'children'）
+ * @param logger - 日志记录器（可选）
+ * @returns 转换后的新树数据
+ * @example
+ * ```typescript
+ * const tree = [{ title: 'Node', key: '1', children: [] }];
+ * const result = transformTreeKeys(tree, { title: 'label', key: 'id' });
+ * // result = [{ label: 'Node', id: '1', children: [] }]
+ * ```
+ */
 export const transformTreeKeys = (
   treeData: Record<string, any>[],
   keyMapping: Record<string, string>,

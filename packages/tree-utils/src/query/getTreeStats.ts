@@ -1,3 +1,16 @@
+/**
+ * 获取树的统计信息
+ * @template T - 树节点类型
+ * @param treeData - 树形数据数组
+ * @param childrenKey - 子节点字段名（默认 'children'）
+ * @returns 包含总节点数、最大深度、叶子节点数的对象
+ * @example
+ * ```typescript
+ * const tree = [{ key: '1', children: [{ key: '1-1', isLeaf: true }] }];
+ * const stats = getTreeStats(tree);
+ * // { totalNodes: 2, maxDepth: 1, leafCount: 1 }
+ * ```
+ */
 export const getTreeStats = <T extends Record<string, any>>(
   treeData: T[],
   childrenKey: string = "children",

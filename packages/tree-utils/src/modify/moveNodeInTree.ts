@@ -5,6 +5,25 @@ const defaultLogger: Logger = {
   error: (msg: string) => console.error("[tree-utils]", msg),
 };
 
+/**
+ * 在树中移动节点（从源节点移动到目标节点）
+ * @param treeData - 树形数据（会被直接修改）
+ * @param sourceKey - 源节点 key（必须是叶子节点）
+ * @param targetKey - 目标节点 key
+ * @param logger - 日志记录器（可选）
+ * @throws 如果源节点或目标节点不存在
+ * @throws 如果源节点不是叶子节点
+ * @example
+ * ```typescript
+ * const tree = [
+ *   { key: '1', children: [{ key: '1-1' }] },
+ *   { key: '2', children: [] }
+ * ];
+ * moveNodeInTree(tree, '1-1', '2');
+ * // tree[0].children 现在为空
+ * // tree[1].children 包含 key='1-1' 的节点
+ * ```
+ */
 export const moveNodeInTree = (
   treeData: any[] | { key: string; children?: any[] },
   sourceKey: string,

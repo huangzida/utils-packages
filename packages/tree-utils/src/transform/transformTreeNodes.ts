@@ -5,6 +5,23 @@ const defaultLogger: Logger = {
   error: (msg: string) => console.error("[tree-utils]", msg),
 };
 
+/**
+ * 转换树节点数据（通过自定义函数）
+ * @param treeData - 树形数据数组
+ * @param transformer - 转换函数，接收节点返回新节点
+ * @param childrenKey - 子节点字段名（默认 'children'）
+ * @param logger - 日志记录器（可选）
+ * @returns 转换后的新树数据
+ * @example
+ * ```typescript
+ * const tree = [{ title: 'Node', children: [] }];
+ * const result = transformTreeNodes(tree, (node) => ({
+ *   ...node,
+ *   active: true
+ * }));
+ * // result = [{ title: 'Node', active: true, children: [] }]
+ * ```
+ */
 export const transformTreeNodes = (
   treeData: Record<string, any>[],
   transformer: (node: Record<string, any>) => Record<string, any>,
