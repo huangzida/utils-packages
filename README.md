@@ -86,284 +86,67 @@ pnpm add @zid-utils/fetch-utils
 
 ## 📖 使用示例
 
-### Regexps - 正则验证
+每个子包都提供详细的 API 文档和使用示例，请查看对应的 README：
 
-```typescript
-import {
-  isEmail,
-  isUrl,
-  isPhone,
-  isIdCard,
-  isChinese,
-} from "@zid-utils/regexps";
+### 数据验证
 
-isEmail("test@example.com"); // true
-isUrl("https://example.com"); // true
-isPhone("13812345678"); // true
-isIdCard("110101199003074519"); // true
-isChinese("你好"); // true
-```
+- [Regexps](./packages/regexps) - 常用正则表达式验证器
 
-### Time Utils - 时间格式化
+### 时间处理
 
-```typescript
-import { padZero, formatTime, formatTimeDetail } from "@zid-utils/time-utils";
+- [Time Utils](./packages/time-utils) - 时间格式化工具
 
-padZero(5, 3); // "005"
-formatTime(3661); // "01:01:01"
-formatTimeDetail(90061); // { hours: "01", minutes: "01", seconds: "01", displayTime: "01:01:01" }
-```
+### 树形数据
 
-### Tree Utils - 树形操作
+- [Tree Utils](./packages/tree-utils) - 树形数据结构操作
 
-```typescript
-import {
-  findNodeByKey,
-  getLeafNodes,
-  searchInTree,
-  deleteNode,
-  flattenTree,
-  transformTreeKeys,
-} from "@zid-utils/tree-utils";
+### 网格操作
 
-const tree = [
-  {
-    key: "1",
-    title: "Root",
-    children: [{ key: "1-1", title: "Child", isLeaf: true }],
-  },
-];
+- [Grid Utils](./packages/grid-utils) - 二维数组操作
 
-findNodeByKey(tree, "1-1"); // 查找节点
-getLeafNodes(tree); // 获取所有叶子节点
-searchInTree(tree, "Child"); // 搜索节点
-deleteNode(tree, "1-1"); // 删除节点
-flattenTree(tree); // 平铺为数组
-transformTreeKeys(tree, { key: "id" }); // 转换键名
-```
+### 浏览器操作
 
-### Grid Utils - 网格操作
+- [DOM Utils](./packages/dom-utils) - DOM 元素可见区域、滚动条检测
+- [Window Utils](./packages/window-utils) - 窗口操作、尺寸获取、滚动控制
 
-```typescript
-import { updateGridElement } from "@zid-utils/grid-utils";
+### 数据加密
 
-const grid = [
-  [
-    { id: 1, name: "a" },
-    { id: 2, name: "b" },
-  ],
-  [
-    { id: 3, name: "c" },
-    { id: 4, name: "d" },
-  ],
-];
+- [Crypto Utils](./packages/crypto-utils) - AES 加密解密、哈希计算
 
-updateGridElement(
-  grid,
-  (el) => el.id === 2,
-  (el) => ({ ...el, name: "updated" }),
-);
-```
+### 数组操作
 
-### DOM Utils - DOM 操作
+- [Array Utils](./packages/array-utils) - 数组去重、分组、排序、洗牌等
 
-```typescript
-import {
-  getElementVisibleRect,
-  getScrollbarWidth,
-  needsScrollbar,
-} from "@zid-utils/dom-utils";
+### 对象操作
 
-const rect = await getElementVisibleRect(element);
-const width = getScrollbarWidth();
-const hasScrollbar = needsScrollbar(container);
-```
+- [Object Utils](./packages/object-utils) - 深拷贝、深度合并、属性选择等
 
-### Window Utils - 窗口操作
+### 字符串操作
 
-```typescript
-import {
-  openWindow,
-  closeWindow,
-  getWindowSize,
-  scrollToTop,
-} from "@zid-utils/window-utils";
+- [String Utils](./packages/string-utils) - 命名转换、HTML 转义、模板等
 
-const size = getWindowSize();
-openWindow("https://example.com");
-scrollToTop();
-```
+### URL 操作
 
-### Crypto Utils - 加解密
+- [URL Utils](./packages/url-utils) - URL 解析、参数处理、路径操作等
 
-```typescript
-import { encrypt, decrypt, createCrypto } from "@zid-utils/crypto-utils";
+### 数据格式化
 
-// 方式一：直接调用
-encrypt("data", { key: "your-16-char-key", iv: "your-16-char-iv" });
-decrypt("ciphertext", { key: "your-16-char-key", iv: "your-16-char-iv" });
+- [Format Utils](./packages/format-utils) - 数字、货币、百分比、文件大小格式化
+- [Color Utils](./packages/color-utils) - 颜色格式转换、调整
 
-// 方式二：创建可复用实例
-const crypto = createCrypto({ key: "your-16-char-key", iv: "your-16-char-iv" });
-crypto.encrypt("data");
-crypto.decrypt("ciphertext");
-```
+### 数据比较
 
-> ⚠️ **安全提示**: key 和 iv 必须都是 16 字符。建议从环境变量读取，不要硬编码在代码中。
+- [Diff Utils](./packages/diff-utils) - 对象深度比较、差异计算
 
-### Array Utils - 数组操作
+### 状态管理
 
-```typescript
-import {
-  unique,
-  uniqueByField,
-  chunk,
-  groupBy,
-  shuffle,
-  sortBy,
-} from "@zid-utils/array-utils";
+- [State Utils](./packages/state-utils) - 响应式状态处理器
 
-unique([1, 2, 2, 3]); // [1, 2, 3]
-uniqueByField([{a: 1}, {a: 2}, {a: 1}], 'a'); // [{a: 1}, {a: 2}]
-chunk([1, 2, 3, 4, 5], 2); // [[1, 2], [3, 4], [5]]
-groupBy([{type: 'a', val: 1}, {type: 'b', val: 2}], item => item.type);
-shuffle([1, 2, 3, 4, 5]); // 随机排列
-sortBy([{n: 3}, {n: 1}, {n: 2}], 'n'); // [{n: 1}, {n: 2}, {n: 3}]
-```
+### 文件下载
 
-### Object Utils - 对象操作
+- [Fetch Utils](./packages/fetch-utils) - URL/Blob/Base64 文件下载
 
-```typescript
-import {
-  deepClone,
-  deepMerge,
-  pick,
-  omit,
-  isEmpty,
-} from "@zid-utils/object-utils";
-
-deepClone({ a: { b: 1 } }); // 深拷贝
-deepMerge({ a: 1 }, { b: 2 }); // { a: 1, b: 2 }
-pick({ a: 1, b: 2, c: 3 }, ['a', 'c']); // { a: 1, c: 3 }
-omit({ a: 1, b: 2, c: 3 }, ['b']); // { a: 1, c: 3 }
-isEmpty({}); // true
-isEmpty({ a: 1 }); // false
-```
-
-### String Utils - 字符串操作
-
-```typescript
-import {
-  capitalize,
-  camelCase,
-  kebabCase,
-  snakeCase,
-  escapeHtml,
-  template,
-} from "@zid-utils/string-utils";
-
-capitalize("hello"); // "Hello"
-camelCase("hello-world"); // "helloWorld"
-kebabCase("helloWorld"); // "hello-world"
-snakeCase("helloWorld"); // "hello_world"
-escapeHtml("<div>"); // "&lt;div&gt;"
-template("Hello {{name}}!", { name: "World" }); // "Hello World!"
-```
-
-### URL Utils - URL 操作
-
-```typescript
-import {
-  parseUrl,
-  buildUrl,
-  getUrlParam,
-  getDomain,
-} from "@zid-utils/url-utils";
-
-parseUrl("https://example.com/path?a=1&b=2");
-buildUrl("https://example.com", { a: "1", b: "2" }); // "https://example.com?a=1&b=2"
-getUrlParam("https://example.com?a=1", "a"); // "1"
-getDomain("https://www.example.com/path"); // "www.example.com"
-```
-
-### Format Utils - 格式化
-
-```typescript
-import {
-  formatNumber,
-  formatCurrency,
-  formatPercent,
-  formatBytes,
-} from "@zid-utils/format-utils";
-
-formatNumber(1234567); // "1,234,567"
-formatCurrency(1234.56, "CNY"); // "¥1,234.56"
-formatPercent(0.756); // "75.6%"
-formatBytes(1024); // "1.00 KB"
-formatBytes(1024 * 1024); // "1.00 MB"
-```
-
-### Color Utils - 颜色转换
-
-```typescript
-import {
-  hexToRgb,
-  rgbToHex,
-  rgbToHsl,
-  hslToRgb,
-} from "@zid-utils/color-utils";
-
-hexToRgb("#FF5733"); // { r: 255, g: 87, b: 51 }
-rgbToHex(255, 87, 51); // "#ff5733"
-rgbToHsl(255, 87, 51); // { h: 11, s: 100, l: 60 }
-hslToRgb(11, 100, 60); // { r: 255, g: 87, b: 51 }
-```
-
-### Diff Utils - 差异比较
-
-```typescript
-import {
-  arraysEqual,
-  deepEqual,
-  diff,
-} from "@zid-utils/diff-utils";
-
-arraysEqual([1, 2, 3], [1, 2, 3]); // true
-deepEqual({ a: 1 }, { a: 1 }); // true
-diff({ a: 1, b: 2 }, { a: 1, b: 3 }); // { b: 3 }
-```
-
-### State Utils - 状态管理
-
-```typescript
-import { StateHandler } from "@zid-utils/state-utils";
-
-const state = new StateHandler(0, (v) => v >= 0);
-
-state.getValue(); // 0
-state.setValue(10);
-state.getValue(); // 10
-
-state.subscribe((value) => {
-  console.log("State changed:", value);
-});
-
-state.update((prev) => prev + 1); // 触发订阅，值为 11
-```
-
-### Fetch Utils - 文件获取
-
-```typescript
-import {
-  downloadByUrl,
-  downloadByBlob,
-  downloadByBase64,
-} from "@zid-utils/fetch-utils";
-
-downloadByUrl("https://example.com/file.pdf", "document.pdf");
-downloadByBlob(blob, "document.pdf");
-downloadByBase64(base64Data, "document.pdf", "application/pdf");
-```
+详细的使用示例、API 文档和最佳实践请查看各包的 README 文件。
 
 ## 🛠️ Development
 
