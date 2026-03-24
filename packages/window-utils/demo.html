@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Window Utils Demo - 窗口操作工具</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles/common.css">
+</head>
+<body>
+  <div class="noise-overlay"></div>
+
+  <div class="container">
+    <header>
+      <a href="../../index.html" class="back-link">← 返回首页</a>
+      <div class="logo">
+        <div class="logo-icon">🪟</div>
+        <div>
+          <h1>Window Utils Demo</h1>
+          <p class="subtitle">窗口操作工具</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="panel">
+      <div class="panel-header">
+        <div class="panel-icon" style="background: linear-gradient(135deg, var(--accent-orange), #d97706);">🪟</div>
+        <div>
+          <h2 class="panel-title">窗口操作工具</h2>
+          <p class="panel-desc">提供窗口操作、尺寸获取、滚动控制等功能</p>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-card">
+          <h3>窗口信息</h3>
+          <p>获取当前窗口和屏幕信息</p>
+          <button class="btn" onclick="showWindowSize()">获取信息</button>
+          <div class="result-box" id="windowSizeResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>屏幕信息</h3>
+          <p>获取屏幕分辨率信息</p>
+          <button class="btn" onclick="showScreenInfo()">获取信息</button>
+          <div class="result-box" id="screenInfoResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>滚动控制</h3>
+          <p>页面滚动到顶部或底部</p>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn" onclick="scrollToTop()">⬆️ 顶部</button>
+            <button class="btn btn-secondary" onclick="scrollToBottom()">⬇️ 底部</button>
+          </div>
+          <div class="result-box" id="scrollResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>窗口聚焦检查</h3>
+          <p>检查窗口是否聚焦</p>
+          <button class="btn" onclick="checkWindowFocus()">检查</button>
+          <div class="result-box" id="focusResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>触发 Resize</h3>
+          <p>手动触发窗口 resize 事件</p>
+          <button class="btn" onclick="triggerWindowResize()">触发</button>
+          <div class="result-box" id="resizeResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>页面导航</h3>
+          <p>页面刷新和跳转</p>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn" onclick="pageReload()">🔄 刷新</button>
+            <button class="btn btn-secondary" onclick="pageReplace()">🔀 替换</button>
+          </div>
+          <div class="result-box" id="navResult"></div>
+        </div>
+      </div>
+
+      <div style="height: 1000px; padding: 40px; background: rgba(0,0,0,0.2); border-radius: 12px; margin-top: 24px; text-align: center; color: var(--text-muted);">
+        <div style="font-size: 48px; margin-bottom: 16px;">⬇️</div>
+        <div>页面底部 - 用于测试滚动功能</div>
+        <div style="margin-top: 8px; font-size: 12px;">继续滚动查看更多...</div>
+      </div>
+    </main>
+
+    <footer>
+      <p>Built with ⚡ by <a href="#">@zid-utils</a> · 开源工具函数库</p>
+    </footer>
+  </div>
+
+  <script>
+    // Window Utils Functions
+    function getWindowSize() {
+      return {
+        width: window.innerWidth,
+        height: window.innerHeight
+      };
+    }
+
+    function getScreenSize() {
+      return {
+        width: screen.width,
+        height: screen.height,
+        availWidth: screen.availWidth,
+        availHeight: screen.availHeight
+      };
+    }
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.getElementById('scrollResult').innerHTML = `
+        <div class="result-label">滚动到顶部</div>
+        <div class="result-value">已触发平滑滚动</div>
+      `;
+    }
+
+    function scrollToBottom() {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      document.getElementById('scrollResult').innerHTML = `
+        <div class="result-label">滚动到底部</div>
+        <div class="result-value">已触发平滑滚动</div>
+      `;
+    }
+
+    function isWindowFocused() {
+      return document.hasFocus();
+    }
+
+    function triggerWindowResize() {
+      window.dispatchEvent(new Event('resize'));
+      document.getElementById('resizeResult').innerHTML = `
+        <div class="result-label">事件已触发</div>
+        <div class="result-value">window resize 事件已触发</div>
+      `;
+    }
+
+    function pageReload() {
+      document.getElementById('navResult').innerHTML = `
+        <div class="result-label">刷新页面</div>
+        <div class="result-value">即将刷新...</div>
+      `;
+      setTimeout(() => location.reload(), 500);
+    }
+
+    function pageReplace() {
+      document.getElementById('navResult').innerHTML = `
+        <div class="result-label">替换页面</div>
+        <div class="result-value">即将替换...</div>
+      `;
+    }
+
+    // Demos
+    function showWindowSize() {
+      const size = getWindowSize();
+      document.getElementById('windowSizeResult').innerHTML = `
+        <div class="result-label">窗口尺寸</div>
+        <div class="result-value">
+          宽度: ${size.width}px<br>
+          高度: ${size.height}px
+        </div>
+      `;
+    }
+
+    function showScreenInfo() {
+      const size = getScreenSize();
+      document.getElementById('screenInfoResult').innerHTML = `
+        <div class="result-label">屏幕信息</div>
+        <div class="result-value">
+          分辨率: ${size.width} x ${size.height}<br>
+          可用: ${size.availWidth} x ${size.availHeight}
+        </div>
+      `;
+    }
+
+    function checkWindowFocus() {
+      const focused = isWindowFocused();
+      document.getElementById('focusResult').innerHTML = `
+        <div class="result-label">窗口聚焦状态</div>
+        <div class="result-value">
+          <span class="status-badge ${focused ? 'success' : 'error'}">
+            <span class="dot"></span>${focused ? '已聚焦' : '未聚焦'}
+          </span>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>

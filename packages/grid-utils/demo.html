@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grid Utils Demo - 网格数据操作</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles/common.css">
+</head>
+<body>
+  <div class="noise-overlay"></div>
+
+  <div class="container">
+    <header>
+      <a href="../../index.html" class="back-link">← 返回首页</a>
+      <div class="logo">
+        <div class="logo-icon">📊</div>
+        <div>
+          <h1>Grid Utils Demo</h1>
+          <p class="subtitle">网格数据操作</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="panel">
+      <div class="panel-header">
+        <div class="panel-icon grid">📊</div>
+        <div>
+          <h2 class="panel-title">网格数据操作</h2>
+          <p class="panel-desc">二维数组的查找、更新等操作</p>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-card">
+          <h3>更新网格元素 <span class="badge">updateGridElement</span></h3>
+          <p>根据匹配条件更新二维数组中的元素</p>
+          <div class="input-group">
+            <label>原始网格</label>
+            <textarea id="gridInput" rows="4" placeholder="JSON数组">[
+  [{ "id": 1, "value": "a" }, { "id": 2, "value": "b" }],
+  [{ "id": 3, "value": "c" }, { "id": 4, "value": "d" }]
+]</textarea>
+          </div>
+          <div class="input-group">
+            <label>匹配条件 (JavaScript)</label>
+            <input type="text" id="gridMatcher" placeholder="如: el => el.id === 2" value="el => el.id === 2">
+          </div>
+          <div class="input-group">
+            <label>更新函数 (JavaScript)</label>
+            <input type="text" id="gridUpdater" placeholder="如: el => ({ ...el, value: 'updated' })" value="el => ({ ...el, value: 'updated' })">
+          </div>
+          <button class="btn" onclick="updateGridDemo()">更新</button>
+          <div class="result-box" id="gridResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>快速示例</h3>
+          <p>使用预设的示例演示更新功能</p>
+          <div class="input-group">
+            <label>要更新的值</label>
+            <input type="text" id="gridValue" placeholder="输入值" value="target">
+          </div>
+          <div class="input-group">
+            <label>新值</label>
+            <input type="text" id="gridNewValue" placeholder="新值" value="updated">
+          </div>
+          <button class="btn" onclick="quickUpdateGrid()">快速更新</button>
+          <div class="result-box" id="quickGridResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>查找元素</h3>
+          <p>在网格中查找符合条件的元素</p>
+          <div class="input-group">
+            <label>查找条件</label>
+            <input type="text" id="findMatcher" placeholder="如: el => el.value === 'b'" value="el => el.value === 'b'">
+          </div>
+          <button class="btn" onclick="findInGrid()">查找</button>
+          <div class="result-box" id="findResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>统计元素</h3>
+          <p>统计网格中符合条件元素的个数</p>
+          <div class="input-group">
+            <label>统计条件</label>
+            <input type="text" id="countMatcher" placeholder="如: el => el.value.startsWith('a')" value="el => el.value.startsWith('a')">
+          </div>
+          <button class="btn" onclick="countInGrid()">统计</button>
+          <div class="result-box" id="countResult"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>Built with ⚡ by <a href="#">@zid-utils</a> · 开源工具函数库</p>
+    </footer>
+  </div>
+
+  <script>
+    // Default Grid Data
+    const defaultGrid = [
+      [{ id: 1, value: 'a' }, { id: 2, value: 'b' }],
+      [{ id: 3, value: 'c' }, { id: 4, value: 'd' }]
+    ];
+
+    // updateGridElement
+    function updateGridElement(grid, matcher, updater) {
+      let updated = false;
+      const newGrid = grid.map(row => {
+        let rowUpdated = false;
+        const newRow = row.map(el => {
+          if (matcher(el)) {
+            updated = true;
+            rowUpdated = true;
+            return updater(el);
+          }
+          return el;
+        });
+        return rowUpdated ? newRow : row;
+      });
+      return updated ? newGrid : grid;
+    }
+
+    // Find in Grid
+    function findInGridElement(grid, matcher) {
+      for (let i = 0; i < grid.length; i++) {
+        for (let j = 0; j < grid[i].length; j++) {
+          if (matcher(grid[i][j])) {
+            return { element: grid[i][j], position: { row: i, col: j } };
+          }
+        }
+      }
+      return null;
+    }
+
+    // Count in Grid
+    function countInGridElement(grid, matcher) {
+      let count = 0;
+      for (let i = 0; i < grid.length; i++) {
+        for (let j = 0; j < grid[i].length; j++) {
+          if (matcher(grid[i][j])) {
+            count++;
+          }
+        }
+      }
+      return count;
+    }
+
+    function updateGridDemo() {
+      try {
+        const grid = JSON.parse(document.getElementById('gridInput').value);
+        const matcherStr = document.getElementById('gridMatcher').value;
+        const updaterStr = document.getElementById('gridUpdater').value;
+
+        const matcher = eval(matcherStr);
+        const updater = eval(updaterStr);
+
+        const result = updateGridElement(grid, matcher, updater);
+        document.getElementById('gridResult').innerHTML = `
+          <div class="result-label">更新结果</div>
+          <div class="result-value">${JSON.stringify(result, null, 2)}</div>
+        `;
+      } catch (e) {
+        document.getElementById('gridResult').innerHTML = `
+          <div class="result-label">错误</div>
+          <div class="result-value error">${e.message}</div>
+        `;
+      }
+    }
+
+    function quickUpdateGrid() {
+      const value = document.getElementById('gridValue').value;
+      const newValue = document.getElementById('gridNewValue').value;
+      const result = updateGridElement(
+        defaultGrid,
+        el => el.value === value,
+        el => ({ ...el, value: newValue })
+      );
+      document.getElementById('quickGridResult').innerHTML = `
+        <div class="result-label">更新后的网格</div>
+        <div class="result-value">${JSON.stringify(result, null, 2)}</div>
+      `;
+    }
+
+    function findInGrid() {
+      try {
+        const matcherStr = document.getElementById('findMatcher').value;
+        const matcher = eval(matcherStr);
+        const result = findInGridElement(defaultGrid, matcher);
+
+        if (result) {
+          document.getElementById('findResult').innerHTML = `
+            <div class="result-label">查找结果</div>
+            <div class="result-value">找到元素: ${JSON.stringify(result.element, null, 2)}</div>
+            <div class="code-block">位置: 第 ${result.position.row + 1} 行, 第 ${result.position.col + 1} 列</div>
+          `;
+        } else {
+          document.getElementById('findResult').innerHTML = `
+            <div class="result-label">查找结果</div>
+            <div class="result-value error">未找到符合条件的元素</div>
+          `;
+        }
+      } catch (e) {
+        document.getElementById('findResult').innerHTML = `
+          <div class="result-label">错误</div>
+          <div class="result-value error">${e.message}</div>
+        `;
+      }
+    }
+
+    function countInGrid() {
+      try {
+        const matcherStr = document.getElementById('countMatcher').value;
+        const matcher = eval(matcherStr);
+        const count = countInGridElement(defaultGrid, matcher);
+
+        document.getElementById('countResult').innerHTML = `
+          <div class="result-label">统计结果</div>
+          <div class="result-value">符合条件的元素个数: ${count}</div>
+        `;
+      } catch (e) {
+        document.getElementById('countResult').innerHTML = `
+          <div class="result-label">错误</div>
+          <div class="result-value error">${e.message}</div>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>

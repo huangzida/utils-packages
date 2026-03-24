@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL Utils Demo - URL 操作工具</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles/common.css">
+</head>
+<body>
+  <div class="noise-overlay"></div>
+
+  <div class="container">
+    <header>
+      <a href="../../index.html" class="back-link">← 返回首页</a>
+      <div class="logo">
+        <div class="logo-icon">🔗</div>
+        <div>
+          <h1>URL Utils Demo</h1>
+          <p class="subtitle">URL 操作工具</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="panel">
+      <div class="panel-header">
+        <div class="panel-icon" style="background: linear-gradient(135deg, var(--accent-orange), #d97706);">🔗</div>
+        <div>
+          <h2 class="panel-title">URL 操作工具</h2>
+          <p class="panel-desc">提供 URL 解析、构建、参数处理等丰富的 URL 操作函数</p>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-card">
+          <h3>构建 URL <span class="badge">buildUrl</span></h3>
+          <p>构建带参数的 URL</p>
+          <div class="input-group">
+            <label>基础 URL</label>
+            <input type="text" id="baseUrl" placeholder="https://api.example.com" value="https://api.example.com/users">
+          </div>
+          <div class="input-group">
+            <label>参数 (JSON)</label>
+            <input type="text" id="urlParams" placeholder='{"page": 1, "limit": 10}' value='{"page": 1, "limit": 10}'>
+          </div>
+          <button class="btn" onclick="demoBuildUrl()">构建</button>
+          <div class="result-box" id="buildUrlResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>获取参数 <span class="badge">getParam</span></h3>
+          <p>从 URL 中获取单个参数</p>
+          <div class="input-group">
+            <label>URL</label>
+            <input type="text" id="getParamUrl" placeholder="https://example.com?a=1&b=2" value="https://example.com?a=1&b=2&name=张三">
+          </div>
+          <div class="input-group">
+            <label>参数名</label>
+            <input type="text" id="getParamKey" placeholder="a" value="name">
+          </div>
+          <button class="btn" onclick="demoGetParam()">获取</button>
+          <div class="result-box" id="getParamResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>设置参数 <span class="badge">setParam</span></h3>
+          <p>设置或更新 URL 中的参数</p>
+          <div class="input-group">
+            <label>URL</label>
+            <input type="text" id="setParamUrl" placeholder="https://example.com?a=1" value="https://example.com?a=1">
+          </div>
+          <div class="input-group">
+            <label>参数名</label>
+            <input type="text" id="setParamKey" placeholder="b" value="b">
+          </div>
+          <div class="input-group">
+            <label>参数值</label>
+            <input type="text" id="setParamValue" placeholder="2" value="2">
+          </div>
+          <button class="btn" onclick="demoSetParam()">设置</button>
+          <div class="result-box" id="setParamResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>提取域名 <span class="badge">extractDomain</span></h3>
+          <p>从 URL 中提取域名</p>
+          <div class="input-group">
+            <label>URL</label>
+            <input type="text" id="domainUrl" placeholder="https://www.example.com/path" value="https://api.example.com:8080/users">
+          </div>
+          <button class="btn" onclick="demoExtractDomain()">提取</button>
+          <div class="result-box" id="domainResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>检查绝对 URL <span class="badge">isAbsoluteUrl</span></h3>
+          <p>检查字符串是否为绝对 URL</p>
+          <div class="input-group">
+            <label>URL</label>
+            <input type="text" id="absoluteUrl" placeholder="/path/to/page" value="/path/to/page">
+          </div>
+          <button class="btn" onclick="demoIsAbsoluteUrl()">检查</button>
+          <div class="result-box" id="absoluteResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>删除参数 <span class="badge">deleteParam</span></h3>
+          <p>从 URL 中删除指定参数</p>
+          <div class="input-group">
+            <label>URL</label>
+            <input type="text" id="deleteParamUrl" placeholder="https://example.com?a=1&b=2" value="https://example.com?a=1&b=2&c=3">
+          </div>
+          <div class="input-group">
+            <label>要删除的参数</label>
+            <input type="text" id="deleteParamKey" placeholder="b" value="b">
+          </div>
+          <button class="btn" onclick="demoDeleteParam()">删除</button>
+          <div class="result-box" id="deleteParamResult"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>Built with ⚡ by <a href="#">@zid-utils</a> · 开源工具函数库</p>
+    </footer>
+  </div>
+
+  <script>
+    // URL Utils Functions
+    function buildUrl(base, params) {
+      if (!params) return base;
+      const url = new URL(base);
+      Object.entries(params).forEach(([key, value]) => {
+        url.searchParams.set(key, value);
+      });
+      return url.toString();
+    }
+
+    function getParam(urlStr, key) {
+      try {
+        const url = new URL(urlStr);
+        return url.searchParams.get(key);
+      } catch {
+        const match = urlStr.match(new RegExp(`[?&]${key}=([^&]+)`));
+        return match ? match[1] : null;
+      }
+    }
+
+    function setParam(urlStr, key, value) {
+      try {
+        const url = new URL(urlStr);
+        url.searchParams.set(key, value);
+        return url.toString();
+      } catch {
+        const separator = urlStr.includes('?') ? '&' : '?';
+        return `${urlStr}${separator}${key}=${encodeURIComponent(value)}`;
+      }
+    }
+
+    function extractDomain(urlStr) {
+      try {
+        const url = new URL(urlStr);
+        return url.hostname;
+      } catch {
+        return null;
+      }
+    }
+
+    function isAbsoluteUrl(url) {
+      return /^(?:https?|ftp):\/\//i.test(url);
+    }
+
+    function deleteParam(urlStr, key) {
+      try {
+        const url = new URL(urlStr);
+        url.searchParams.delete(key);
+        return url.toString();
+      } catch {
+        const regex = new RegExp(`([?&]${key}=([^&]+)&?)`);
+        return urlStr.replace(regex, '$1').replace(/[?&]$/, '');
+      }
+    }
+
+    // Demos
+    function demoBuildUrl() {
+      const base = document.getElementById('baseUrl').value;
+      const paramsStr = document.getElementById('urlParams').value;
+      try {
+        const params = JSON.parse(paramsStr);
+        const result = buildUrl(base, params);
+        document.getElementById('buildUrlResult').innerHTML = `
+          <div class="result-label">构建的 URL</div>
+          <div class="result-value">${result}</div>
+        `;
+      } catch (e) {
+        document.getElementById('buildUrlResult').innerHTML = `
+          <div class="result-label">错误</div>
+          <div class="result-value error">JSON 格式错误: ${e.message}</div>
+        `;
+      }
+    }
+
+    function demoGetParam() {
+      const url = document.getElementById('getParamUrl').value;
+      const key = document.getElementById('getParamKey').value;
+      const result = getParam(url, key);
+      document.getElementById('getParamResult').innerHTML = `
+        <div class="result-label">参数 ${key} 的值</div>
+        <div class="result-value">${result || 'null'}</div>
+      `;
+    }
+
+    function demoSetParam() {
+      const url = document.getElementById('setParamUrl').value;
+      const key = document.getElementById('setParamKey').value;
+      const value = document.getElementById('setParamValue').value;
+      const result = setParam(url, key, value);
+      document.getElementById('setParamResult').innerHTML = `
+        <div class="result-label">设置后的 URL</div>
+        <div class="result-value">${result}</div>
+      `;
+    }
+
+    function demoExtractDomain() {
+      const url = document.getElementById('domainUrl').value;
+      const result = extractDomain(url);
+      document.getElementById('domainResult').innerHTML = `
+        <div class="result-label">提取的域名</div>
+        <div class="result-value">${result || '无效 URL'}</div>
+      `;
+    }
+
+    function demoIsAbsoluteUrl() {
+      const url = document.getElementById('absoluteUrl').value;
+      const result = isAbsoluteUrl(url);
+      document.getElementById('absoluteResult').innerHTML = `
+        <div class="result-label">绝对 URL 检查结果</div>
+        <div class="result-value">
+          <span class="status-badge ${result ? 'success' : 'error'}">
+            <span class="dot"></span>${result ? '是绝对 URL' : '不是绝对 URL'}
+          </span>
+        </div>
+      `;
+    }
+
+    function demoDeleteParam() {
+      const url = document.getElementById('deleteParamUrl').value;
+      const key = document.getElementById('deleteParamKey').value;
+      const result = deleteParam(url, key);
+      document.getElementById('deleteParamResult').innerHTML = `
+        <div class="result-label">删除参数后的 URL</div>
+        <div class="result-value">${result}</div>
+      `;
+    }
+  </script>
+</body>
+</html>

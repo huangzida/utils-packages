@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>State Utils Demo - 状态管理工具</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles/common.css">
+  <style>
+    .state-display {
+      font-size: 48px;
+      font-weight: bold;
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 16px 0;
+    }
+    .counter-controls {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin: 16px 0;
+    }
+    .counter-controls .btn {
+      font-size: 24px;
+      padding: 12px 24px;
+    }
+    .log-box {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 8px;
+      padding: 12px;
+      max-height: 200px;
+      overflow-y: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--accent-green);
+    }
+  </style>
+</head>
+<body>
+  <div class="noise-overlay"></div>
+
+  <div class="container">
+    <header>
+      <a href="../../index.html" class="back-link">← 返回首页</a>
+      <div class="logo">
+        <div class="logo-icon">📡</div>
+        <div>
+          <h1>State Utils Demo</h1>
+          <p class="subtitle">状态管理工具</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="panel">
+      <div class="panel-header">
+        <div class="panel-icon" style="background: linear-gradient(135deg, var(--accent-purple), #7c3aed);">📡</div>
+        <div>
+          <h2 class="panel-title">状态管理工具</h2>
+          <p class="panel-desc">提供轻量级的状态管理功能，支持条件验证、订阅更新</p>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-card">
+          <h3>计数器示例</h3>
+          <p>带边界限制的状态计数器</p>
+          <div class="state-display" id="counterDisplay">0</div>
+          <div class="counter-controls">
+            <button class="btn" onclick="counterDecrement()">−</button>
+            <button class="btn" onclick="counterIncrement()">+</button>
+          </div>
+          <button class="btn btn-secondary" onclick="counterReset()" style="width: 100%;">重置</button>
+        </div>
+
+        <div class="demo-card">
+          <h3>状态订阅</h3>
+          <p>实时查看状态变化日志</p>
+          <div class="result-label">变更日志</div>
+          <div class="log-box" id="stateLog">
+            <div>初始状态: 0</div>
+          </div>
+          <button class="btn" onclick="clearLog()" style="margin-top: 12px;">清空日志</button>
+        </div>
+
+        <div class="demo-card">
+          <h3>条件验证</h3>
+          <p>验证状态是否满足条件</p>
+          <div class="input-group">
+            <label>验证条件</label>
+            <select id="validateCondition">
+              <option value="positive">值 > 0</option>
+              <option value="even">值为偶数</option>
+              <option value="range">0-100 之间</option>
+            </select>
+          </div>
+          <button class="btn" onclick="validateState()">验证</button>
+          <div class="result-box" id="validateResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>状态历史</h3>
+          <p>查看状态变化历史</p>
+          <button class="btn" onclick="getHistory()">获取历史</button>
+          <div class="result-box" id="historyResult">
+            <div class="result-label">历史记录</div>
+            <div class="result-value" id="historyValue">暂无历史</div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>Built with ⚡ by <a href="#">@zid-utils</a> · 开源工具函数库</p>
+    </footer>
+  </div>
+
+  <script>
+    // State Handler Class (Simplified)
+    class StateHandler {
+      constructor(initialValue, condition) {
+        this._value = initialValue;
+        this._condition = condition || (() => true);
+        this._subscribers = [];
+        this._history = [initialValue];
+      }
+
+      getValue() {
+        return this._value;
+      }
+
+      setValue(value) {
+        if (this._condition(value)) {
+          this._value = value;
+          this._history.push(value);
+          this._notify();
+        }
+      }
+
+      reset() {
+        this._value = this._history[0];
+        this._notify();
+      }
+
+      subscribe(callback) {
+        this._subscribers.push(callback);
+        return () => {
+          this._subscribers = this._subscribers.filter(cb => cb !== callback);
+        };
+      }
+
+      getHistory() {
+        return [...this._history];
+      }
+
+      _notify() {
+        this._subscribers.forEach(cb => cb(this._value));
+      }
+    }
+
+    // Create counter state
+    const counter = new StateHandler(0, v => v >= 0 && v <= 100);
+
+    // Update display
+    counter.subscribe(value => {
+      document.getElementById('counterDisplay').textContent = value;
+    });
+
+    // Log changes
+    counter.subscribe(value => {
+      const log = document.getElementById('stateLog');
+      const entry = document.createElement('div');
+      entry.textContent = `变更: ${value}`;
+      log.appendChild(entry);
+      log.scrollTop = log.scrollHeight;
+    });
+
+    // Controls
+    function counterIncrement() {
+      counter.setValue(counter.getValue() + 1);
+    }
+
+    function counterDecrement() {
+      counter.setValue(counter.getValue() - 1);
+    }
+
+    function counterReset() {
+      counter.reset();
+    }
+
+    function clearLog() {
+      document.getElementById('stateLog').innerHTML = '<div>初始状态: ' + counter.getHistory()[0] + '</div>';
+    }
+
+    function validateState() {
+      const condition = document.getElementById('validateCondition').value;
+      const value = counter.getValue();
+      let valid = false;
+      let message = '';
+
+      switch (condition) {
+        case 'positive':
+          valid = value > 0;
+          message = `值 (${value}) > 0`;
+          break;
+        case 'even':
+          valid = value % 2 === 0;
+          message = `值 (${value}) 是偶数`;
+          break;
+        case 'range':
+          valid = value >= 0 && value <= 100;
+          message = `值 (${value}) 在 0-100 之间`;
+          break;
+      }
+
+      document.getElementById('validateResult').innerHTML = `
+        <div class="result-label">验证结果</div>
+        <div class="result-value">
+          <span class="status-badge ${valid ? 'success' : 'error'}">
+            <span class="dot"></span>${valid ? '通过' : '未通过'}
+          </span>
+          <br><br>
+          ${message}
+        </div>
+      `;
+    }
+
+    function getHistory() {
+      const history = counter.getHistory();
+      document.getElementById('historyValue').textContent = JSON.stringify(history, null, 2);
+    }
+  </script>
+</body>
+</html>

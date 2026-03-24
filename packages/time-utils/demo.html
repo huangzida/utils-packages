@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time Utils Demo - 时间格式化工具</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles/common.css">
+</head>
+<body>
+  <div class="noise-overlay"></div>
+
+  <div class="container">
+    <header>
+      <a href="../../index.html" class="back-link">← 返回首页</a>
+      <div class="logo">
+        <div class="logo-icon">⏰</div>
+        <div>
+          <h1>Time Utils Demo</h1>
+          <p class="subtitle">时间格式化工具</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="panel">
+      <div class="panel-header">
+        <div class="panel-icon time">⏰</div>
+        <div>
+          <h2 class="panel-title">时间格式化工具</h2>
+          <p class="panel-desc">秒数转换为时间格式，支持时分秒和详细格式</p>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-card">
+          <h3>格式化时间 <span class="badge">formatTime</span></h3>
+          <p>将秒数转换为 MM:SS 或 HH:MM:SS 格式</p>
+          <div class="input-group">
+            <label>输入秒数</label>
+            <input type="number" id="secondsInput" placeholder="输入秒数" value="3661">
+          </div>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <button class="btn" onclick="formatTimeDemo()">格式化</button>
+            <button class="btn btn-secondary" onclick="formatTimeNow()">当前时间</button>
+          </div>
+          <div class="result-box" id="timeResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>详细时间格式 <span class="badge">formatTimeDetail</span></h3>
+          <p>将秒数转换为包含时、分、秒的详细对象</p>
+          <div class="input-group">
+            <label>输入秒数</label>
+            <input type="number" id="detailSecondsInput" placeholder="输入秒数" value="90061">
+          </div>
+          <button class="btn" onclick="formatTimeDetailDemo()">获取详情</button>
+          <div class="result-box" id="timeDetailResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>数字补零 <span class="badge">padZero</span></h3>
+          <p>将数字补零到指定位数</p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="input-group">
+              <label>数字</label>
+              <input type="number" id="padNumInput" placeholder="数字" value="5">
+            </div>
+            <div class="input-group">
+              <label>位数</label>
+              <input type="number" id="padLenInput" placeholder="位数" value="3">
+            </div>
+          </div>
+          <button class="btn" onclick="padZeroDemo()">补零</button>
+          <div class="result-box" id="padZeroResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>相对时间 <span class="badge">formatRelativeTime</span></h3>
+          <p>显示相对时间（中文/英文）</p>
+          <div class="input-group">
+            <label>时间戳（毫秒）</label>
+            <input type="number" id="relativeTimeInput" placeholder="时间戳" value="">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
+            <button class="btn" onclick="formatRelativeTimeCN()">中文</button>
+            <button class="btn btn-secondary" onclick="formatRelativeTimeEN()">English</button>
+          </div>
+          <div class="result-box" id="relativeTimeResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>音频播放器时间示例</h3>
+          <p>模拟音频播放器的进度显示</p>
+          <div class="input-group">
+            <label>当前进度（秒）</label>
+            <input type="number" id="audioProgressInput" placeholder="进度秒数" value="125">
+          </div>
+          <div class="input-group">
+            <label>总时长（秒）</label>
+            <input type="number" id="audioDurationInput" placeholder="总时长" value="300">
+          </div>
+          <button class="btn" onclick="showAudioTime()">显示时间</button>
+          <div class="result-box" id="audioTimeResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>倒计时计算</h3>
+          <p>计算距离目标时间的剩余时间</p>
+          <div class="input-group">
+            <label>目标时间戳（毫秒）</label>
+            <input type="number" id="countdownInput" placeholder="未来时间戳" value="">
+          </div>
+          <button class="btn" onclick="calculateCountdown()">计算倒计时</button>
+          <div class="result-box" id="countdownResult"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>Built with ⚡ by <a href="#">@zid-utils</a> · 开源工具函数库</p>
+    </footer>
+  </div>
+
+  <script>
+    // Time Utils Functions
+    function padZero(num, length = 2) {
+      return num.toString().padStart(length, '0');
+    }
+
+    function formatTimeDisplay(seconds) {
+      const hours = Math.floor(seconds / 3600);
+      const mins = Math.floor((seconds % 3600) / 60);
+      const secs = Math.floor(seconds % 60);
+      if (hours > 0) {
+        return `${padZero(hours)}:${padZero(mins)}:${padZero(secs)}`;
+      }
+      return `${padZero(mins)}:${padZero(secs)}`;
+    }
+
+    function formatTimeDemo() {
+      const seconds = parseInt(document.getElementById('secondsInput').value) || 0;
+      const result = formatTimeDisplay(seconds);
+      document.getElementById('timeResult').innerHTML = `
+        <div class="result-label">格式化结果</div>
+        <div class="result-value">${result}</div>
+        <div class="code-block">formatTime(${seconds}) → "${result}"</div>
+      `;
+    }
+
+    function formatTimeNow() {
+      const seconds = Math.floor(Date.now() / 1000) % 86400;
+      document.getElementById('secondsInput').value = seconds;
+      formatTimeDemo();
+    }
+
+    function formatTimeDetailDemo() {
+      const seconds = parseInt(document.getElementById('detailSecondsInput').value) || 0;
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const secs = seconds % 60;
+      const detail = {
+        hours: padZero(hours),
+        minutes: padZero(minutes),
+        seconds: padZero(secs),
+        displayTime: `${padZero(hours)}:${padZero(minutes)}:${padZero(secs)}`
+      };
+      document.getElementById('timeDetailResult').innerHTML = `
+        <div class="result-label">详细时间信息</div>
+        <div class="result-value">${JSON.stringify(detail, null, 2)}</div>
+        <div class="code-block">formatTimeDetail(${seconds})</div>
+      `;
+    }
+
+    function padZeroDemo() {
+      const num = parseInt(document.getElementById('padNumInput').value) || 0;
+      const length = parseInt(document.getElementById('padLenInput').value) || 2;
+      const result = padZero(num, length);
+      document.getElementById('padZeroResult').innerHTML = `
+        <div class="result-label">补零结果</div>
+        <div class="result-value">${result}</div>
+        <div class="code-block">padZero(${num}, ${length}) → "${result}"</div>
+      `;
+    }
+
+    function formatRelativeTimeDemo(timestamp, locale) {
+      const now = Date.now();
+      const diff = now - timestamp;
+      const seconds = Math.floor(diff / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+      const months = Math.floor(days / 30);
+      const years = Math.floor(days / 365);
+
+      let result;
+      if (locale === 'zh-CN') {
+        if (seconds < 60) result = '刚刚';
+        else if (minutes < 60) result = `${minutes} 分钟前`;
+        else if (hours < 24) result = `${hours} 小时前`;
+        else if (days < 30) result = `${days} 天前`;
+        else if (months < 12) result = `${months} 个月前`;
+        else result = `${years} 年前`;
+      } else {
+        if (seconds < 60) result = 'just now';
+        else if (minutes < 60) result = `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+        else if (hours < 24) result = `${hours} hour${hours > 1 ? 's' : ''} ago`;
+        else if (days < 30) result = `${days} day${days > 1 ? 's' : ''} ago`;
+        else if (months < 12) result = `${months} month${months > 1 ? 's' : ''} ago`;
+        else result = `${years} year${years > 1 ? 's' : ''} ago`;
+      }
+
+      return result;
+    }
+
+    function formatRelativeTimeCN() {
+      let timestamp = parseInt(document.getElementById('relativeTimeInput').value);
+      if (!timestamp) {
+        timestamp = Date.now() - 3600000;
+      }
+      const result = formatRelativeTimeDemo(timestamp, 'zh-CN');
+      document.getElementById('relativeTimeResult').innerHTML = `
+        <div class="result-label">相对时间（中文）</div>
+        <div class="result-value">${result}</div>
+        <div class="code-block">formatRelativeTime(${timestamp}, "zh-CN")</div>
+      `;
+    }
+
+    function formatRelativeTimeEN() {
+      let timestamp = parseInt(document.getElementById('relativeTimeInput').value);
+      if (!timestamp) {
+        timestamp = Date.now() - 3600000;
+      }
+      const result = formatRelativeTimeDemo(timestamp, 'en-US');
+      document.getElementById('relativeTimeResult').innerHTML = `
+        <div class="result-label">Relative Time (English)</div>
+        <div class="result-value">${result}</div>
+        <div class="code-block">formatRelativeTime(${timestamp}, "en-US")</div>
+      `;
+    }
+
+    function showAudioTime() {
+      const progress = parseInt(document.getElementById('audioProgressInput').value) || 0;
+      const duration = parseInt(document.getElementById('audioDurationInput').value) || 0;
+      const currentTime = formatTimeDisplay(progress);
+      const totalTime = formatTimeDisplay(duration);
+
+      document.getElementById('audioTimeResult').innerHTML = `
+        <div class="result-label">播放器时间显示</div>
+        <div class="result-value">${currentTime} / ${totalTime}</div>
+        <div class="code-block">
+          formatTime(${progress}) → "${currentTime}"\n
+          formatTime(${duration}) → "${totalTime}"
+        </div>
+      `;
+    }
+
+    function calculateCountdown() {
+      let targetTimestamp = parseInt(document.getElementById('countdownInput').value);
+      if (!targetTimestamp) {
+        targetTimestamp = Date.now() + 86400000;
+      }
+      const now = Date.now();
+      const diff = targetTimestamp - now;
+
+      if (diff <= 0) {
+        document.getElementById('countdownResult').innerHTML = `
+          <div class="result-label">倒计时结果</div>
+          <div class="result-value error">时间已过</div>
+        `;
+        return;
+      }
+
+      const seconds = Math.floor(diff / 1000);
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const secs = seconds % 60;
+      const countdown = formatTimeDisplay(seconds);
+
+      document.getElementById('countdownResult').innerHTML = `
+        <div class="result-label">倒计时结果</div>
+        <div class="result-value">${countdown}</div>
+        <div class="code-block">
+          距离目标时间还有:\n
+          ${hours} 小时 ${minutes} 分 ${secs} 秒
+        </div>
+      `;
+    }
+
+    // Initialize
+    formatRelativeTimeCN();
+    calculateCountdown();
+  </script>
+</body>
+</html>

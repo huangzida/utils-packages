@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOM Utils Demo - DOM 操作工具</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles/common.css">
+  <style>
+    .demo-area {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 32px;
+      margin-top: 20px;
+      text-align: center;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scroll-container {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      padding: 16px;
+      max-height: 200px;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="noise-overlay"></div>
+
+  <div class="container">
+    <header>
+      <a href="../../index.html" class="back-link">← 返回首页</a>
+      <div class="logo">
+        <div class="logo-icon">🏠</div>
+        <div>
+          <h1>DOM Utils Demo</h1>
+          <p class="subtitle">DOM 操作工具</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="panel">
+      <div class="panel-header">
+        <div class="panel-icon dom">🏠</div>
+        <div>
+          <h2 class="panel-title">DOM 操作工具</h2>
+          <p class="panel-desc">封装常用的 DOM 查询操作</p>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-card">
+          <h3>获取元素可见区域 <span class="badge">getElementVisibleRect</span></h3>
+          <p>获取元素在视口中的可见区域</p>
+          <div class="demo-area" id="targetElement">
+            <div>
+              <div style="font-size: 24px; margin-bottom: 8px;">🎯</div>
+              <div>这是一个示例元素</div>
+              <div style="color: var(--text-muted); margin-top: 8px;">点击下方按钮获取其可见区域</div>
+            </div>
+          </div>
+          <button class="btn" onclick="getVisibleRect()">获取可见区域</button>
+          <div class="result-box" id="visibleRectResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>获取滚动条宽度 <span class="badge">getScrollbarWidth</span></h3>
+          <p>获取浏览器滚动条的宽度</p>
+          <button class="btn" onclick="getScrollbarWidthDemo()">获取宽度</button>
+          <div class="result-box" id="scrollbarWidthResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>检查滚动条需求 <span class="badge">needsScrollbar</span></h3>
+          <p>检查元素是否需要滚动条</p>
+          <div class="scroll-container" id="scrollableContainer">
+            <div style="padding: 16px;">
+              <p>这是内容区域...</p>
+              <p>滚动查看更多内容...</p>
+              <p>内容1</p>
+              <p>内容2</p>
+              <p>内容3</p>
+              <p>内容4</p>
+              <p>内容5</p>
+              <p>内容6</p>
+              <p>内容7</p>
+              <p>内容8</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <button class="btn" onclick="checkScrollbar('vertical')">检查垂直</button>
+            <button class="btn btn-secondary" onclick="checkScrollbar('horizontal')">检查水平</button>
+          </div>
+          <div class="result-box" id="needsScrollbarResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>触发窗口 Resize <span class="badge">triggerWindowResize</span></h3>
+          <p>手动触发窗口的 resize 事件</p>
+          <button class="btn" onclick="triggerResize()">触发 Resize</button>
+          <div class="result-box" id="resizeResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>窗口信息</h3>
+          <p>获取当前窗口和屏幕的信息</p>
+          <button class="btn" onclick="showWindowInfo()">显示信息</button>
+          <div class="result-box" id="windowInfoResult"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>Built with ⚡ by <a href="#">@zid-utils</a> · 开源工具函数库</p>
+    </footer>
+  </div>
+
+  <script>
+    // getElementVisibleRect - 获取元素可见区域
+    async function getElementVisibleRect(element) {
+      return new Promise((resolve) => {
+        const rect = element.getBoundingClientRect();
+        resolve({
+          top: rect.top,
+          left: rect.left,
+          width: rect.width,
+          height: rect.height
+        });
+      });
+    }
+
+    async function getVisibleRect() {
+      const element = document.getElementById('targetElement');
+      const rect = await getElementVisibleRect(element);
+      document.getElementById('visibleRectResult').innerHTML = `
+        <div class="result-label">元素可见区域</div>
+        <div class="result-value">${JSON.stringify(rect, null, 2)}</div>
+      `;
+    }
+
+    // getScrollbarWidth - 获取滚动条宽度
+    function getScrollbarWidth() {
+      const outer = document.createElement('div');
+      outer.style.visibility = 'hidden';
+      outer.style.overflow = 'scroll';
+      document.body.appendChild(outer);
+
+      const inner = document.createElement('div');
+      outer.appendChild(inner);
+
+      const scrollbarWidth = outer.offsetWidth - inner.offsetWidth;
+      outer.parentNode.removeChild(outer);
+
+      return scrollbarWidth;
+    }
+
+    function getScrollbarWidthDemo() {
+      const width = getScrollbarWidth();
+      document.getElementById('scrollbarWidthResult').innerHTML = `
+        <div class="result-label">滚动条宽度</div>
+        <div class="result-value">${width} px</div>
+      `;
+    }
+
+    // needsScrollbar - 检查是否需要滚动条
+    function needsScrollbar(element, direction) {
+      if (direction === 'vertical') {
+        return element.scrollHeight > element.clientHeight;
+      } else if (direction === 'horizontal') {
+        return element.scrollWidth > element.clientWidth;
+      }
+      return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+    }
+
+    function checkScrollbar(direction) {
+      const container = document.getElementById('scrollableContainer');
+      const result = needsScrollbar(container, direction);
+      document.getElementById('needsScrollbarResult').innerHTML = `
+        <div class="result-label">检查结果 (${direction === 'vertical' ? '垂直' : '水平'})</div>
+        <div class="result-value">
+          <span class="status-badge ${result ? 'success' : 'error'}">
+            <span class="dot"></span>${result ? '需要' : '不需要'}滚动条
+          </span>
+        </div>
+      `;
+    }
+
+    // triggerWindowResize - 触发窗口 resize
+    function triggerWindowResize() {
+      window.dispatchEvent(new Event('resize'));
+    }
+
+    function triggerResize() {
+      triggerWindowResize();
+      document.getElementById('resizeResult').innerHTML = `
+        <div class="result-label">事件已触发</div>
+        <div class="result-value">window resize 事件已触发</div>
+      `;
+    }
+
+    // showWindowInfo - 显示窗口信息
+    function showWindowInfo() {
+      const info = {
+        window: {
+          innerWidth: window.innerWidth,
+          innerHeight: window.innerHeight,
+          outerWidth: window.outerWidth,
+          outerHeight: window.outerHeight
+        },
+        screen: {
+          width: screen.width,
+          height: screen.height,
+          availWidth: screen.availWidth,
+          availHeight: screen.availHeight
+        },
+        scrollbarWidth: getScrollbarWidth()
+      };
+
+      document.getElementById('windowInfoResult').innerHTML = `
+        <div class="result-label">窗口和屏幕信息</div>
+        <div class="result-value">${JSON.stringify(info, null, 2)}</div>
+      `;
+    }
+  </script>
+</body>
+</html>

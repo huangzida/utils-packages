@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fetch Utils Demo - 文件下载工具</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles/common.css">
+</head>
+<body>
+  <div class="noise-overlay"></div>
+
+  <div class="container">
+    <header>
+      <a href="../../index.html" class="back-link">← 返回首页</a>
+      <div class="logo">
+        <div class="logo-icon">📥</div>
+        <div>
+          <h1>Fetch Utils Demo</h1>
+          <p class="subtitle">文件下载工具</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="panel">
+      <div class="panel-header">
+        <div class="panel-icon" style="background: linear-gradient(135deg, var(--accent-green), #059669);">📥</div>
+        <div>
+          <h2 class="panel-title">文件下载工具</h2>
+          <p class="panel-desc">提供 URL、Blob、Base64 等多种文件下载方式</p>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-card">
+          <h3>下载文本文件</h3>
+          <p>通过 Blob 下载文本文件</p>
+          <div class="input-group">
+            <label>文件名</label>
+            <input type="text" id="textFileName" placeholder="filename.txt" value="hello.txt">
+          </div>
+          <div class="input-group">
+            <label>文件内容</label>
+            <textarea id="textFileContent" placeholder="文件内容" rows="3">Hello World! 这是下载的文本文件。</textarea>
+          </div>
+          <button class="btn" onclick="downloadTextFile()">📥 下载文件</button>
+          <div class="result-box" id="textFileResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>下载 CSV 文件</h3>
+          <p>导出数据为 CSV 格式</p>
+          <button class="btn" onclick="downloadCSV()">📊 下载 CSV</button>
+          <div class="result-box" id="csvResult">
+            <div class="result-label">示例数据</div>
+            <div class="result-value" style="font-size: 12px;">
+              name,age,city<br>
+              张三,28,北京<br>
+              李四,32,上海
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-card">
+          <h3>下载 JSON 文件</h3>
+          <p>导出数据为 JSON 格式</p>
+          <button class="btn" onclick="downloadJSON()">📋 下载 JSON</button>
+          <div class="result-box" id="jsonResult">
+            <div class="result-label">示例数据</div>
+            <div class="result-value" style="font-size: 12px;">
+              {"name": "张三", "age": 28}
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-card">
+          <h3>Base64 下载</h3>
+          <p>通过 Base64 数据下载文件</p>
+          <div class="input-group">
+            <label>文件名</label>
+            <input type="text" id="base64FileName" placeholder="image.png" value="data.txt">
+          </div>
+          <div class="input-group">
+            <label>Base64 数据</label>
+            <textarea id="base64Data" placeholder="Base64 编码的数据" rows="2">SGVsbG8gV29ybGQ=</textarea>
+          </div>
+          <button class="btn" onclick="downloadBase64()">📥 下载</button>
+          <div class="result-box" id="base64Result"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>下载 HTML 文件</h3>
+          <p>下载 HTML 格式的文件</p>
+          <div class="input-group">
+            <label>文件名</label>
+            <input type="text" id="htmlFileName" placeholder="page.html" value="page.html">
+          </div>
+          <div class="input-group">
+            <label>HTML 内容</label>
+            <textarea id="htmlContent" placeholder="HTML 内容" rows="3">&lt;h1&gt;Hello&lt;/h1&gt;&lt;p&gt;This is a test page.&lt;/p&gt;</textarea>
+          </div>
+          <button class="btn" onclick="downloadHTML()">📥 下载 HTML</button>
+          <div class="result-box" id="htmlResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>生成下载链接</h3>
+          <p>生成一个可点击的下载链接</p>
+          <button class="btn" onclick="generateDownloadLink()">🔗 生成链接</button>
+          <div class="result-box" id="linkResult"></div>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; padding: 16px; background: rgba(16, 185, 129, 0.1); border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.3);">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--accent-green); font-weight: 600;">
+          💡 使用提示
+        </div>
+        <ul style="color: var(--text-secondary); font-size: 13px; line-height: 1.8; padding-left: 20px;">
+          <li>所有下载都会自动触发浏览器下载</li>
+          <li>Blob 下载会自动创建临时 URL 并在下载后清理</li>
+          <li>Base64 下载会自动添加 data URI 前缀</li>
+          <li>建议在用户点击事件中调用，避免被浏览器拦截</li>
+        </ul>
+      </div>
+    </main>
+
+    <footer>
+      <p>Built with ⚡ by <a href="#">@zid-utils</a> · 开源工具函数库</p>
+    </footer>
+  </div>
+
+  <script>
+    // Download Functions
+    function downloadBlob(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 100);
+    }
+
+    function downloadTextFile() {
+      const filename = document.getElementById('textFileName').value || 'file.txt';
+      const content = document.getElementById('textFileContent').value;
+      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+      downloadBlob(blob, filename);
+      document.getElementById('textFileResult').innerHTML = `
+        <div class="result-label">下载成功</div>
+        <div class="result-value">已下载: ${filename}</div>
+      `;
+    }
+
+    function downloadCSV() {
+      const data = [
+        ['name', 'age', 'city'],
+        ['张三', 28, '北京'],
+        ['李四', 32, '上海']
+      ];
+      const csv = data.map(row => row.join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+      downloadBlob(blob, 'data.csv');
+      document.getElementById('csvResult').innerHTML = `
+        <div class="result-label">下载成功</div>
+        <div class="result-value">已下载: data.csv</div>
+      `;
+    }
+
+    function downloadJSON() {
+      const data = { name: '张三', age: 28, hobbies: ['读书', '旅行'] };
+      const json = JSON.stringify(data, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      downloadBlob(blob, 'data.json');
+      document.getElementById('jsonResult').innerHTML = `
+        <div class="result-label">下载成功</div>
+        <div class="result-value">已下载: data.json</div>
+      `;
+    }
+
+    function downloadBase64() {
+      const filename = document.getElementById('base64FileName').value || 'file.txt';
+      const base64 = document.getElementById('base64Data').value;
+      try {
+        const binary = atob(base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        const blob = new Blob([bytes]);
+        downloadBlob(blob, filename);
+        document.getElementById('base64Result').innerHTML = `
+          <div class="result-label">下载成功</div>
+          <div class="result-value">已下载: ${filename}</div>
+        `;
+      } catch (e) {
+        document.getElementById('base64Result').innerHTML = `
+          <div class="result-label">错误</div>
+          <div class="result-value error">Base64 解码失败: ${e.message}</div>
+        `;
+      }
+    }
+
+    function downloadHTML() {
+      const filename = document.getElementById('htmlFileName').value || 'page.html';
+      const content = document.getElementById('htmlContent').value;
+      const blob = new Blob([content], { type: 'text/html;charset=utf-8' });
+      downloadBlob(blob, filename);
+      document.getElementById('htmlResult').innerHTML = `
+        <div class="result-label">下载成功</div>
+        <div class="result-value">已下载: ${filename}</div>
+      `;
+    }
+
+    function generateDownloadLink() {
+      const content = '这是通过链接下载的内容！';
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const link = `<a href="${url}" download="generated.txt" style="color: var(--accent-cyan);">点击下载文件</a>`;
+      document.getElementById('linkResult').innerHTML = `
+        <div class="result-label">生成的下载链接</div>
+        <div class="result-value">${link}</div>
+      `;
+    }
+  </script>
+</body>
+</html>

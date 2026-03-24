@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>String Utils Demo - 字符串操作工具</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles/common.css">
+</head>
+<body>
+  <div class="noise-overlay"></div>
+
+  <div class="container">
+    <header>
+      <a href="../../index.html" class="back-link">← 返回首页</a>
+      <div class="logo">
+        <div class="logo-icon">✂️</div>
+        <div>
+          <h1>String Utils Demo</h1>
+          <p class="subtitle">字符串操作工具</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="panel">
+      <div class="panel-header">
+        <div class="panel-icon" style="background: linear-gradient(135deg, var(--accent-green), #059669);">✂️</div>
+        <div>
+          <h2 class="panel-title">字符串操作工具</h2>
+          <p class="panel-desc">提供命名转换、HTML 转义、模板等丰富的字符串处理函数</p>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-card">
+          <h3>命名转换</h3>
+          <p>驼峰、短横线、下划线命名转换</p>
+          <div class="input-group">
+            <label>输入</label>
+            <input type="text" id="caseInput" placeholder="hello-world" value="hello-world">
+          </div>
+          <button class="btn" onclick="demoCaseConvert()">转换</button>
+          <div class="result-box" id="caseResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>HTML 转义 <span class="badge">escapeHtml</span></h3>
+          <p>转义 HTML 特殊字符，防止 XSS</p>
+          <div class="input-group">
+            <label>输入 HTML</label>
+            <input type="text" id="escapeInput" placeholder="<div>Hello</div>" value="<script>alert('xss')</script>">
+          </div>
+          <button class="btn" onclick="demoEscapeHtml()">转义</button>
+          <div class="result-box" id="escapeResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>模板替换 <span class="badge">template</span></h3>
+          <p>替换字符串中的 {{变量}}</p>
+          <div class="input-group">
+            <label>模板</label>
+            <input type="text" id="templateStr" placeholder="Hello {{name}}!" value="Hello {{name}}, you have {{count}} messages">
+          </div>
+          <div class="input-group">
+            <label>变量 (JSON)</label>
+            <input type="text" id="templateData" placeholder='{"name": "张三", "count": 5}' value='{"name": "张三", "count": 5}'>
+          </div>
+          <button class="btn" onclick="demoTemplate()">替换</button>
+          <div class="result-box" id="templateResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>字符串截断 <span class="badge">truncate</span></h3>
+          <p>截断字符串并添加后缀</p>
+          <div class="input-group">
+            <label>输入</label>
+            <input type="text" id="truncateInput" placeholder="这是一个很长的字符串" value="这是一个很长的字符串需要被截断">
+          </div>
+          <div class="input-group">
+            <label>最大长度</label>
+            <input type="number" id="truncateLength" placeholder="长度" value="10">
+          </div>
+          <button class="btn" onclick="demoTruncate()">截断</button>
+          <div class="result-box" id="truncateResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>字符串重复 <span class="badge">repeat</span></h3>
+          <p>重复字符串指定次数</p>
+          <div class="input-group">
+            <label>字符串</label>
+            <input type="text" id="repeatStr" placeholder="abc" value="abc">
+          </div>
+          <div class="input-group">
+            <label>次数</label>
+            <input type="number" id="repeatCount" placeholder="次数" value="3">
+          </div>
+          <button class="btn" onclick="demoRepeat()">重复</button>
+          <div class="result-box" id="repeatResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>去除空白 <span class="badge">trim</span></h3>
+          <p>去除字符串首尾空白</p>
+          <div class="input-group">
+            <label>输入</label>
+            <input type="text" id="trimInput" placeholder="  Hello  " value="   Hello World   ">
+          </div>
+          <button class="btn" onclick="demoTrim()">去空白</button>
+          <div class="result-box" id="trimResult"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>Built with ⚡ by <a href="#">@zid-utils</a> · 开源工具函数库</p>
+    </footer>
+  </div>
+
+  <script>
+    // String Utils Functions
+    function camelCase(str) {
+      return str.replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
+    }
+
+    function kebabCase(str) {
+      return str.replace(/([a-z])([A-Z])/g, '$1-$2')
+        .replace(/[\s_]+/g, '-')
+        .toLowerCase();
+    }
+
+    function snakeCase(str) {
+      return str.replace(/([a-z])([A-Z])/g, '$1_$2')
+        .replace(/[\s-]+/g, '_')
+        .toLowerCase();
+    }
+
+    function escapeHtml(str) {
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      };
+      return str.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    function template(str, data) {
+      return str.replace(/\{\{(\w+)\}\}/g, (_, key) => data[key] ?? '');
+    }
+
+    function truncate(str, length, suffix = '...') {
+      if (str.length <= length) return str;
+      return str.substring(0, length - suffix.length) + suffix;
+    }
+
+    function repeat(str, count) {
+      return str.repeat(count);
+    }
+
+    function trim(str) {
+      return str.trim();
+    }
+
+    // Demos
+    function demoCaseConvert() {
+      const input = document.getElementById('caseInput').value;
+      document.getElementById('caseResult').innerHTML = `
+        <div class="result-label">命名转换结果</div>
+        <div class="result-value">
+          原始: ${input}<br>
+          驼峰: ${camelCase(input)}<br>
+          短横线: ${kebabCase(input)}<br>
+          下划线: ${snakeCase(input)}
+        </div>
+      `;
+    }
+
+    function demoEscapeHtml() {
+      const input = document.getElementById('escapeInput').value;
+      const result = escapeHtml(input);
+      document.getElementById('escapeResult').innerHTML = `
+        <div class="result-label">HTML 转义结果</div>
+        <div class="result-value">${result}</div>
+      `;
+    }
+
+    function demoTemplate() {
+      const str = document.getElementById('templateStr').value;
+      const dataStr = document.getElementById('templateData').value;
+      try {
+        const data = JSON.parse(dataStr);
+        const result = template(str, data);
+        document.getElementById('templateResult').innerHTML = `
+          <div class="result-label">模板替换结果</div>
+          <div class="result-value">${result}</div>
+        `;
+      } catch (e) {
+        document.getElementById('templateResult').innerHTML = `
+          <div class="result-label">错误</div>
+          <div class="result-value error">JSON 格式错误: ${e.message}</div>
+        `;
+      }
+    }
+
+    function demoTruncate() {
+      const input = document.getElementById('truncateInput').value;
+      const length = parseInt(document.getElementById('truncateLength').value) || 10;
+      const result = truncate(input, length);
+      document.getElementById('truncateResult').innerHTML = `
+        <div class="result-label">截断结果 (最大 ${length} 字符)</div>
+        <div class="result-value">${result}</div>
+      `;
+    }
+
+    function demoRepeat() {
+      const str = document.getElementById('repeatStr').value;
+      const count = parseInt(document.getElementById('repeatCount').value) || 3;
+      const result = repeat(str, count);
+      document.getElementById('repeatResult').innerHTML = `
+        <div class="result-label">重复 ${count} 次结果</div>
+        <div class="result-value">${result}</div>
+      `;
+    }
+
+    function demoTrim() {
+      const input = document.getElementById('trimInput').value;
+      const result = trim(input);
+      document.getElementById('trimResult').innerHTML = `
+        <div class="result-label">去空白结果</div>
+        <div class="result-value">"${result}"</div>
+      `;
+    }
+  </script>
+</body>
+</html>

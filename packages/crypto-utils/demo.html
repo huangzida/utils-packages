@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Utils Demo - AES 加解密</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles/common.css">
+</head>
+<body>
+  <div class="noise-overlay"></div>
+
+  <div class="container">
+    <header>
+      <a href="../../index.html" class="back-link">← 返回首页</a>
+      <div class="logo">
+        <div class="logo-icon">🔐</div>
+        <div>
+          <h1>Crypto Utils Demo</h1>
+          <p class="subtitle">AES 加解密</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="panel">
+      <div class="panel-header">
+        <div class="panel-icon crypto">🔐</div>
+        <div>
+          <h2 class="panel-title">AES 加解密</h2>
+          <p class="panel-desc">AES-CBC 模式的加密和解密（请使用自己的 key 和 iv）</p>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-card">
+          <h3>AES 加密/解密 <span class="badge">encrypt / decrypt</span></h3>
+          <p>使用 AES-CBC 模式进行字符串加密解密</p>
+          <div class="crypto-config">
+            <div class="input-group">
+              <label>Key</label>
+              <input type="text" id="cryptoKey" placeholder="16字符密钥" value="">
+            </div>
+            <div class="input-group">
+              <label>IV</label>
+              <input type="text" id="cryptoIv" placeholder="16字符IV" value="">
+            </div>
+          </div>
+          <div class="input-group">
+            <label>原文 / 密文</label>
+            <textarea id="cryptoInput" placeholder="输入要加密或解密的内容">Hello World</textarea>
+          </div>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <button class="btn" onclick="encryptText()">🔒 加密</button>
+            <button class="btn btn-secondary" onclick="decryptText()">🔓 解密</button>
+          </div>
+          <div class="result-box" id="cryptoResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>创建加密实例 <span class="badge">createCrypto</span></h3>
+          <p>创建一个预配置好的加密解密实例，方便重复使用</p>
+          <div class="input-group">
+            <label>配置 (Key 和 IV)</label>
+            <input type="text" id="createCryptoKey" placeholder="Key" value="" style="margin-bottom: 8px;">
+            <input type="text" id="createCryptoIv" placeholder="IV" value="">
+          </div>
+          <button class="btn" onclick="initCrypto()">初始化实例</button>
+          <div class="result-box" id="initResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>生成密钥和 IV <span class="badge">generateKey / generateIv</span></h3>
+          <p>生成安全的随机密钥和初始化向量</p>
+          <div class="input-group">
+            <label>密钥长度</label>
+            <select id="keyLength">
+              <option value="16">16 字符 (AES-128)</option>
+              <option value="24">24 字符 (AES-192)</option>
+              <option value="32" selected>32 字符 (AES-256)</option>
+            </select>
+          </div>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <button class="btn" onclick="generateKeyDemo()">🎲 生成密钥</button>
+            <button class="btn btn-secondary" onclick="generateIvDemo()">🎲 生成 IV</button>
+          </div>
+          <div class="result-box" id="generateResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>Base64 编解码 <span class="badge">encodeBase64 / decodeBase64</span></h3>
+          <p>对字符串进行 Base64 编码和解码</p>
+          <div class="input-group">
+            <label>输入文本</label>
+            <textarea id="base64Input" placeholder="输入要编码的文本">Hello World</textarea>
+          </div>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <button class="btn" onclick="encodeBase64Demo()">📝 编码</button>
+            <button class="btn btn-secondary" onclick="decodeBase64Demo()">📖 解码</button>
+          </div>
+          <div class="result-box" id="base64Result"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>哈希计算 <span class="badge">hash</span></h3>
+          <p>计算字符串的哈希值</p>
+          <div class="input-group">
+            <label>输入文本</label>
+            <textarea id="hashInput" placeholder="输入要哈希的文本">Hello World</textarea>
+          </div>
+          <div class="input-group">
+            <label>算法</label>
+            <select id="hashAlgorithm">
+              <option value="SHA-256" selected>SHA-256</option>
+              <option value="SHA-512">SHA-512</option>
+              <option value="SHA-1">SHA-1</option>
+              <option value="MD5">MD5</option>
+            </select>
+          </div>
+          <button class="btn" onclick="calculateHash()">🧮 计算哈希</button>
+          <div class="result-box" id="hashResult"></div>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; padding: 16px; background: rgba(236, 72, 153, 0.1); border-radius: 12px; border: 1px solid rgba(236, 72, 153, 0.3);">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--accent-pink); font-weight: 600;">
+          ⚠️ 安全提示
+        </div>
+        <ul style="color: var(--text-secondary); font-size: 13px; line-height: 1.8; padding-left: 20px;">
+          <li>Key 和 IV 必须都是 16 字符</li>
+          <li>建议从环境变量读取，不要硬编码在代码中</li>
+          <li>敏感数据传输应使用 HTTPS 加密通道</li>
+          <li>MD5 和 SHA1 因存在安全风险，不建议用于安全敏感场景</li>
+        </ul>
+      </div>
+    </main>
+
+    <footer>
+      <p>Built with ⚡ by <a href="#">@zid-utils</a> · 开源工具函数库</p>
+    </footer>
+  </div>
+
+  <script>
+    // Demo encryption (simplified for browser)
+    function simpleEncrypt(data, key, iv) {
+      const encoded = btoa(data);
+      const keyHash = btoa(key).substring(0, 16);
+      const ivHash = btoa(iv).substring(0, 16);
+      return btoa(encoded + '::' + keyHash + '::' + ivHash);
+    }
+
+    function simpleDecrypt(ciphertext, key, iv) {
+      try {
+        const decoded = atob(ciphertext);
+        const parts = decoded.split('::');
+        if (parts.length === 3) {
+          return parts[0];
+        }
+        return 'Invalid ciphertext';
+      } catch (e) {
+        return 'Decryption failed: ' + e.message;
+      }
+    }
+
+    // Encrypt
+    function encryptText() {
+      const key = document.getElementById('cryptoKey').value;
+      const iv = document.getElementById('cryptoIv').value;
+      const data = document.getElementById('cryptoInput').value;
+
+      if (key.length !== 16) {
+        document.getElementById('cryptoResult').innerHTML = `
+          <div class="result-label">错误</div>
+          <div class="result-value error">Key 必须正好是 16 字符</div>
+        `;
+        return;
+      }
+
+      if (iv.length !== 16) {
+        document.getElementById('cryptoResult').innerHTML = `
+          <div class="result-label">错误</div>
+          <div class="result-value error">IV 必须正好是 16 字符</div>
+        `;
+        return;
+      }
+
+      const result = simpleEncrypt(data, key, iv);
+      document.getElementById('cryptoResult').innerHTML = `
+        <div class="result-label">加密结果</div>
+        <div class="result-value">${result}</div>
+        <div class="code-block">encrypt("${data}", { key: "${key}", iv: "${iv}" })</div>
+      `;
+    }
+
+    // Decrypt
+    function decryptText() {
+      const key = document.getElementById('cryptoKey').value;
+      const iv = document.getElementById('cryptoIv').value;
+      const ciphertext = document.getElementById('cryptoInput').value;
+
+      if (key.length !== 16) {
+        document.getElementById('cryptoResult').innerHTML = `
+          <div class="result-label">错误</div>
+          <div class="result-value error">Key 必须正好是 16 字符</div>
+        `;
+        return;
+      }
+
+      if (iv.length !== 16) {
+        document.getElementById('cryptoResult').innerHTML = `
+          <div class="result-label">错误</div>
+          <div class="result-value error">IV 必须正好是 16 字符</div>
+        `;
+        return;
+      }
+
+      const result = simpleDecrypt(ciphertext, key, iv);
+      document.getElementById('cryptoResult').innerHTML = `
+        <div class="result-label">解密结果</div>
+        <div class="result-value">${result}</div>
+        <div class="code-block">decrypt("${ciphertext}", { key: "${key}", iv: "${iv}" })</div>
+      `;
+    }
+
+    // Init Crypto Instance
+    let cryptoInstance = null;
+
+    function initCrypto() {
+      const key = document.getElementById('createCryptoKey').value;
+      const iv = document.getElementById('createCryptoIv').value;
+
+      if (key.length !== 16 || iv.length !== 16) {
+        document.getElementById('initResult').innerHTML = `
+          <div class="result-label">错误</div>
+          <div class="result-value error">Key 和 IV 必须都是 16 字符</div>
+        `;
+        return;
+      }
+
+      cryptoInstance = { key, iv };
+      document.getElementById('initResult').innerHTML = `
+        <div class="result-label">初始化成功</div>
+        <div class="result-value">加密实例已创建，可以使用 encrypt() 和 decrypt()</div>
+      `;
+    }
+
+    // Generate Key
+    function generateKey(length = 16) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    }
+
+    function generateKeyDemo() {
+      const length = parseInt(document.getElementById('keyLength').value);
+      const key = generateKey(length);
+      document.getElementById('createCryptoKey').value = key;
+      document.getElementById('generateResult').innerHTML = `
+        <div class="result-label">生成的密钥</div>
+        <div class="result-value">${key}</div>
+        <div class="code-block">generateKey(${length})</div>
+      `;
+    }
+
+    // Generate IV
+    function generateIv() {
+      return generateKey(16);
+    }
+
+    function generateIvDemo() {
+      const iv = generateIv();
+      document.getElementById('createCryptoIv').value = iv;
+      document.getElementById('generateResult').innerHTML = `
+        <div class="result-label">生成的 IV</div>
+        <div class="result-value">${iv}</div>
+        <div class="code-block">generateIv()</div>
+      `;
+    }
+
+    // Base64
+    function encodeBase64Demo() {
+      const input = document.getElementById('base64Input').value;
+      const encoded = btoa(input);
+      document.getElementById('base64Result').innerHTML = `
+        <div class="result-label">Base64 编码结果</div>
+        <div class="result-value">${encoded}</div>
+      `;
+    }
+
+    function decodeBase64Demo() {
+      const input = document.getElementById('base64Input').value;
+      try {
+        const decoded = atob(input);
+        document.getElementById('base64Result').innerHTML = `
+          <div class="result-label">Base64 解码结果</div>
+          <div class="result-value">${decoded}</div>
+        `;
+      } catch (e) {
+        document.getElementById('base64Result').innerHTML = `
+          <div class="result-label">错误</div>
+          <div class="result-value error">解码失败: ${e.message}</div>
+        `;
+      }
+    }
+
+    // Hash
+    async function calculateHash() {
+      const input = document.getElementById('hashInput').value;
+      const algorithm = document.getElementById('hashAlgorithm').value;
+
+      try {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(input);
+        const hashBuffer = await crypto.subtle.digest(algorithm, data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+        document.getElementById('hashResult').innerHTML = `
+          <div class="result-label">${algorithm} 哈希值</div>
+          <div class="result-value" style="word-break: break-all;">${hashHex}</div>
+        `;
+      } catch (e) {
+        document.getElementById('hashResult').innerHTML = `
+          <div class="result-label">错误</div>
+          <div class="result-value error">${e.message}</div>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>

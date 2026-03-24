@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Utils Demo - 颜色转换工具</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles/common.css">
+  <style>
+    .color-preview {
+      display: flex;
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .color-box {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      border: 2px solid rgba(255,255,255,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .color-palette {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .color-palette-item {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .color-palette-item:hover {
+      transform: scale(1.1);
+      border-color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="noise-overlay"></div>
+
+  <div class="container">
+    <header>
+      <a href="../../index.html" class="back-link">← 返回首页</a>
+      <div class="logo">
+        <div class="logo-icon">🌈</div>
+        <div>
+          <h1>Color Utils Demo</h1>
+          <p class="subtitle">颜色转换工具</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="panel">
+      <div class="panel-header">
+        <div class="panel-icon" style="background: linear-gradient(135deg, var(--accent-pink), #db2777);">🌈</div>
+        <div>
+          <h2 class="panel-title">颜色转换工具</h2>
+          <p class="panel-desc">提供 HEX、RGB、HSL 之间的相互转换，颜色亮度调整等功能</p>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-card">
+          <h3>HEX ↔ RGB</h3>
+          <p>十六进制颜色与 RGB 互转</p>
+          <div class="input-group">
+            <label>HEX 颜色</label>
+            <input type="text" id="hexInput" placeholder="#FF5733" value="#FF5733">
+          </div>
+          <button class="btn" onclick="demoHexToRgb()">转换为 RGB</button>
+          <div class="color-preview">
+            <div class="color-box" id="hexPreview" style="background: #FF5733;"></div>
+          </div>
+          <div class="result-box" id="hexRgbResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>RGB ↔ HSL</h3>
+          <p>RGB 颜色与 HSL 互转</p>
+          <div class="input-group">
+            <label>R</label>
+            <input type="number" id="rgbR" placeholder="0-255" value="255" min="0" max="255">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div class="input-group">
+              <label>G</label>
+              <input type="number" id="rgbG" placeholder="0-255" value="87" min="0" max="255">
+            </div>
+            <div class="input-group">
+              <label>B</label>
+              <input type="number" id="rgbB" placeholder="0-255" value="51" min="0" max="255">
+            </div>
+          </div>
+          <button class="btn" onclick="demoRgbToHsl()">转换为 HSL</button>
+          <div class="color-preview">
+            <div class="color-box" id="rgbPreview" style="background: rgb(255, 87, 51);"></div>
+          </div>
+          <div class="result-box" id="rgbHslResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>颜色提亮 <span class="badge">lighten</span></h3>
+          <p>提亮指定百分比</p>
+          <div class="input-group">
+            <label>HEX 颜色</label>
+            <input type="text" id="lightenColor" placeholder="#FF5733" value="#FF5733">
+          </div>
+          <div class="input-group">
+            <label>提亮百分比 (0-100)</label>
+            <input type="number" id="lightenAmount" placeholder="20" value="20" min="0" max="100">
+          </div>
+          <button class="btn" onclick="demoLighten()">提亮</button>
+          <div class="color-preview">
+            <div class="color-box" id="lightenOriginal"></div>
+            <div class="color-box" id="lightenResult"></div>
+          </div>
+        </div>
+
+        <div class="demo-card">
+          <h3>颜色加深 <span class="badge">darken</span></h3>
+          <p>加深指定百分比</p>
+          <div class="input-group">
+            <label>HEX 颜色</label>
+            <input type="text" id="darkenColor" placeholder="#FF5733" value="#FF5733">
+          </div>
+          <div class="input-group">
+            <label>加深百分比 (0-100)</label>
+            <input type="number" id="darkenAmount" placeholder="20" value="20" min="0" max="100">
+          </div>
+          <button class="btn" onclick="demoDarken()">加深</button>
+          <div class="color-preview">
+            <div class="color-box" id="darkenOriginal"></div>
+            <div class="color-box" id="darkenResult"></div>
+          </div>
+        </div>
+
+        <div class="demo-card">
+          <h3>对比度检查</h3>
+          <p>检查两个颜色的对比度</p>
+          <div class="input-group">
+            <label>背景色</label>
+            <input type="text" id="bgColor" placeholder="#FFFFFF" value="#FFFFFF">
+          </div>
+          <div class="input-group">
+            <label>文字色</label>
+            <input type="text" id="textColor" placeholder="#000000" value="#000000">
+          </div>
+          <button class="btn" onclick="demoContrastRatio()">检查对比度</button>
+          <div class="result-box" id="contrastResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>随机颜色 <span class="badge">randomColor</span></h3>
+          <p>生成随机 HEX 颜色</p>
+          <button class="btn" onclick="demoRandomColor()">生成</button>
+          <div class="color-preview">
+            <div class="color-box" id="randomColorBox" style="background: #FF5733;"></div>
+          </div>
+          <div class="result-box" id="randomColorResult">
+            <div class="result-label">随机颜色</div>
+            <div class="result-value">#FF5733</div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>Built with ⚡ by <a href="#">@zid-utils</a> · 开源工具函数库</p>
+    </footer>
+  </div>
+
+  <script>
+    // Color Utils Functions
+    function hexToRgb(hex) {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      } : null;
+    }
+
+    function rgbToHex(r, g, b) {
+      return '#' + [r, g, b].map(x => {
+        const hex = Math.max(0, Math.min(255, Math.round(x))).toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+      }).join('');
+    }
+
+    function rgbToHsl(r, g, b) {
+      r /= 255; g /= 255; b /= 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      let h, s, l = (max + min) / 2;
+
+      if (max === min) {
+        h = s = 0;
+      } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+          case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+          case g: h = ((b - r) / d + 2) / 6; break;
+          case b: h = ((r - g) / d + 4) / 6; break;
+        }
+      }
+      return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+    }
+
+    function hslToRgb(h, s, l) {
+      h /= 360; s /= 100; l /= 100;
+      let r, g, b;
+      if (s === 0) {
+        r = g = b = l;
+      } else {
+        const hue2rgb = (p, q, t) => {
+          if (t < 0) t += 1;
+          if (t > 1) t -= 1;
+          if (t < 1/6) return p + (q - p) * 6 * t;
+          if (t < 1/2) return q;
+          if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+          return p;
+        };
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+      }
+      return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
+    }
+
+    function lighten(hex, amount) {
+      const rgb = hexToRgb(hex);
+      if (!rgb) return hex;
+      const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+      hsl.l = Math.min(100, hsl.l + amount);
+      const newRgb = hslToRgb(hsl.h, hsl.s, hsl.l);
+      return rgbToHex(newRgb.r, newRgb.g, newRgb.b);
+    }
+
+    function darken(hex, amount) {
+      const rgb = hexToRgb(hex);
+      if (!rgb) return hex;
+      const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+      hsl.l = Math.max(0, hsl.l - amount);
+      const newRgb = hslToRgb(hsl.h, hsl.s, hsl.l);
+      return rgbToHex(newRgb.r, newRgb.g, newRgb.b);
+    }
+
+    function getLuminance(r, g, b) {
+      const [rs, gs, bs] = [r, g, b].map(c => {
+        c /= 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    }
+
+    function getContrastRatio(color1, color2) {
+      const rgb1 = hexToRgb(color1);
+      const rgb2 = hexToRgb(color2);
+      if (!rgb1 || !rgb2) return 0;
+      const l1 = getLuminance(rgb1.r, rgb1.g, rgb1.b);
+      const l2 = getLuminance(rgb2.r, rgb2.g, rgb2.b);
+      const lighter = Math.max(l1, l2);
+      const darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function randomColor() {
+      return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+    }
+
+    // Demos
+    function demoHexToRgb() {
+      const hex = document.getElementById('hexInput').value;
+      const rgb = hexToRgb(hex);
+      document.getElementById('hexPreview').style.background = hex;
+      if (rgb) {
+        document.getElementById('hexRgbResult').innerHTML = `
+          <div class="result-label">RGB 值</div>
+          <div class="result-value">rgb(${rgb.r}, ${rgb.g}, ${rgb.b})</div>
+        `;
+      } else {
+        document.getElementById('hexRgbResult').innerHTML = `
+          <div class="result-label">错误</div>
+          <div class="result-value error">无效的 HEX 颜色</div>
+        `;
+      }
+    }
+
+    function demoRgbToHsl() {
+      const r = parseInt(document.getElementById('rgbR').value) || 0;
+      const g = parseInt(document.getElementById('rgbG').value) || 0;
+      const b = parseInt(document.getElementById('rgbB').value) || 0;
+      const hsl = rgbToHsl(r, g, b);
+      const hex = rgbToHex(r, g, b);
+      document.getElementById('rgbPreview').style.background = hex;
+      document.getElementById('rgbHslResult').innerHTML = `
+        <div class="result-label">HSL 值</div>
+        <div class="result-value">hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)</div>
+      `;
+    }
+
+    function demoLighten() {
+      const hex = document.getElementById('lightenColor').value;
+      const amount = parseInt(document.getElementById('lightenAmount').value) || 0;
+      const result = lighten(hex, amount);
+      document.getElementById('lightenOriginal').style.background = hex;
+      document.getElementById('lightenResult').style.background = result;
+      document.getElementById('lightenResult').nextElementSibling.innerHTML = `
+        <div class="result-label">提亮结果</div>
+        <div class="result-value">${result}</div>
+      `;
+    }
+
+    function demoDarken() {
+      const hex = document.getElementById('darkenColor').value;
+      const amount = parseInt(document.getElementById('darkenAmount').value) || 0;
+      const result = darken(hex, amount);
+      document.getElementById('darkenOriginal').style.background = hex;
+      document.getElementById('darkenResult').style.background = result;
+      document.getElementById('darkenResult').nextElementSibling.innerHTML = `
+        <div class="result-label">加深结果</div>
+        <div class="result-value">${result}</div>
+      `;
+    }
+
+    function demoContrastRatio() {
+      const bg = document.getElementById('bgColor').value;
+      const fg = document.getElementById('textColor').value;
+      const ratio = getContrastRatio(bg, fg);
+      let level = ratio >= 7 ? 'AAA' : ratio >= 4.5 ? 'AA' : ratio >= 3 ? 'AA Large' : 'Fail';
+      document.getElementById('contrastResult').innerHTML = `
+        <div class="result-label">对比度</div>
+        <div class="result-value">${ratio.toFixed(2)}:1</div>
+        <div class="code-block">WCAG 等级: ${level}</div>
+      `;
+    }
+
+    function demoRandomColor() {
+      const color = randomColor();
+      document.getElementById('randomColorBox').style.background = color;
+      document.getElementById('randomColorResult').innerHTML = `
+        <div class="result-label">随机颜色</div>
+        <div class="result-value">${color.toUpperCase()}</div>
+      `;
+    }
+  </script>
+</body>
+</html>

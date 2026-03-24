@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Object Utils Demo - 对象操作工具</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles/common.css">
+</head>
+<body>
+  <div class="noise-overlay"></div>
+
+  <div class="container">
+    <header>
+      <a href="../../index.html" class="back-link">← 返回首页</a>
+      <div class="logo">
+        <div class="logo-icon">🔧</div>
+        <div>
+          <h1>Object Utils Demo</h1>
+          <p class="subtitle">对象操作工具</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="panel">
+      <div class="panel-header">
+        <div class="panel-icon" style="background: linear-gradient(135deg, var(--accent-purple), #7c3aed);">🔧</div>
+        <div>
+          <h2 class="panel-title">对象操作工具</h2>
+          <p class="panel-desc">提供深拷贝、深度合并、属性选择等丰富的对象操作函数</p>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-card">
+          <h3>深拷贝 <span class="badge">deepClone</span></h3>
+          <p>创建对象的深拷贝，修改拷贝不影响原对象</p>
+          <button class="btn" onclick="demoDeepClone()">运行示例</button>
+          <div class="result-box" id="deepCloneResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>深度合并 <span class="badge">deepMerge</span></h3>
+          <p>深度合并多个对象</p>
+          <button class="btn" onclick="demoDeepMerge()">运行示例</button>
+          <div class="result-box" id="deepMergeResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>属性选择 <span class="badge">pick</span></h3>
+          <p>从对象中选取指定的键</p>
+          <button class="btn" onclick="demoPick()">运行示例</button>
+          <div class="result-box" id="pickResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>属性排除 <span class="badge">omit</span></h3>
+          <p>从对象中排除指定的键</p>
+          <button class="btn" onclick="demoOmit()">运行示例</button>
+          <div class="result-box" id="omitResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>获取嵌套值 <span class="badge">get</span></h3>
+          <p>安全获取嵌套对象的值</p>
+          <div class="input-group">
+            <label>路径</label>
+            <input type="text" id="getPath" placeholder="如: user.profile.name" value="user.profile.name">
+          </div>
+          <button class="btn" onclick="demoGet()">获取</button>
+          <div class="result-box" id="getResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>设置嵌套值 <span class="badge">set</span></h3>
+          <p>安全设置嵌套对象的值</p>
+          <button class="btn" onclick="demoSet()">运行示例</button>
+          <div class="result-box" id="setResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>检查属性存在 <span class="badge">has</span></h3>
+          <p>检查对象是否有指定路径的属性</p>
+          <div class="input-group">
+            <label>路径</label>
+            <input type="text" id="hasPath" placeholder="如: user.name" value="user.name">
+          </div>
+          <button class="btn" onclick="demoHas()">检查</button>
+          <div class="result-box" id="hasResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>对象扁平化 <span class="badge">flatten</span></h3>
+          <p>将嵌套对象扁平化</p>
+          <button class="btn" onclick="demoFlatten()">运行示例</button>
+          <div class="result-box" id="flattenResult"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>Built with ⚡ by <a href="#">@zid-utils</a> · 开源工具函数库</p>
+    </footer>
+  </div>
+
+  <script>
+    // Object Utils Functions
+    function deepClone(obj) {
+      if (obj === null || typeof obj !== 'object') return obj;
+      if (obj instanceof Date) return new Date(obj);
+      if (Array.isArray(obj)) return obj.map(item => deepClone(item));
+      const cloned = {};
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          cloned[key] = deepClone(obj[key]);
+        }
+      }
+      return cloned;
+    }
+
+    function deepMerge(target, ...sources) {
+      if (!sources.length) return target;
+      const source = sources.shift();
+      if (typeof target === 'object' && typeof source === 'object') {
+        for (const key in source) {
+          if (typeof source[key] === 'object' && !Array.isArray(source[key])) {
+            if (!target[key]) Object.assign(target, { [key]: {} });
+            deepMerge(target[key], source[key]);
+          } else {
+            Object.assign(target, { [key]: source[key] });
+          }
+        }
+      }
+      return deepMerge(target, ...sources);
+    }
+
+    function pick(obj, keys) {
+      return keys.reduce((acc, key) => {
+        if (key in obj) acc[key] = obj[key];
+        return acc;
+      }, {});
+    }
+
+    function omit(obj, keys) {
+      const result = {};
+      for (const key in obj) {
+        if (!keys.includes(key)) {
+          result[key] = obj[key];
+        }
+      }
+      return result;
+    }
+
+    function get(obj, path, defaultValue) {
+      const keys = path.split('.');
+      let result = obj;
+      for (const key of keys) {
+        if (result === null || result === undefined) return defaultValue;
+        result = result[key];
+      }
+      return result ?? defaultValue;
+    }
+
+    function set(obj, path, value) {
+      const keys = path.split('.');
+      const lastKey = keys.pop();
+      let current = obj;
+      for (const key of keys) {
+        if (!current[key]) current[key] = {};
+        current = current[key];
+      }
+      current[lastKey] = value;
+      return obj;
+    }
+
+    function has(obj, path) {
+      const keys = path.split('.');
+      let current = obj;
+      for (const key of keys) {
+        if (current === null || current === undefined) return false;
+        current = current[key];
+      }
+      return current !== undefined;
+    }
+
+    function flatten(obj, separator = '.') {
+      const result = {};
+      function flattenHelper(current, prefix = '') {
+        for (const key in current) {
+          const newKey = prefix ? `${prefix}${separator}${key}` : key;
+          if (typeof current[key] === 'object' && current[key] !== null && !Array.isArray(current[key])) {
+            flattenHelper(current[key], newKey);
+          } else {
+            result[newKey] = current[key];
+          }
+        }
+      }
+      flattenHelper(obj);
+      return result;
+    }
+
+    // Sample Data
+    const sampleUser = {
+      user: {
+        profile: {
+          name: '张三',
+          age: 28
+        },
+        settings: {
+          theme: 'dark'
+        }
+      }
+    };
+
+    // Demos
+    function demoDeepClone() {
+      const original = { a: 1, b: { c: 2 } };
+      const cloned = deepClone(original);
+      cloned.b.c = 3;
+      document.getElementById('deepCloneResult').innerHTML = `
+        <div class="result-label">深拷贝结果</div>
+        <div class="result-value">原对象 b.c: ${original.b.c}</div>
+        <div class="code-block">拷贝对象 b.c: ${cloned.b.c} (修改拷贝不影响原对象)</div>
+      `;
+    }
+
+    function demoDeepMerge() {
+      const target = { a: 1, b: { c: 2 } };
+      const source = { b: { d: 3 }, e: 4 };
+      const result = deepMerge({}, target, source);
+      document.getElementById('deepMergeResult').innerHTML = `
+        <div class="result-label">深度合并结果</div>
+        <div class="result-value">${JSON.stringify(result, null, 2)}</div>
+      `;
+    }
+
+    function demoPick() {
+      const user = { id: 1, name: '张三', email: 'zhang@example.com', password: 'secret' };
+      const result = pick(user, ['id', 'name', 'email']);
+      document.getElementById('pickResult').innerHTML = `
+        <div class="result-label">pick 结果</div>
+        <div class="result-value">${JSON.stringify(result, null, 2)}</div>
+      `;
+    }
+
+    function demoOmit() {
+      const user = { id: 1, name: '张三', email: 'zhang@example.com', password: 'secret' };
+      const result = omit(user, ['password']);
+      document.getElementById('omitResult').innerHTML = `
+        <div class="result-label">omit 结果</div>
+        <div class="result-value">${JSON.stringify(result, null, 2)}</div>
+      `;
+    }
+
+    function demoGet() {
+      const path = document.getElementById('getPath').value;
+      const result = get(sampleUser, path, 'undefined');
+      document.getElementById('getResult').innerHTML = `
+        <div class="result-label">get('${path}') 结果</div>
+        <div class="result-value">${result}</div>
+      `;
+    }
+
+    function demoSet() {
+      const obj = { a: 1 };
+      set(obj, 'b.c.d', 2);
+      document.getElementById('setResult').innerHTML = `
+        <div class="result-label">set 结果</div>
+        <div class="result-value">${JSON.stringify(obj, null, 2)}</div>
+      `;
+    }
+
+    function demoHas() {
+      const path = document.getElementById('hasPath').value;
+      const result = has(sampleUser, path);
+      document.getElementById('hasResult').innerHTML = `
+        <div class="result-label">has('${path}') 结果</div>
+        <div class="result-value">
+          <span class="status-badge ${result ? 'success' : 'error'}">
+            <span class="dot"></span>${result ? '存在' : '不存在'}
+          </span>
+        </div>
+      `;
+    }
+
+    function demoFlatten() {
+      const nested = { a: 1, b: { c: 2, d: { e: 3 } } };
+      const result = flatten(nested);
+      document.getElementById('flattenResult').innerHTML = `
+        <div class="result-label">flatten 结果</div>
+        <div class="result-value">${JSON.stringify(result, null, 2)}</div>
+      `;
+    }
+  </script>
+</body>
+</html>

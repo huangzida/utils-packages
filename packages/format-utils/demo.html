@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Format Utils Demo - 格式化工具</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles/common.css">
+</head>
+<body>
+  <div class="noise-overlay"></div>
+
+  <div class="container">
+    <header>
+      <a href="../../index.html" class="back-link">← 返回首页</a>
+      <div class="logo">
+        <div class="logo-icon">🎨</div>
+        <div>
+          <h1>Format Utils Demo</h1>
+          <p class="subtitle">格式化工具</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="panel">
+      <div class="panel-header">
+        <div class="panel-icon" style="background: linear-gradient(135deg, var(--accent-blue), #2563eb);">🎨</div>
+        <div>
+          <h2 class="panel-title">格式化工具</h2>
+          <p class="panel-desc">提供数字、货币、百分比、文件大小等数据的格式化功能</p>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-card">
+          <h3>数字格式化 <span class="badge">formatNumber</span></h3>
+          <p>格式化数字（千分位、小数位）</p>
+          <div class="input-group">
+            <label>输入数字</label>
+            <input type="number" id="numberInput" placeholder="1234567" value="1234567.89">
+          </div>
+          <div class="input-group">
+            <label>小数位</label>
+            <input type="number" id="numberDecimals" placeholder="小数位" value="2">
+          </div>
+          <button class="btn" onclick="demoFormatNumber()">格式化</button>
+          <div class="result-box" id="numberResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>货币格式化 <span class="badge">formatCurrency</span></h3>
+          <p>格式化货币显示</p>
+          <div class="input-group">
+            <label>金额</label>
+            <input type="number" id="currencyInput" placeholder="1234.56" value="1234.56">
+          </div>
+          <div class="input-group">
+            <label>货币</label>
+            <select id="currencyCode">
+              <option value="CNY">CNY (人民币)</option>
+              <option value="USD">USD (美元)</option>
+              <option value="EUR">EUR (欧元)</option>
+              <option value="GBP">GBP (英镑)</option>
+              <option value="JPY">JPY (日元)</option>
+            </select>
+          </div>
+          <button class="btn" onclick="demoFormatCurrency()">格式化</button>
+          <div class="result-box" id="currencyResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>百分比格式化 <span class="badge">formatPercent</span></h3>
+          <p>格式化百分比显示</p>
+          <div class="input-group">
+            <label>输入值 (0-1)</label>
+            <input type="number" id="percentInput" placeholder="0.756" value="0.756" step="0.01">
+          </div>
+          <div class="input-group">
+            <label>小数位</label>
+            <input type="number" id="percentDecimals" placeholder="1" value="1">
+          </div>
+          <button class="btn" onclick="demoFormatPercent()">格式化</button>
+          <div class="result-box" id="percentResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>文件大小格式化 <span class="badge">formatBytes</span></h3>
+          <p>格式化字节大小</p>
+          <div class="input-group">
+            <label>字节数</label>
+            <input type="number" id="bytesInput" placeholder="1024" value="1048576">
+          </div>
+          <div class="input-group">
+            <label>小数位</label>
+            <input type="number" id="bytesDecimals" placeholder="2" value="2">
+          </div>
+          <button class="btn" onclick="demoFormatBytes()">格式化</button>
+          <div class="result-box" id="bytesResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>数字缩写 <span class="badge">abbreviateNumber</span></h3>
+          <p>数字缩写（K、W、M、B）</p>
+          <div class="input-group">
+            <label>输入数字</label>
+            <input type="number" id="abbrevInput" placeholder="1234567" value="1234567">
+          </div>
+          <button class="btn" onclick="demoAbbreviateNumber()">缩写</button>
+          <div class="result-box" id="abbrevResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>数值限制 <span class="badge">clamp</span></h3>
+          <p>限制数值在指定范围内</p>
+          <div class="input-group">
+            <label>数值</label>
+            <input type="number" id="clampNum" placeholder="数值" value="15">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div class="input-group">
+              <label>最小值</label>
+              <input type="number" id="clampMin" placeholder="最小" value="0">
+            </div>
+            <div class="input-group">
+              <label>最大值</label>
+              <input type="number" id="clampMax" placeholder="最大" value="10">
+            </div>
+          </div>
+          <button class="btn" onclick="demoClamp()">限制</button>
+          <div class="result-box" id="clampResult"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>Built with ⚡ by <a href="#">@zid-utils</a> · 开源工具函数库</p>
+    </footer>
+  </div>
+
+  <script>
+    // Format Utils Functions
+    function formatNumber(num, options = {}) {
+      const { decimals = 0, thousands = ',', decimal = '.' } = options;
+      const fixed = num.toFixed(decimals);
+      const parts = fixed.split('.');
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousands);
+      return parts.join(decimal);
+    }
+
+    function formatCurrency(amount, currency = 'CNY') {
+      const symbols = {
+        CNY: '¥',
+        USD: '$',
+        EUR: '€',
+        GBP: '£',
+        JPY: '¥'
+      };
+      const symbol = symbols[currency] || currency;
+      const formatted = formatNumber(amount, { decimals: currency === 'JPY' ? 0 : 2 });
+      return `${symbol}${formatted}`;
+    }
+
+    function formatPercent(value, decimals = 1) {
+      return `${(value * 100).toFixed(decimals)}%`;
+    }
+
+    function formatBytes(bytes, decimals = 2) {
+      if (bytes === 0) return '0 B';
+      const k = 1024;
+      const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return `${(bytes / Math.pow(k, i)).toFixed(decimals)} ${sizes[i]}`;
+    }
+
+    function abbreviateNumber(num) {
+      if (num >= 1e9) return `${(num / 1e9).toFixed(1).replace(/\.0$/, '')}B`;
+      if (num >= 1e6) return `${(num / 1e6).toFixed(1).replace(/\.0$/, '')}M`;
+      if (num >= 1e4) return `${(num / 1e4).toFixed(1).replace(/\.0$/, '')}W`;
+      if (num >= 1e3) return `${(num / 1e3).toFixed(1).replace(/\.0$/, '')}K`;
+      return num.toString();
+    }
+
+    function clamp(num, min, max) {
+      return Math.min(Math.max(num, min), max);
+    }
+
+    // Demos
+    function demoFormatNumber() {
+      const num = parseFloat(document.getElementById('numberInput').value) || 0;
+      const decimals = parseInt(document.getElementById('numberDecimals').value) || 0;
+      const result = formatNumber(num, { decimals });
+      document.getElementById('numberResult').innerHTML = `
+        <div class="result-label">格式化结果</div>
+        <div class="result-value">${result}</div>
+      `;
+    }
+
+    function demoFormatCurrency() {
+      const amount = parseFloat(document.getElementById('currencyInput').value) || 0;
+      const currency = document.getElementById('currencyCode').value;
+      const result = formatCurrency(amount, currency);
+      document.getElementById('currencyResult').innerHTML = `
+        <div class="result-label">${currency} 格式</div>
+        <div class="result-value">${result}</div>
+      `;
+    }
+
+    function demoFormatPercent() {
+      const value = parseFloat(document.getElementById('percentInput').value) || 0;
+      const decimals = parseInt(document.getElementById('percentDecimals').value) || 1;
+      const result = formatPercent(value, decimals);
+      document.getElementById('percentResult').innerHTML = `
+        <div class="result-label">百分比格式</div>
+        <div class="result-value">${result}</div>
+      `;
+    }
+
+    function demoFormatBytes() {
+      const bytes = parseInt(document.getElementById('bytesInput').value) || 0;
+      const decimals = parseInt(document.getElementById('bytesDecimals').value) || 2;
+      const result = formatBytes(bytes, decimals);
+      document.getElementById('bytesResult').innerHTML = `
+        <div class="result-label">文件大小</div>
+        <div class="result-value">${result}</div>
+      `;
+    }
+
+    function demoAbbreviateNumber() {
+      const num = parseInt(document.getElementById('abbrevInput').value) || 0;
+      const result = abbreviateNumber(num);
+      document.getElementById('abbrevResult').innerHTML = `
+        <div class="result-label">缩写结果</div>
+        <div class="result-value">${result}</div>
+      `;
+    }
+
+    function demoClamp() {
+      const num = parseInt(document.getElementById('clampNum').value) || 0;
+      const min = parseInt(document.getElementById('clampMin').value) || 0;
+      const max = parseInt(document.getElementById('clampMax').value) || 0;
+      const result = clamp(num, min, max);
+      document.getElementById('clampResult').innerHTML = `
+        <div class="result-label">限制结果</div>
+        <div class="result-value">${result}</div>
+        <div class="code-block">clamp(${num}, ${min}, ${max}) = ${result}</div>
+      `;
+    }
+  </script>
+</body>
+</html>

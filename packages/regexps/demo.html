@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regexps Demo - 正则表达式验证</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles/common.css">
+</head>
+<body>
+  <div class="noise-overlay"></div>
+
+  <div class="container">
+    <header>
+      <a href="../../index.html" class="back-link">← 返回首页</a>
+      <div class="logo">
+        <div class="logo-icon">📝</div>
+        <div>
+          <h1>Regexps Demo</h1>
+          <p class="subtitle">正则表达式验证工具</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="panel">
+      <div class="panel-header">
+        <div class="panel-icon regexps">📝</div>
+        <div>
+          <h2 class="panel-title">正则表达式验证</h2>
+          <p class="panel-desc">常用正则表达式验证工具，支持邮箱、URL、IP、电话等多种格式</p>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-card">
+          <h3>邮箱验证 <span class="badge">isEmail</span></h3>
+          <p>验证字符串是否符合邮箱格式规范</p>
+          <div class="input-group">
+            <label>输入邮箱地址</label>
+            <input type="text" id="emailInput" placeholder="例如: user@example.com" value="test@example.com">
+          </div>
+          <button class="btn" onclick="testEmail()">验证</button>
+          <div class="result-box" id="emailResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>URL 验证 <span class="badge">isUrl</span></h3>
+          <p>验证字符串是否为有效的 URL 格式</p>
+          <div class="input-group">
+            <label>输入 URL</label>
+            <input type="text" id="urlInput" placeholder="例如: https://example.com" value="https://github.com/user/repo">
+          </div>
+          <button class="btn" onclick="testUrl()">验证</button>
+          <div class="result-box" id="urlResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>IPv4 验证 <span class="badge">isIpv4</span></h3>
+          <p>验证字符串是否符合 IPv4 地址格式</p>
+          <div class="input-group">
+            <label>输入 IPv4 地址</label>
+            <input type="text" id="ipv4Input" placeholder="例如: 192.168.1.1" value="192.168.0.1">
+          </div>
+          <button class="btn" onclick="testIpv4()">验证</button>
+          <div class="result-box" id="ipv4Result"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>IPv6 验证 <span class="badge">isIpv6</span></h3>
+          <p>验证字符串是否符合 IPv6 地址格式</p>
+          <div class="input-group">
+            <label>输入 IPv6 地址</label>
+            <input type="text" id="ipv6Input" placeholder="例如: 2001:0db8:85a3::8a2e:0370:7334" value="2001:0db8:85a3::8a2e:0370:7334">
+          </div>
+          <button class="btn" onclick="testIpv6()">验证</button>
+          <div class="result-box" id="ipv6Result"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>手机号验证 <span class="badge">isPhone</span></h3>
+          <p>验证中国手机号码格式（支持国际区号）</p>
+          <div class="input-group">
+            <label>输入手机号</label>
+            <input type="text" id="phoneInput" placeholder="例如: 13812345678" value="13812345678">
+          </div>
+          <button class="btn" onclick="testPhone()">验证</button>
+          <div class="result-box" id="phoneResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>身份证号验证 <span class="badge">isIdCard</span></h3>
+          <p>验证中国居民身份证号码格式</p>
+          <div class="input-group">
+            <label>输入身份证号</label>
+            <input type="text" id="idCardInput" placeholder="18位身份证号" value="110101199003074519">
+          </div>
+          <button class="btn" onclick="testIdCard()">验证</button>
+          <div class="result-box" id="idCardResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>中文验证 <span class="badge">isChinese</span></h3>
+          <p>验证字符串是否全部为中文汉字</p>
+          <div class="input-group">
+            <label>输入文本</label>
+            <input type="text" id="chineseInput" placeholder="输入中文内容" value="你好世界">
+          </div>
+          <button class="btn" onclick="testChinese()">验证</button>
+          <div class="result-box" id="chineseResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>邮政编码验证 <span class="badge">isZipCode</span></h3>
+          <p>验证中国邮政编码格式</p>
+          <div class="input-group">
+            <label>输入邮政编码</label>
+            <input type="text" id="zipInput" placeholder="6位数字" value="100000">
+          </div>
+          <button class="btn" onclick="testZipCode()">验证</button>
+          <div class="result-box" id="zipResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>UUID 验证 <span class="badge">isUuid</span></h3>
+          <p>验证字符串是否符合 UUID 格式</p>
+          <div class="input-group">
+            <label>输入 UUID</label>
+            <input type="text" id="uuidInput" placeholder="例如: 550e8400-e29b-41d4-a716-446655440000" value="550e8400-e29b-41d4-a716-446655440000">
+          </div>
+          <button class="btn" onclick="testUuid()">验证</button>
+          <div class="result-box" id="uuidResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>Nanoid 验证 <span class="badge">isNanoid</span></h3>
+          <p>验证 Nanoid 格式（21个字符）</p>
+          <div class="input-group">
+            <label>输入 Nanoid</label>
+            <input type="text" id="nanoidInput" placeholder="21个字符的ID" value="VDbEsaI6U9FJGq7R-mOxw">
+          </div>
+          <button class="btn" onclick="testNanoid()">验证</button>
+          <div class="result-box" id="nanoidResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>主机名验证 <span class="badge">isHostname</span></h3>
+          <p>验证主机名格式</p>
+          <div class="input-group">
+            <label>输入主机名</label>
+            <input type="text" id="hostnameInput" placeholder="例如: localhost" value="example.com">
+          </div>
+          <button class="btn" onclick="testHostname()">验证</button>
+          <div class="result-box" id="hostnameResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>纯数字验证 <span class="badge">isNumeric</span></h3>
+          <p>验证字符串是否全是数字</p>
+          <div class="input-group">
+            <label>输入文本</label>
+            <input type="text" id="numericInput" placeholder="输入数字" value="123456">
+          </div>
+          <button class="btn" onclick="testNumeric()">验证</button>
+          <div class="result-box" id="numericResult"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>Built with ⚡ by <a href="#">@zid-utils</a> · 开源工具函数库</p>
+    </footer>
+  </div>
+
+  <script>
+    // Regexps Validators
+    const isEmail = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
+    const isUrl = /^(?:https?|ftp):\/\/(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z0-9\u{00a1}-\u{ffff}]+-)*[a-z0-9\u{00a1}-\u{ffff}]+)(?:\.(?:[a-z0-9\u{00a1}-\u{ffff}]+-)*[a-z0-9\u{00a1}-\u{ffff}]+)*(?:\.(?:[a-z\u{00a1}-\u{ffff}]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/iu;
+    const isIpv4 = /^(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/;
+    const isIpv6 = /^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/;
+    const isPhone = /^(0|86|17951)?(1\d{10})$/;
+    const isIdCard = /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/;
+    const isChinese = /^[\u4e00-\u9fa5]+$/;
+    const isZipCode = /^[1-9]\d{5}(?!\d)$/;
+    const isUuid = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i;
+    const isNanoid = /^[A-Za-z0-9_-]{21}$/;
+    const isHostname = /^(?!:\/\/)(?=.{1,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|b(?!_)){0,61}[0-9A-Za-z])?(?:\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|b(?!_)){0,61}[0-9A-Za-z])?)*\.?$/;
+    const isNumeric = /^\d+$/;
+
+    function testEmail() {
+      const value = document.getElementById('emailInput').value;
+      const result = isEmail.test(value);
+      showResult('emailResult', result, value, 'isEmail');
+    }
+
+    function testUrl() {
+      const value = document.getElementById('urlInput').value;
+      const result = isUrl.test(value);
+      showResult('urlResult', result, value, 'isUrl');
+    }
+
+    function testIpv4() {
+      const value = document.getElementById('ipv4Input').value;
+      const result = isIpv4.test(value);
+      showResult('ipv4Result', result, value, 'isIpv4');
+    }
+
+    function testIpv6() {
+      const value = document.getElementById('ipv6Input').value;
+      const result = isIpv6.test(value);
+      showResult('ipv6Result', result, value, 'isIpv6');
+    }
+
+    function testPhone() {
+      const value = document.getElementById('phoneInput').value;
+      const result = isPhone.test(value);
+      showResult('phoneResult', result, value, 'isPhone');
+    }
+
+    function testIdCard() {
+      const value = document.getElementById('idCardInput').value;
+      const result = isIdCard.test(value);
+      showResult('idCardResult', result, value, 'isIdCard');
+    }
+
+    function testChinese() {
+      const value = document.getElementById('chineseInput').value;
+      const result = isChinese.test(value);
+      showResult('chineseResult', result, value, 'isChinese');
+    }
+
+    function testZipCode() {
+      const value = document.getElementById('zipInput').value;
+      const result = isZipCode.test(value);
+      showResult('zipResult', result, value, 'isZipCode');
+    }
+
+    function testUuid() {
+      const value = document.getElementById('uuidInput').value;
+      const result = isUuid.test(value);
+      showResult('uuidResult', result, value, 'isUuid');
+    }
+
+    function testNanoid() {
+      const value = document.getElementById('nanoidInput').value;
+      const result = isNanoid.test(value);
+      showResult('nanoidResult', result, value, 'isNanoid');
+    }
+
+    function testHostname() {
+      const value = document.getElementById('hostnameInput').value;
+      const result = isHostname.test(value);
+      showResult('hostnameResult', result, value, 'isHostname');
+    }
+
+    function testNumeric() {
+      const value = document.getElementById('numericInput').value;
+      const result = isNumeric.test(value);
+      showResult('numericResult', result, value, 'isNumeric');
+    }
+
+    function showResult(elementId, isValid, value, funcName) {
+      const el = document.getElementById(elementId);
+      const badge = isValid
+        ? '<span class="status-badge success"><span class="dot"></span>有效</span>'
+        : '<span class="status-badge error"><span class="dot"></span>无效</span>';
+      el.innerHTML = `
+        <div class="result-label">验证结果</div>
+        <div class="result-value ${isValid ? '' : 'error'}">
+          ${badge}
+          <br><br>
+          <strong>输入值:</strong> ${value}
+          <div class="code-block">${funcName}.test("${value}") → ${isValid}</div>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>

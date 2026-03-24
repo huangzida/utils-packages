@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Array Utils Demo - 数组操作工具</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles/common.css">
+</head>
+<body>
+  <div class="noise-overlay"></div>
+
+  <div class="container">
+    <header>
+      <a href="../../index.html" class="back-link">← 返回首页</a>
+      <div class="logo">
+        <div class="logo-icon">📋</div>
+        <div>
+          <h1>Array Utils Demo</h1>
+          <p class="subtitle">数组操作工具</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="panel">
+      <div class="panel-header">
+        <div class="panel-icon" style="background: linear-gradient(135deg, var(--accent-cyan), #0891b2);">📋</div>
+        <div>
+          <h2 class="panel-title">数组操作工具</h2>
+          <p class="panel-desc">提供去重、分组、排序、洗牌等丰富的数组操作函数</p>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-card">
+          <h3>数组去重 <span class="badge">unique</span></h3>
+          <p>去除数组中的重复元素</p>
+          <button class="btn" onclick="demoUnique()">运行示例</button>
+          <div class="result-box" id="uniqueResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>按字段去重 <span class="badge">uniqueByField</span></h3>
+          <p>根据指定字段去除重复对象</p>
+          <button class="btn" onclick="demoUniqueByField()">运行示例</button>
+          <div class="result-box" id="uniqueByFieldResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>数组分块 <span class="badge">chunk</span></h3>
+          <p>将数组按指定大小分块</p>
+          <div class="input-group">
+            <label>块大小</label>
+            <input type="number" id="chunkSize" value="3" min="1">
+          </div>
+          <button class="btn" onclick="demoChunk()">分块</button>
+          <div class="result-box" id="chunkResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>数组分组 <span class="badge">groupBy</span></h3>
+          <p>按键函数对数组进行分组</p>
+          <button class="btn" onclick="demoGroupBy()">运行示例</button>
+          <div class="result-box" id="groupByResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>随机洗牌 <span class="badge">shuffle</span></h3>
+          <p>Fisher-Yates 洗牌算法随机打乱数组</p>
+          <button class="btn" onclick="demoShuffle()">洗牌</button>
+          <button class="btn btn-secondary" onclick="demoShuffle5()">洗牌5次</button>
+          <div class="result-box" id="shuffleResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>数组排序 <span class="badge">sortBy</span></h3>
+          <p>按键函数对数组排序</p>
+          <button class="btn" onclick="demoSortBy()">运行示例</button>
+          <div class="result-box" id="sortByResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>数组分区 <span class="badge">partition</span></h3>
+          <p>按条件将数组分为两部分</p>
+          <div class="input-group">
+            <label>分区条件 (JavaScript)</label>
+            <input type="text" id="partitionCondition" placeholder="n => n % 2 === 0" value="n => n % 2 === 0">
+          </div>
+          <button class="btn" onclick="demoPartition()">分区</button>
+          <div class="result-box" id="partitionResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>数组交集 <span class="badge">intersection</span></h3>
+          <p>获取两个数组的交集</p>
+          <button class="btn" onclick="demoIntersection()">运行示例</button>
+          <div class="result-box" id="intersectionResult"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>Built with ⚡ by <a href="#">@zid-utils</a> · 开源工具函数库</p>
+    </footer>
+  </div>
+
+  <script>
+    // Array Utils Functions
+    function unique(arr) {
+      return [...new Set(arr)];
+    }
+
+    function uniqueByField(arr, key) {
+      const seen = new Set();
+      return arr.filter(item => {
+        const val = item[key];
+        if (seen.has(val)) return false;
+        seen.add(val);
+        return true;
+      });
+    }
+
+    function chunk(arr, size) {
+      const result = [];
+      for (let i = 0; i < arr.length; i += size) {
+        result.push(arr.slice(i, i + size));
+      }
+      return result;
+    }
+
+    function groupBy(arr, keyFn) {
+      return arr.reduce((acc, item) => {
+        const key = keyFn(item);
+        if (!acc[key]) acc[key] = [];
+        acc[key].push(item);
+        return acc;
+      }, {});
+    }
+
+    function shuffle(arr) {
+      const result = [...arr];
+      for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+      }
+      return result;
+    }
+
+    function sortBy(arr, keyFn, order = 'asc') {
+      return [...arr].sort((a, b) => {
+        const valA = keyFn(a);
+        const valB = keyFn(b);
+        const modifier = order === 'desc' ? -1 : 1;
+        if (valA < valB) return -1 * modifier;
+        if (valA > valB) return 1 * modifier;
+        return 0;
+      });
+    }
+
+    function partition(arr, predicate) {
+      const pass = [];
+      const fail = [];
+      arr.forEach(item => (predicate(item) ? pass : fail).push(item));
+      return [pass, fail];
+    }
+
+    function intersection(arr1, arr2) {
+      const set2 = new Set(arr2);
+      return arr1.filter(item => set2.has(item));
+    }
+
+    // Demos
+    function demoUnique() {
+      const arr = [1, 2, 2, 3, 3, 3, 4, 5];
+      const result = unique(arr);
+      document.getElementById('uniqueResult').innerHTML = `
+        <div class="result-label">去重结果</div>
+        <div class="result-value">${JSON.stringify(result)}</div>
+      `;
+    }
+
+    function demoUniqueByField() {
+      const arr = [
+        { id: 1, name: '张三' },
+        { id: 2, name: '李四' },
+        { id: 1, name: '张三' }
+      ];
+      const result = uniqueByField(arr, 'id');
+      document.getElementById('uniqueByFieldResult').innerHTML = `
+        <div class="result-label">按 id 去重结果</div>
+        <div class="result-value">${JSON.stringify(result, null, 2)}</div>
+      `;
+    }
+
+    function demoChunk() {
+      const size = parseInt(document.getElementById('chunkSize').value) || 3;
+      const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      const result = chunk(arr, size);
+      document.getElementById('chunkResult').innerHTML = `
+        <div class="result-label">分块结果 (每块 ${size} 个)</div>
+        <div class="result-value">${JSON.stringify(result)}</div>
+      `;
+    }
+
+    function demoGroupBy() {
+      const arr = [
+        { type: 'fruit', name: '苹果' },
+        { type: 'fruit', name: '香蕉' },
+        { type: 'vegetable', name: '胡萝卜' }
+      ];
+      const result = groupBy(arr, item => item.type);
+      document.getElementById('groupByResult').innerHTML = `
+        <div class="result-label">分组结果</div>
+        <div class="result-value">${JSON.stringify(result, null, 2)}</div>
+      `;
+    }
+
+    function demoShuffle() {
+      const arr = [1, 2, 3, 4, 5];
+      const result = shuffle(arr);
+      document.getElementById('shuffleResult').innerHTML = `
+        <div class="result-label">洗牌结果</div>
+        <div class="result-value">${JSON.stringify(result)}</div>
+      `;
+    }
+
+    function demoShuffle5() {
+      const arr = [1, 2, 3, 4, 5];
+      const results = [];
+      for (let i = 0; i < 5; i++) {
+        results.push(shuffle([...arr]));
+      }
+      document.getElementById('shuffleResult').innerHTML = `
+        <div class="result-label">洗牌 5 次结果</div>
+        <div class="result-value">${JSON.stringify(results)}</div>
+      `;
+    }
+
+    function demoSortBy() {
+      const arr = [
+        { name: '张三', age: 28 },
+        { name: '李四', age: 24 },
+        { name: '王五', age: 32 }
+      ];
+      const result = sortBy(arr, item => item.age);
+      document.getElementById('sortByResult').innerHTML = `
+        <div class="result-label">按年龄排序结果</div>
+        <div class="result-value">${JSON.stringify(result, null, 2)}</div>
+      `;
+    }
+
+    function demoPartition() {
+      const conditionStr = document.getElementById('partitionCondition').value;
+      try {
+        const predicate = eval(conditionStr);
+        const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        const [pass, fail] = partition(arr, predicate);
+        document.getElementById('partitionResult').innerHTML = `
+          <div class="result-label">分区结果</div>
+          <div class="result-value">符合条件: ${JSON.stringify(pass)}</div>
+          <div class="code-block">不符合: ${JSON.stringify(fail)}</div>
+        `;
+      } catch (e) {
+        document.getElementById('partitionResult').innerHTML = `
+          <div class="result-label">错误</div>
+          <div class="result-value error">${e.message}</div>
+        `;
+      }
+    }
+
+    function demoIntersection() {
+      const arr1 = [1, 2, 3, 4, 5];
+      const arr2 = [3, 4, 5, 6, 7];
+      const result = intersection(arr1, arr2);
+      document.getElementById('intersectionResult').innerHTML = `
+        <div class="result-label">交集结果</div>
+        <div class="result-value">${JSON.stringify(result)}</div>
+        <div class="code-block">arr1: [1,2,3,4,5]\narr2: [3,4,5,6,7]</div>
+      `;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tree Utils Demo - 树形数据操作</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles/common.css">
+</head>
+<body>
+  <div class="noise-overlay"></div>
+
+  <div class="container">
+    <header>
+      <a href="../../index.html" class="back-link">← 返回首页</a>
+      <div class="logo">
+        <div class="logo-icon">🌳</div>
+        <div>
+          <h1>Tree Utils Demo</h1>
+          <p class="subtitle">树形数据操作</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="panel">
+      <div class="panel-header">
+        <div class="panel-icon tree">🌳</div>
+        <div>
+          <h2 class="panel-title">树形数据操作</h2>
+          <p class="panel-desc">树结构数据的查找、过滤、转换等操作</p>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-card">
+          <h3>查找节点 <span class="badge">findNodeByKey</span></h3>
+          <p>根据 key 在树中查找对应节点</p>
+          <div class="input-group">
+            <label>目标 Key</label>
+            <input type="text" id="treeSearchKey" placeholder="输入节点 key" value="node-2">
+          </div>
+          <button class="btn" onclick="findTreeNode()">查找</button>
+          <div class="result-box" id="treeSearchResult"></div>
+          <div class="tree-visualizer" id="treeVisualizer"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>获取叶子节点 <span class="badge">getLeafNodes</span></h3>
+          <p>递归获取树中所有叶子节点</p>
+          <button class="btn" onclick="getLeafNodes()">获取叶子节点</button>
+          <div class="result-box" id="leafNodesResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>搜索树 <span class="badge">searchInTree</span></h3>
+          <p>在树的叶子节点中搜索匹配项</p>
+          <div class="input-group">
+            <label>搜索关键词</label>
+            <input type="text" id="treeSearchText" placeholder="输入搜索词" value="Node">
+          </div>
+          <button class="btn" onclick="searchTree()">搜索</button>
+          <div class="result-box" id="treeSearchTextResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>删除节点 <span class="badge">deleteNode</span></h3>
+          <p>根据 key 删除树中的指定节点</p>
+          <div class="input-group">
+            <label>要删除的 Key</label>
+            <input type="text" id="deleteNodeKey" placeholder="输入节点 key" value="node-2">
+          </div>
+          <button class="btn" onclick="deleteTreeNode()">删除</button>
+          <div class="result-box" id="deleteNodeResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>平铺树结构 <span class="badge">flattenTree</span></h3>
+          <p>将树结构转换为扁平数组</p>
+          <div class="input-group">
+            <label>过滤条件 (JavaScript 表达式)</label>
+            <input type="text" id="flattenFilter" placeholder="如: node => node.isLeaf" value="node => node.isLeaf">
+          </div>
+          <button class="btn" onclick="flattenTreeDemo()">平铺</button>
+          <div class="result-box" id="flattenResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>转换树键名 <span class="badge">transformTreeKeys</span></h3>
+          <p>将树的键名按照映射规则转换</p>
+          <div class="input-group">
+            <label>键名映射 (JSON)</label>
+            <textarea id="keyMapping" placeholder='如: {"key": "id", "title": "label"}'>{"key": "id", "title": "label"}</textarea>
+          </div>
+          <button class="btn" onclick="transformTreeKeysDemo()">转换</button>
+          <div class="result-box" id="transformResult"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>Built with ⚡ by <a href="#">@zid-utils</a> · 开源工具函数库</p>
+    </footer>
+  </div>
+
+  <script>
+    // Sample Tree Data
+    const sampleTree = [
+      {
+        key: 'node-1',
+        title: '根节点 1',
+        isLeaf: false,
+        children: [
+          { key: 'node-1-1', title: '子节点 1-1', isLeaf: true },
+          { key: 'node-1-2', title: '子节点 1-2', isLeaf: true }
+        ]
+      },
+      {
+        key: 'node-2',
+        title: '根节点 2',
+        isLeaf: false,
+        children: [
+          { key: 'node-2-1', title: '子节点 2-1', isLeaf: false, children: [
+            { key: 'node-2-1-1', title: '叶子 2-1-1', isLeaf: true },
+            { key: 'node-2-1-2', title: '叶子 2-1-2', isLeaf: true }
+          ]}
+        ]
+      },
+      { key: 'node-3', title: '独立叶子', isLeaf: true }
+    ];
+
+    // Render Tree Visualization
+    function renderTree(nodes, level = 0) {
+      return nodes.map(node => {
+        const indent = '  '.repeat(level);
+        const icon = node.children ? '📁' : '📄';
+        const className = node.children ? 'tree-branch' : 'tree-leaf';
+        let html = `<div class="tree-node"><span class="${className}">${indent}${icon} ${node.title} (${node.key})</span>`;
+        if (node.children) {
+          html += renderTree(node.children, level + 1);
+        }
+        html += '</div>';
+        return html;
+      }).join('');
+    }
+    document.getElementById('treeVisualizer').innerHTML = renderTree(sampleTree);
+
+    // findNodeByKey
+    function findNodeByKey(treeData, key) {
+      for (let i = 0; i < treeData.length; i++) {
+        const node = treeData[i];
+        if (node.key === key) return node;
+        if (node.children) {
+          const found = findNodeByKey(node.children, key);
+          if (found) return found;
+        }
+      }
+      return null;
+    }
+
+    function findTreeNode() {
+      const key = document.getElementById('treeSearchKey').value;
+      const node = findNodeByKey(sampleTree, key);
+      document.getElementById('treeSearchResult').innerHTML = `
+        <div class="result-label">查找结果</div>
+        <div class="result-value">${node ? JSON.stringify(node, null, 2) : '未找到节点'}</div>
+      `;
+    }
+
+    // getLeafNodes
+    function getLeafNodes(treeData = sampleTree, isLeafKey = 'isLeaf') {
+      function collect(nodes) {
+        let leaves = [];
+        for (let node of nodes) {
+          if (node[isLeafKey] === true) {
+            leaves.push(node);
+          } else if (node.children) {
+            leaves = leaves.concat(collect(node.children));
+          }
+        }
+        return leaves;
+      }
+      return collect(treeData);
+    }
+
+    function getLeafNodesDemo() {
+      const leaves = getLeafNodes();
+      document.getElementById('leafNodesResult').innerHTML = `
+        <div class="result-label">叶子节点 (${leaves.length}个)</div>
+        <div class="result-value">${JSON.stringify(leaves, null, 2)}</div>
+      `;
+    }
+
+    // searchInTree
+    function searchInTree(tree, searchValue) {
+      function search(node, text, result) {
+        const title = node.title?.toString().toLowerCase() || '';
+        const textLower = text.toLowerCase();
+        const chars = textLower.split('');
+        if (node.isLeaf && chars.every(c => title.includes(c))) {
+          if (!result.some(item => item.key === node.key)) {
+            result.push(node);
+          }
+        }
+        if (node.children) {
+          for (const child of node.children) {
+            search(child, textLower, result);
+          }
+        }
+      }
+      const result = [];
+      for (const rootNode of tree) {
+        search(rootNode, searchValue.toLowerCase(), result);
+      }
+      return result;
+    }
+
+    function searchTree() {
+      const text = document.getElementById('treeSearchText').value;
+      const results = searchInTree(sampleTree, text);
+      document.getElementById('treeSearchTextResult').innerHTML = `
+        <div class="result-label">搜索结果 (${results.length}个匹配)</div>
+        <div class="result-value">${results.length > 0 ? JSON.stringify(results, null, 2) : '无匹配结果'}</div>
+      `;
+    }
+
+    // deleteNode
+    function deleteNode(treeData, key) {
+      const del = (data) => {
+        return data.filter(node => {
+          if (node.key === key) return false;
+          if (node.children) node.children = del(node.children);
+          return true;
+        });
+      };
+      return del([...treeData]);
+    }
+
+    function deleteTreeNode() {
+      const key = document.getElementById('deleteNodeKey').value;
+      const newTree = deleteNode(sampleTree, key);
+      document.getElementById('deleteNodeResult').innerHTML = `
+        <div class="result-label">删除后的树结构</div>
+        <div class="result-value">${JSON.stringify(newTree, null, 2)}</div>
+      `;
+    }
+
+    // flattenTree
+    function flattenTree(tree, filter = () => true) {
+      const result = [];
+      const flatten = (node) => {
+        if (filter(node)) result.push(node);
+        if (node.children) node.children.forEach(flatten);
+      };
+      tree.forEach(flatten);
+      return result;
+    }
+
+    function flattenTreeDemo() {
+      const filterStr = document.getElementById('flattenFilter').value;
+      let filterFn;
+      try {
+        filterFn = eval(filterStr);
+      } catch {
+        filterFn = () => true;
+      }
+      const flat = flattenTree(JSON.parse(JSON.stringify(sampleTree)), filterFn);
+      document.getElementById('flattenResult').innerHTML = `
+        <div class="result-label">平铺结果 (${flat.length}个)</div>
+        <div class="result-value">${JSON.stringify(flat, null, 2)}</div>
+      `;
+    }
+
+    // transformTreeKeys
+    function transformTreeKeys(treeData, keyMapping, childrenKey = 'children') {
+      const transform = (node) => {
+        const transformed = {};
+        Object.keys(node).forEach(key => {
+          const newKey = keyMapping[key] || key;
+          if (key === childrenKey && Array.isArray(node[key])) {
+            transformed[newKey] = transformTreeKeys(node[key], keyMapping, childrenKey);
+          } else {
+            transformed[newKey] = node[key];
+          }
+        });
+        return transformed;
+      };
+      return treeData.map(transform);
+    }
+
+    function transformTreeKeysDemo() {
+      const mappingStr = document.getElementById('keyMapping').value;
+      try {
+        const mapping = JSON.parse(mappingStr);
+        const transformed = transformTreeKeys(JSON.parse(JSON.stringify(sampleTree)), mapping);
+        document.getElementById('transformResult').innerHTML = `
+          <div class="result-label">转换后的树</div>
+          <div class="result-value">${JSON.stringify(transformed, null, 2)}</div>
+        `;
+      } catch (e) {
+        document.getElementById('transformResult').innerHTML = `
+          <div class="result-label">错误</div>
+          <div class="result-value error">JSON 格式错误: ${e.message}</div>
+        `;
+      }
+    }
+
+    // Initialize
+    getLeafNodesDemo();
+  </script>
+</body>
+</html>
