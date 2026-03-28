@@ -4,7 +4,13 @@
   "private": true,
   "type": "module",
   "description": "Monorepo for utility packages",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": "24.14.1",
+    "pnpm": "10.33.0"
+  },
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "build": "pnpm -r build",
     "format": "prettier --write .",
     "lint": "eslint .",
@@ -13,7 +19,9 @@
     "release:push": "AUTO_PUSH=true pnpm release",
     "test": "vitest run",
     "test:watch": "vitest",
-    "preview": "serve . -l 3000"
+    "preview": "serve . -l 3000",
+    "clean": "pnpm -r exec rm -rf node_modules && rm -rf node_modules",
+    "reinstall": "pnpm run clean && pnpm install"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",
