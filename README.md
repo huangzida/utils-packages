@@ -25,6 +25,9 @@ Monorepo for TypeScript utility packages. Each package is self-contained and pub
 | [@zid-utils/diff-utils](./packages/diff-utils)         | [![npm](https://img.shields.io/npm/v/@zid-utils/diff-utils)](https://www.npmjs.com/package/@zid-utils/diff-utils)         | 对象差异比较工具             |
 | [@zid-utils/state-utils](./packages/state-utils)       | [![npm](https://img.shields.io/npm/v/@zid-utils/state-utils)](https://www.npmjs.com/package/@zid-utils/state-utils)       | 状态管理工具                 |
 | [@zid-utils/fetch-utils](./packages/fetch-utils)     | [![npm](https://img.shields.io/npm/v/@zid-utils/fetch-utils)](https://www.npmjs.com/package/@zid-utils/fetch-utils)     | 文件获取工具                 |
+| [@zid-utils/fn-utils](./packages/fn-utils)     | | 函数式编程工具                 |
+| [@zid-utils/async-utils](./packages/async-utils)     | | 异步操作工具                 |
+| [@zid-utils/type-utils](./packages/type-utils)     | | 类型守卫工具                 |
 
 ## 🎮 Playground
 
@@ -56,6 +59,9 @@ pnpm preview
 - **差异比较** - 对象深比较、差异计算
 - **状态管理** - 响应式状态处理器
 - **文件获取** - URL/Blob/Base64 获取
+- **函数式编程** - 防抖、节流、组合、柯里化、记忆化
+- **异步操作** - 延迟、重试、超时、异步防抖
+- **类型守卫** - 类型检查工具，支持 TypeScript 类型收窄
 
 ## 🚀 Quick Start
 
@@ -82,6 +88,9 @@ pnpm add @zid-utils/color-utils
 pnpm add @zid-utils/diff-utils
 pnpm add @zid-utils/state-utils
 pnpm add @zid-utils/fetch-utils
+pnpm add @zid-utils/fn-utils
+pnpm add @zid-utils/async-utils
+pnpm add @zid-utils/type-utils
 ```
 
 ## 📖 使用示例
@@ -146,6 +155,18 @@ pnpm add @zid-utils/fetch-utils
 
 - [Fetch Utils](./packages/fetch-utils) - URL/Blob/Base64 文件下载
 
+### 函数式编程
+
+- [Fn Utils](./packages/fn-utils) - 防抖、节流、组合、柯里化、记忆化等
+
+### 异步操作
+
+- [Async Utils](./packages/async-utils) - 延迟、重试、超时、异步防抖等
+
+### 类型守卫
+
+- [Type Utils](./packages/type-utils) - 类型检查工具，支持 TypeScript 类型收窄
+
 详细的使用示例、API 文档和最佳实践请查看各包的 README 文件。
 
 ## 🛠️ Development
@@ -201,11 +222,13 @@ pnpm release
 utils-packages/
 ├── packages/
 │   ├── array-utils/      # 数组操作
+│   ├── async-utils/      # 异步操作
 │   ├── color-utils/      # 颜色转换
 │   ├── crypto-utils/     # AES 加密解密
 │   ├── diff-utils/       # 对象差异比较
 │   ├── dom-utils/        # DOM 操作
 │   ├── fetch-utils/      # 文件获取
+│   ├── fn-utils/         # 函数式编程
 │   ├── format-utils/      # 格式化工具
 │   ├── grid-utils/       # 网格操作
 │   ├── object-utils/     # 对象操作
@@ -214,6 +237,7 @@ utils-packages/
 │   ├── string-utils/     # 字符串操作
 │   ├── time-utils/       # 时间处理
 │   ├── tree-utils/       # 树形数据
+│   ├── type-utils/       # 类型守卫
 │   ├── url-utils/        # URL 操作
 │   └── window-utils/     # 窗口操作
 ├── index.html            # 交互式 Playground

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fn Utils Demo - 函数式编程工具</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles/common.css">
+</head>
+<body>
+  <div class="noise-overlay"></div>
+
+  <div class="container">
+    <header>
+      <a href="../../index.html" class="back-link">← 返回首页</a>
+      <div class="logo">
+        <div class="logo-icon">🔮</div>
+        <div>
+          <h1>Fn Utils Demo</h1>
+          <p class="subtitle">函数式编程工具</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="panel">
+      <div class="panel-header">
+        <div class="panel-icon" style="background: linear-gradient(135deg, var(--accent-orange), #ea580c);">🔮</div>
+        <div>
+          <h2 class="panel-title">函数式编程工具</h2>
+          <p class="panel-desc">提供防抖、节流、函数组合、柯里化等函数式编程工具</p>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-card">
+          <h3>防抖 <span class="badge">debounce</span></h3>
+          <p>延迟执行，300ms 内多次调用只执行一次</p>
+          <div class="input-group">
+            <label>输入内容</label>
+            <input type="text" id="debounceInput" placeholder="快速输入...">
+          </div>
+          <button class="btn" onclick="demoDebounce()">测试防抖</button>
+          <div class="result-box" id="debounceResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>节流 <span class="badge">throttle</span></h3>
+          <p>限制执行频率，每 300ms 最多执行一次</p>
+          <button class="btn" onclick="demoThrottle()">快速点击测试</button>
+          <div class="result-box" id="throttleResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>函数组合 <span class="badge">compose / pipe</span></h3>
+          <p>组合多个函数，从左到右或从右到左执行</p>
+          <div class="input-group">
+            <label>输入数字</label>
+            <input type="number" id="composeInput" value="5" min="1" max="100">
+          </div>
+          <button class="btn" onclick="demoCompose()">执行组合</button>
+          <div class="result-box" id="composeResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>记忆化 <span class="badge">memoize</span></h3>
+          <p>缓存函数结果，避免重复计算</p>
+          <div class="input-group">
+            <label>输入数字</label>
+            <input type="number" id="memoizeInput" value="10" min="1" max="50">
+          </div>
+          <button class="btn" onclick="demoMemoize()">计算阶乘</button>
+          <div class="result-box" id="memoizeResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>单次执行 <span class="badge">once</span></h3>
+          <p>确保函数只被调用一次</p>
+          <button class="btn" onclick="demoOnce()">点击多次</button>
+          <button class="btn btn-secondary" onclick="resetOnce()">重置</button>
+          <div class="result-box" id="onceResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>柯里化 <span class="badge">curry</span></h3>
+          <p>将多参数函数转换为一元函数链</p>
+          <div class="input-group">
+            <label>输入 (逗号分隔三个数字)</label>
+            <input type="text" id="curryInput" placeholder="1, 2, 3" value="1, 2, 3">
+          </div>
+          <button class="btn" onclick="demoCurry()">执行柯里化</button>
+          <div class="result-box" id="curryResult"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>Built with ⚡ by <a href="#">@zid-utils</a> · 开源工具函数库</p>
+    </footer>
+  </div>
+
+  <script>
+    let debounceTimer = null;
+    let throttleLastTime = 0;
+    let onceCallCount = 0;
+
+    function noop() {
+      return;
+    }
+
+    function once(fn) {
+      let called = false;
+      let result;
+      return function(...args) {
+        if (!called) {
+          called = true;
+          result = fn(...args);
+        }
+        return result;
+      };
+    }
+
+    function memoize(fn) {
+      const cache = new Map();
+      return function(...args) {
+        const key = JSON.stringify(args);
+        if (cache.has(key)) {
+          return cache.get(key);
+        }
+        const result = fn(...args);
+        cache.set(key, result);
+        return result;
+      };
+    }
+
+    function debounce(fn, wait) {
+      let timeoutId = null;
+      return function(...args) {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(() => {
+          fn(...args);
+          timeoutId = null;
+        }, wait);
+      };
+    }
+
+    function throttle(fn, wait) {
+      let lastTime = 0;
+      return function(...args) {
+        const now = Date.now();
+        if (now - lastTime >= wait) {
+          lastTime = now;
+          fn(...args);
+        }
+      };
+    }
+
+    function pipe(...fns) {
+      return function(x) {
+        return fns.reduce((v, f) => f(v), x);
+      };
+    }
+
+    function compose(...fns) {
+      return function(x) {
+        return fns.reduceRight((v, f) => f(v), x);
+      };
+    }
+
+    function curry(fn, arity = fn.length) {
+      return function curried(...args) {
+        if (args.length >= arity) {
+          return fn(...args);
+        }
+        return (...nextArgs) => curried(...args, ...nextArgs);
+      };
+    }
+
+    function factorial(n) {
+      if (n <= 1) return 1;
+      return n * factorial(n - 1);
+    }
+
+    function demoDebounce() {
+      const input = document.getElementById('debounceInput').value;
+      document.getElementById('debounceResult').innerHTML = `
+        <div class="result-label">等待 300ms...</div>
+        <div class="result-value">输入: ${input}</div>
+      `;
+
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        document.getElementById('debounceResult').innerHTML = `
+          <div class="result-label">防抖执行!</div>
+          <div class="result-value">处理输入: ${input}</div>
+        `;
+      }, 300);
+    }
+
+    function demoThrottle() {
+      const now = Date.now();
+      if (now - throttleLastTime < 300) {
+        document.getElementById('throttleResult').innerHTML = `
+          <div class="result-label">节流中...</div>
+          <div class="result-value">距离上次执行还需 ${300 - (now - throttleLastTime)}ms</div>
+        `;
+        return;
+      }
+      throttleLastTime = now;
+      const callCount = parseInt(document.getElementById('throttleResult').dataset.count || '0') + 1;
+      document.getElementById('throttleResult').dataset.count = callCount;
+      document.getElementById('throttleResult').innerHTML = `
+        <div class="result-label">执行!</div>
+        <div class="result-value">执行次数: ${callCount}</div>
+      `;
+    }
+
+    function demoCompose() {
+      const num = parseInt(document.getElementById('composeInput').value) || 5;
+
+      const double = (x) => x * 2;
+      const addOne = (x) => x + 1;
+      const square = (x) => x * x;
+
+      const piped = pipe(double, addOne, square);
+      const composed = compose(square, addOne, double);
+
+      const pipeResult = piped(num);
+      const composeResult = composed(num);
+
+      document.getElementById('composeResult').innerHTML = `
+        <div class="result-label">输入: ${num}</div>
+        <div class="result-value">
+          pipe(double, addOne, square)(<span style="color: var(--accent-orange)">${num}</span>)
+          = <span style="color: var(--accent-green)">${pipeResult}</span>
+          <div style="margin-top: 8px;">
+          compose(square, addOne, double)(<span style="color: var(--accent-orange)">${num}</span>)
+          = <span style="color: var(--accent-purple)">${composeResult}</span>
+          </div>
+        </div>
+        <div class="code-block">
+          pipe: ((5 × 2) + 1)² = 11² = ${pipeResult}
+          compose: ((5 × 2) + 1)² = 11² = ${composeResult}
+        </div>
+      `;
+    }
+
+    function demoMemoize() {
+      const num = parseInt(document.getElementById('memoizeInput').value) || 10;
+      const cachedFactorial = memoize(factorial);
+
+      const startTime = performance.now();
+      const result = cachedFactorial(num);
+      const time = performance.now() - startTime;
+
+      document.getElementById('memoizeResult').innerHTML = `
+        <div class="result-label">阶乘计算</div>
+        <div class="result-value">${num}! = ${result}</div>
+        <div class="code-block">计算耗时: ${time.toFixed(2)}ms</div>
+      `;
+    }
+
+    function demoOnce() {
+      if (onceCallCount === 0) {
+        const wrappedOnce = once(() => {
+          return '已执行!';
+        });
+        document.getElementById('onceResult').dataset.wrappedOnce = wrappedOnce;
+      }
+
+      onceCallCount++;
+      const wrappedOnce = document.getElementById('onceResult').dataset.wrappedOnce;
+      const result = eval(wrappedOnce)();
+
+      document.getElementById('onceResult').innerHTML = `
+        <div class="result-label">once 测试 (点击 ${onceCallCount} 次)</div>
+        <div class="result-value">${result}</div>
+      `;
+    }
+
+    function resetOnce() {
+      onceCallCount = 0;
+      delete document.getElementById('onceResult').dataset.wrappedOnce;
+      document.getElementById('onceResult').innerHTML = '';
+    }
+
+    function demoCurry() {
+      const input = document.getElementById('curryInput').value;
+      const nums = input.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+
+      if (nums.length < 3) {
+        document.getElementById('curryResult').innerHTML = `
+          <div class="result-label">错误</div>
+          <div class="result-value error">请输入 3 个数字，用逗号分隔</div>
+        `;
+        return;
+      }
+
+      const add = (a, b, c) => a + b + c;
+      const curriedAdd = curry(add);
+
+      const result1 = curriedAdd(nums[0])(nums[1])(nums[2]);
+      const result2 = curriedAdd(nums[0], nums[1])(nums[2]);
+
+      document.getElementById('curryResult').innerHTML = `
+        <div class="result-label">输入: [${nums.join(', ')}]</div>
+        <div class="result-value">
+          curriedAdd(${nums[0]})(${nums[1]})(${nums[2]}) = ${result1}
+          <div style="margin-top: 8px;">
+          curriedAdd(${nums[0]}, ${nums[1]})(${nums[2]}) = ${result2}
+          </div>
+        </div>
+        <div class="code-block">
+          相加结果: ${nums[0]} + ${nums[1]} + ${nums[2]} = ${result1}
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>

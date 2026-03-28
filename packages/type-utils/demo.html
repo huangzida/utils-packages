@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Utils Demo - 类型守卫工具</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles/common.css">
+</head>
+<body>
+  <div class="noise-overlay"></div>
+
+  <div class="container">
+    <header>
+      <a href="../../index.html" class="back-link">← 返回首页</a>
+      <div class="logo">
+        <div class="logo-icon">🎯</div>
+        <div>
+          <h1>Type Utils Demo</h1>
+          <p class="subtitle">类型守卫工具</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="panel">
+      <div class="panel-header">
+        <div class="panel-icon" style="background: linear-gradient(135deg, var(--accent-pink), #db2777);">🎯</div>
+        <div>
+          <h2 class="panel-title">类型守卫工具</h2>
+          <p class="panel-desc">提供类型检查工具，支持 TypeScript 类型收窄</p>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-card">
+          <h3>基础类型检查</h3>
+          <p>检查值的基本类型</p>
+          <div class="input-group">
+            <label>输入值</label>
+            <input type="text" id="typeInput" placeholder="输入任意值，如: hello, 123, true" value="hello">
+          </div>
+          <button class="btn" onclick="demoBasicTypes()">检查类型</button>
+          <div class="result-box" id="basicTypeResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>对象类型检查</h3>
+          <p>检查对象、数组、函数</p>
+          <div class="input-group">
+            <label>选择类型</label>
+            <select id="objectTypeSelect">
+              <option value="object">普通对象 { a: 1 }</option>
+              <option value="array">数组 [1, 2, 3]</option>
+              <option value="function">函数 () => {}</option>
+              <option value="null">null</option>
+              <option value="promise">Promise</option>
+            </select>
+          </div>
+          <button class="btn" onclick="demoObjectTypes()">检查</button>
+          <div class="result-box" id="objectTypeResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>空值检查 <span class="badge">isEmpty</span></h3>
+          <p>检查值是否为空</p>
+          <div class="input-group">
+            <label>选择值</label>
+            <select id="emptyTypeSelect">
+              <option value="null">null</option>
+              <option value="undefined">undefined</option>
+              <option value="emptyString">空字符串 ""</option>
+              <option value="whitespaceString">空白字符串 "   "</option>
+              <option value="emptyArray">空数组 []</option>
+              <option value="emptyObject">空对象 {}</option>
+              <option value="nonEmptyString">非空字符串 "hello"</option>
+              <option value="nonEmptyArray">非空数组 [1]</option>
+            </select>
+          </div>
+          <button class="btn" onclick="demoIsEmpty()">检查是否为空</button>
+          <div class="result-box" id="isEmptyResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>类型守卫示例</h3>
+          <p>TypeScript 类型收窄演示</p>
+          <div class="input-group">
+            <label>输入值</label>
+            <input type="text" id="guardInput" placeholder='{"name": "张三", "age": 28}' value='{"name": "张三", "age": 28}'>
+          </div>
+          <button class="btn" onclick="demoTypeGuard()">验证对象</button>
+          <div class="result-box" id="typeGuardResult"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>Built with ⚡ by <a href="#">@zid-utils</a> · 开源工具函数库</p>
+    </footer>
+  </div>
+
+  <script>
+    function isString(val) {
+      return typeof val === 'string';
+    }
+
+    function isNumber(val) {
+      return typeof val === 'number' && !Number.isNaN(val);
+    }
+
+    function isBoolean(val) {
+      return typeof val === 'boolean';
+    }
+
+    function isArray(val) {
+      return Array.isArray(val);
+    }
+
+    function isObject(val) {
+      return val !== null && typeof val === 'object' && !Array.isArray(val);
+    }
+
+    function isFunction(val) {
+      return typeof val === 'function';
+    }
+
+    function isNull(val) {
+      return val === null;
+    }
+
+    function isUndefined(val) {
+      return val === undefined;
+    }
+
+    function isEmpty(val) {
+      if (val == null) return true;
+      if (isArray(val)) return val.length === 0;
+      if (isObject(val)) return Object.keys(val).length === 0;
+      if (isString(val)) return val.trim().length === 0;
+      return false;
+    }
+
+    function isPromise(val) {
+      return isObject(val) && isFunction(val?.then);
+    }
+
+    function parseInput(value) {
+      try {
+        return JSON.parse(value);
+      } catch {
+        return value;
+      }
+    }
+
+    function getType(value) {
+      if (value === null) return 'null';
+      if (value === undefined) return 'undefined';
+      if (Array.isArray(value)) return 'array';
+      return typeof value;
+    }
+
+    function demoBasicTypes() {
+      const input = document.getElementById('typeInput').value;
+      const value = parseInput(input);
+      const type = getType(value);
+
+      const results = {
+        'isString': isString(value),
+        'isNumber': isNumber(value),
+        'isBoolean': isBoolean(value),
+        'isArray': isArray(value),
+        'isObject': isObject(value),
+        'isNull': isNull(value),
+        'isUndefined': isUndefined(value),
+        'isEmpty': isEmpty(value)
+      };
+
+      let html = `<div class="result-label">值: <code>${JSON.stringify(value)}</code> (类型: ${type})</div>`;
+      html += '<div class="result-value">';
+      for (const [fn, result] of Object.entries(results)) {
+        const color = result ? 'var(--accent-green)' : 'var(--accent-red)';
+        html += `<div style="color: ${color};">${fn}: ${result ? '✓' : '✗'}</div>`;
+      }
+      html += '</div>';
+
+      document.getElementById('basicTypeResult').innerHTML = html;
+    }
+
+    function demoObjectTypes() {
+      const select = document.getElementById('objectTypeSelect').value;
+      let value;
+      let displayName;
+
+      switch (select) {
+        case 'object':
+          value = { a: 1 };
+          displayName = '{ a: 1 }';
+          break;
+        case 'array':
+          value = [1, 2, 3];
+          displayName = '[1, 2, 3]';
+          break;
+        case 'function':
+          value = function() {};
+          displayName = '() => {}';
+          break;
+        case 'null':
+          value = null;
+          displayName = 'null';
+          break;
+        case 'promise':
+          value = Promise.resolve();
+          displayName = 'Promise';
+          break;
+      }
+
+      const results = {
+        'isObject': isObject(value),
+        'isArray': isArray(value),
+        'isFunction': isFunction(value),
+        'isPromise': isPromise(value),
+        'isEmpty': isEmpty(value)
+      };
+
+      let html = `<div class="result-label">值: <code>${displayName}</code></div>`;
+      html += '<div class="result-value">';
+      for (const [fn, result] of Object.entries(results)) {
+        const color = result ? 'var(--accent-green)' : 'var(--accent-red)';
+        html += `<div style="color: ${color};">${fn}: ${result ? '✓' : '✗'}</div>`;
+      }
+      html += '</div>';
+
+      document.getElementById('objectTypeResult').innerHTML = html;
+    }
+
+    function demoIsEmpty() {
+      const select = document.getElementById('emptyTypeSelect').value;
+      let value;
+      let displayName;
+
+      switch (select) {
+        case 'null':
+          value = null;
+          displayName = 'null';
+          break;
+        case 'undefined':
+          value = undefined;
+          displayName = 'undefined';
+          break;
+        case 'emptyString':
+          value = '';
+          displayName = '""';
+          break;
+        case 'whitespaceString':
+          value = '   ';
+          displayName = '"   "';
+          break;
+        case 'emptyArray':
+          value = [];
+          displayName = '[]';
+          break;
+        case 'emptyObject':
+          value = {};
+          displayName = '{}';
+          break;
+        case 'nonEmptyString':
+          value = 'hello';
+          displayName = '"hello"';
+          break;
+        case 'nonEmptyArray':
+          value = [1];
+          displayName = '[1]';
+          break;
+      }
+
+      const result = isEmpty(value);
+      const color = result ? 'var(--accent-green)' : 'var(--accent-red)';
+
+      document.getElementById('isEmptyResult').innerHTML = `
+        <div class="result-label">值: <code>${displayName}</code></div>
+        <div class="result-value" style="color: ${color}; font-size: 1.5em;">
+          isEmpty(): ${result ? '空 ✓' : '非空 ✗'}
+        </div>
+      `;
+    }
+
+    function demoTypeGuard() {
+      const input = document.getElementById('guardInput').value;
+
+      try {
+        const value = JSON.parse(input);
+
+        if (!isObject(value)) {
+          throw new Error('值必须是对象');
+        }
+
+        const hasName = isString(value.name) && value.name.length > 0;
+        const hasAge = isNumber(value.age) && value.age > 0 && value.age < 150;
+
+        let html = `<div class="result-label">验证对象</div>`;
+        html += '<div class="result-value">';
+        html += `<div>name: <code>${JSON.stringify(value.name)}</code> → ${hasName ? '✓ 有效' : '✗ 无效'}</div>`;
+        html += `<div>age: <code>${JSON.stringify(value.age)}</code> → ${hasAge ? '✓ 有效' : '✗ 无效'}</div>`;
+        html += '</div>';
+
+        if (hasName && hasAge) {
+          html += `<div class="code-block" style="margin-top: 12px; color: var(--accent-green);">
+            ✓ 验证通过! 类型收窄为 { name: string, age: number }
+          </div>`;
+        }
+
+        document.getElementById('typeGuardResult').innerHTML = html;
+      } catch (e) {
+        document.getElementById('typeGuardResult').innerHTML = `
+          <div class="result-label">错误</div>
+          <div class="result-value error">${e.message}</div>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -131,21 +131,6 @@ export const get = <T = any>(
 }
 
 /**
- * 获取嵌套对象值的别名
- * @param obj - 源对象
- * @param path - 属性路径
- * @param defaultValue - 默认值
- * @returns 属性值
- */
-export const getNestedValue = <T = any>(
-  obj: Record<string, any>,
-  path: string,
-  defaultValue?: T,
-): T | undefined => {
-  return get(obj, path, defaultValue)
-}
-
-/**
  * 设置嵌套对象的值
  * @param obj - 源对象
  * @param path - 属性路径
@@ -357,26 +342,6 @@ export const invert = <T extends Record<string, string>>(
     }
   }
   return result
-}
-
-/**
- * 按键对数组分组
- * @param array - 源数组
- * @param key - 分组键
- * @returns 分组后的对象
- */
-export const groupBy = <T extends Record<string, any>>(
-  array: T[],
-  key: keyof T,
-): Record<string, T[]> => {
-  return array.reduce((result, item) => {
-    const groupKey = String(item[key])
-    if (!result[groupKey]) {
-      result[groupKey] = []
-    }
-    result[groupKey].push(item)
-    return result
-  }, {} as Record<string, T[]>)
 }
 
 /**

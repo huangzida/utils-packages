@@ -5,7 +5,6 @@ import {
   pick,
   omit,
   get,
-  getNestedValue,
   set,
   has,
   flatten,
@@ -17,7 +16,6 @@ import {
   mapValues,
   filterKeys,
   invert,
-  groupBy,
   keyBy,
   difference,
   intersection,
@@ -196,17 +194,6 @@ describe('@zid-utils/object-utils', () => {
     })
   })
 
-  describe('groupBy', () => {
-    it('should group array by key', () => {
-      const arr = [{ type: 'a', v: 1 }, { type: 'b', v: 2 }, { type: 'a', v: 3 }]
-      const result = groupBy(arr, 'type')
-      expect(result).toEqual({
-        a: [{ type: 'a', v: 1 }, { type: 'a', v: 3 }],
-        b: [{ type: 'b', v: 2 }],
-      })
-    })
-  })
-
   describe('keyBy', () => {
     it('should index array by key', () => {
       const arr = [{ id: 'x', v: 1 }, { id: 'y', v: 2 }]
@@ -229,16 +216,6 @@ describe('@zid-utils/object-utils', () => {
     it('should return keys with same values', () => {
       const result = intersection({ a: 1, b: 2 }, { a: 1, b: 3 })
       expect(result).toEqual({ a: 1 })
-    })
-  })
-
-  describe('getNestedValue', () => {
-    it('should be an alias for get', () => {
-      expect(getNestedValue({ a: { b: { c: 1 } } }, 'a.b.c')).toBe(1)
-    })
-
-    it('should return default for missing path', () => {
-      expect(getNestedValue({ a: { b: 1 } }, 'a.c', 'default')).toBe('default')
     })
   })
 

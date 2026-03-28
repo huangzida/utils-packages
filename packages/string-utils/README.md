@@ -600,41 +600,6 @@ template("User: {{user.name}}, Age: {{user.age}}", {
 // "User: 张三, Age: 28"
 ```
 
-## 查询字符串
-
-### parseQuery
-
-解析查询字符串。
-
-```typescript
-function parseQuery(query: string): Record<string, string>
-```
-
-**示例**:
-
-```typescript
-parseQuery("a=1&b=2&c=3");
-// { a: "1", b: "2", c: "3" }
-
-parseQuery("name=John&age=30");
-// { name: "John", age: "30" }
-```
-
-### buildQuery
-
-构建查询字符串。
-
-```typescript
-function buildQuery(params: Record<string, any>): string
-```
-
-**示例**:
-
-```typescript
-buildQuery({ a: 1, b: 2, c: 3 }); // "a=1&b=2&c=3"
-buildQuery({ name: "John", age: 30 }); // "name=John&age=30"
-```
-
 ## 实际应用示例
 
 ### 数据库字段映射

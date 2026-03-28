@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Async Utils Demo - 异步操作工具</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles/common.css">
+</head>
+<body>
+  <div class="noise-overlay"></div>
+
+  <div class="container">
+    <header>
+      <a href="../../index.html" class="back-link">← 返回首页</a>
+      <div class="logo">
+        <div class="logo-icon">⏱️</div>
+        <div>
+          <h1>Async Utils Demo</h1>
+          <p class="subtitle">异步操作工具</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="panel">
+      <div class="panel-header">
+        <div class="panel-icon" style="background: linear-gradient(135deg, var(--accent-blue), #2563eb);">⏱️</div>
+        <div>
+          <h2 class="panel-title">异步操作工具</h2>
+          <p class="panel-desc">提供延迟、重试、超时、异步防抖等异步操作工具</p>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-card">
+          <h3>延迟 <span class="badge">sleep</span></h3>
+          <p>延迟执行指定时间</p>
+          <div class="input-group">
+            <label>延迟时间 (ms)</label>
+            <input type="number" id="sleepTime" value="1000" min="100" max="5000">
+          </div>
+          <button class="btn" onclick="demoSleep()">执行延迟</button>
+          <div class="result-box" id="sleepResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>重试 <span class="badge">retry</span></h3>
+          <p>失败后自动重试指定次数</p>
+          <div class="input-group">
+            <label>重试次数</label>
+            <input type="number" id="retryAttempts" value="3" min="1" max="10">
+          </div>
+          <div class="input-group">
+            <label>成功率 (0-100%)</label>
+            <input type="number" id="retrySuccessRate" value="30" min="0" max="100">
+          </div>
+          <button class="btn" onclick="demoRetry()">测试重试</button>
+          <div class="result-box" id="retryResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>超时 <span class="badge">timeout</span></h3>
+          <p>为操作设置超时限制</p>
+          <div class="input-group">
+            <label>模拟延迟 (ms)</label>
+            <input type="number" id="timeoutDelay" value="2000" min="100" max="5000">
+          </div>
+          <div class="input-group">
+            <label>超时限制 (ms)</label>
+            <input type="number" id="timeoutLimit" value="1000" min="100" max="5000">
+          </div>
+          <button class="btn" onclick="demoTimeout()">测试超时</button>
+          <div class="result-box" id="timeoutResult"></div>
+        </div>
+
+        <div class="demo-card">
+          <h3>异步防抖 <span class="badge">pDebounce</span></h3>
+          <p>异步函数的防抖版本</p>
+          <div class="input-group">
+            <label>延迟时间 (ms)</label>
+            <input type="number" id="pDebounceDelay" value="300" min="100" max="2000">
+          </div>
+          <button class="btn" onclick="demoPDebounce()">测试防抖</button>
+          <button class="btn btn-secondary" onclick="demoPDebounceMultiple()">快速点击3次</button>
+          <div class="result-box" id="pDebounceResult"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>Built with ⚡ by <a href="#">@zid-utils</a> · 开源工具函数库</p>
+    </footer>
+  </div>
+
+  <script>
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function retry(fn, options = {}) {
+      const { attempts = 3, delay = 100, onRetry } = options;
+      let lastError;
+
+      for (let i = 1; i <= attempts; i++) {
+        try {
+          return await fn();
+        } catch (error) {
+          lastError = error;
+          if (i < attempts) {
+            onRetry?.(lastError, i);
+            await sleep(delay);
+          }
+        }
+      }
+
+      throw lastError;
+    }
+
+    function timeout(promise, ms) {
+      return Promise.race([
+        promise,
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Operation timed out')), ms)
+        )
+      ]);
+    }
+
+    function pDebounce(fn, wait) {
+      let timeoutId = null;
+
+      return function(...args) {
+        return new Promise((resolve, reject) => {
+          if (timeoutId) {
+            clearTimeout(timeoutId);
+          }
+
+          timeoutId = setTimeout(async () => {
+            timeoutId = null;
+            try {
+              const result = await fn(...args);
+              resolve(result);
+            } catch (error) {
+              reject(error);
+            }
+          }, wait);
+        });
+      };
+    }
+
+    let sleepStartTime = 0;
+
+    async function demoSleep() {
+      const ms = parseInt(document.getElementById('sleepTime').value) || 1000;
+      const resultBox = document.getElementById('sleepResult');
+
+      resultBox.innerHTML = `
+        <div class="result-label">正在等待...</div>
+        <div class="result-value">等待 ${ms}ms</div>
+      `;
+
+      sleepStartTime = Date.now();
+      await sleep(ms);
+      const elapsed = Date.now() - sleepStartTime;
+
+      resultBox.innerHTML = `
+        <div class="result-label">延迟完成!</div>
+        <div class="result-value">实际延迟: ${elapsed}ms</div>
+      `;
+    }
+
+    async function demoRetry() {
+      const attempts = parseInt(document.getElementById('retryAttempts').value) || 3;
+      const successRate = parseInt(document.getElementById('retrySuccessRate').value) || 30;
+      const resultBox = document.getElementById('retryResult');
+
+      let attemptCount = 0;
+      const logs = [];
+
+      const result = await retry(
+        () => {
+          attemptCount++;
+          const shouldSucceed = Math.random() * 100 < successRate;
+          if (!shouldSucceed) {
+            throw new Error(`尝试 ${attemptCount} 失败`);
+          }
+          return `成功! (共尝试 ${attemptCount} 次)`;
+        },
+        {
+          attempts,
+          delay: 100,
+          onRetry: (error, attempt) => {
+            logs.push(`第 ${attempt} 次重试`);
+            resultBox.innerHTML = `
+              <div class="result-label">重试中...</div>
+              <div class="result-value">${logs.join('<br>')}</div>
+            `;
+          }
+        }
+      ).catch(err => `最终失败: ${err.message}`);
+
+      resultBox.innerHTML = `
+        <div class="result-label">重试结果</div>
+        <div class="result-value ${result.startsWith('成功') ? '' : 'error'}">${result}</div>
+      `;
+    }
+
+    async function demoTimeout() {
+      const delay = parseInt(document.getElementById('timeoutDelay').value) || 2000;
+      const limit = parseInt(document.getElementById('timeoutLimit').value) || 1000;
+      const resultBox = document.getElementById('timeoutResult');
+
+      resultBox.innerHTML = `
+        <div class="result-label">执行中...</div>
+        <div class="result-value">延迟 ${delay}ms，超时限制 ${limit}ms</div>
+      `;
+
+      const startTime = Date.now();
+
+      try {
+        const result = await timeout(
+          new Promise(resolve => setTimeout(() => resolve('操作完成!'), delay)),
+          limit
+        );
+        const elapsed = Date.now() - startTime;
+        resultBox.innerHTML = `
+          <div class="result-label">成功</div>
+          <div class="result-value">${result} (耗时 ${elapsed}ms)</div>
+        `;
+      } catch (error) {
+        const elapsed = Date.now() - startTime;
+        resultBox.innerHTML = `
+          <div class="result-label">超时!</div>
+          <div class="result-value error">${error.message} (耗时 ${elapsed}ms)</div>
+        `;
+      }
+    }
+
+    async function demoPDebounce() {
+      const wait = parseInt(document.getElementById('pDebounceDelay').value) || 300;
+      const resultBox = document.getElementById('pDebounceResult');
+
+      const mockAsyncFn = async (id) => {
+        await sleep(50);
+        return `异步操作 ${id} 完成`;
+      };
+
+      const debouncedFn = pDebounce(mockAsyncFn, wait);
+
+      const startTime = Date.now();
+      const id = Date.now();
+
+      resultBox.innerHTML = `
+        <div class="result-label">执行中...</div>
+        <div class="result-value">等待 ${wait}ms...</div>
+      `;
+
+      const result = await debouncedFn(id);
+      const elapsed = Date.now() - startTime;
+
+      resultBox.innerHTML = `
+        <div class="result-label">防抖执行</div>
+        <div class="result-value">${result} (耗时 ${elapsed}ms)</div>
+      `;
+    }
+
+    async function demoPDebounceMultiple() {
+      const wait = parseInt(document.getElementById('pDebounceDelay').value) || 300;
+      const resultBox = document.getElementById('pDebounceResult');
+
+      const mockAsyncFn = async (id) => {
+        await sleep(50);
+        return `操作 ${id}`;
+      };
+
+      const debouncedFn = pDebounce(mockAsyncFn, wait);
+
+      resultBox.innerHTML = `
+        <div class="result-label">快速点击 3 次...</div>
+        <div class="result-value">等待 ${wait}ms...</div>
+      `;
+
+      debouncedFn(1);
+      debouncedFn(2);
+      const result = await debouncedFn(3);
+
+      resultBox.innerHTML = `
+        <div class="result-label">防抖结果</div>
+        <div class="result-value">只执行了 1 次: ${result}</div>
+      `;
+    }
+  </script>
+</body>
+</html>

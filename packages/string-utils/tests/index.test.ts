@@ -24,8 +24,6 @@ import {
   countLines,
   indent,
   template,
-  parseQuery,
-  buildQuery,
 } from '../src/index'
 
 describe('@zid-utils/string-utils', () => {
@@ -194,18 +192,6 @@ describe('@zid-utils/string-utils', () => {
     it('should replace template variables', () => {
       const result = template('Hello {{name}}!', { name: 'World' })
       expect(result).toBe('Hello World!')
-    })
-  })
-
-  describe('parseQuery', () => {
-    it('should parse query string', () => {
-      expect(parseQuery('a=1&b=2')).toEqual({ a: '1', b: '2' })
-    })
-  })
-
-  describe('buildQuery', () => {
-    it('should build query string', () => {
-      expect(buildQuery({ a: 1, b: 'hello' })).toBe('a=1&b=hello')
     })
   })
 })

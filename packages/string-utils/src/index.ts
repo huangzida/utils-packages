@@ -402,31 +402,4 @@ export const template = (
   })
 }
 
-/**
- * 解析查询字符串
- * @param query - 查询字符串（如 "a=1&b=2"）
- * @returns 参数对象
- */
-export const parseQuery = (query: string): Record<string, string> => {
-  const params = new URLSearchParams(query)
-  const result: Record<string, string> = {}
-  params.forEach((value, key) => {
-    result[key] = value
-  })
-  return result
-}
 
-/**
- * 构建查询字符串
- * @param params - 参数对象
- * @returns 查询字符串
- */
-export const buildQuery = (params: Record<string, any>): string => {
-  const searchParams = new URLSearchParams()
-  Object.entries(params).forEach(([key, value]) => {
-    if (value != null) {
-      searchParams.append(key, String(value))
-    }
-  })
-  return searchParams.toString()
-}

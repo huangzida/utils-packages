@@ -219,18 +219,6 @@ get(config, "database.timeout", 5000); // 5000 (默认值)
 get(config, "nonexistent.path", "default"); // "default"
 ```
 
-### getNestedValue
-
-`get` 的别名。
-
-```typescript
-function getNestedValue<T>(
-  obj: Record<string, any>,
-  path: string,
-  defaultValue?: T
-): T | undefined
-```
-
 ### set
 
 设置嵌套对象的值。
@@ -504,34 +492,6 @@ function invert<T>(obj: T): Record<string, string>
 ```typescript
 invert({ a: "1", b: "2", c: "3" });
 // { "1": "a", "2": "b", "3": "c" }
-```
-
-### groupBy
-
-按键对数组分组。
-
-```typescript
-function groupBy<T>(
-  array: T[],
-  key: keyof T
-): Record<string, T[]>
-```
-
-**示例**:
-
-```typescript
-groupBy(
-  [
-    { category: "fruit", name: "苹果" },
-    { category: "fruit", name: "香蕉" },
-    { category: "vegetable", name: "胡萝卜" },
-  ],
-  "category"
-);
-// {
-//   fruit: [{ category: "fruit", name: "苹果" }, { category: "fruit", name: "香蕉" }],
-//   vegetable: [{ category: "vegetable", name: "胡萝卜" }]
-// }
 ```
 
 ### keyBy
