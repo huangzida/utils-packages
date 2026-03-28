@@ -30,3 +30,4 @@ coverage
 
 # pnpm
 .pnpm-store
+.worktrees/
