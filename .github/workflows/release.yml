@@ -3,8 +3,9 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
-      - '@*@*'
+      - 'v*.*.*'
+      - '@zid-utils/*@*'
+  workflow_dispatch:
 
 jobs:
   release:
