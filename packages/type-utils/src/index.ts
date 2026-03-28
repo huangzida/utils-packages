@@ -39,5 +39,5 @@ export const isEmpty = (val: unknown): boolean => {
 }
 
 export const isPromise = <T = any>(val: unknown): val is Promise<T> => {
-  return isObject(val) && isFunction((val as Promise<T>).then)
+  return isObject(val) && isFunction((val as unknown as Promise<T>).then)
 }
