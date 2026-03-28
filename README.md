@@ -25,9 +25,9 @@ Monorepo for TypeScript utility packages. Each package is self-contained and pub
 | [@zid-utils/diff-utils](./packages/diff-utils)         | [![npm](https://img.shields.io/npm/v/@zid-utils/diff-utils)](https://www.npmjs.com/package/@zid-utils/diff-utils)         | 对象差异比较工具             |
 | [@zid-utils/state-utils](./packages/state-utils)       | [![npm](https://img.shields.io/npm/v/@zid-utils/state-utils)](https://www.npmjs.com/package/@zid-utils/state-utils)       | 状态管理工具                 |
 | [@zid-utils/fetch-utils](./packages/fetch-utils)     | [![npm](https://img.shields.io/npm/v/@zid-utils/fetch-utils)](https://www.npmjs.com/package/@zid-utils/fetch-utils)     | 文件获取工具                 |
-| [@zid-utils/fn-utils](./packages/fn-utils)     | | 函数式编程工具                 |
-| [@zid-utils/async-utils](./packages/async-utils)     | | 异步操作工具                 |
-| [@zid-utils/type-utils](./packages/type-utils)     | | 类型守卫工具                 |
+| [@zid-utils/fn-utils](./packages/fn-utils)     | [![npm](https://img.shields.io/npm/v/@zid-utils/fn-utils)](https://www.npmjs.com/package/@zid-utils/fn-utils)     | 函数式编程工具                 |
+| [@zid-utils/async-utils](./packages/async-utils)     | [![npm](https://img.shields.io/npm/v/@zid-utils/async-utils)](https://www.npmjs.com/package/@zid-utils/async-utils)     | 异步操作工具                 |
+| [@zid-utils/type-utils](./packages/type-utils)     | [![npm](https://img.shields.io/npm/v/@zid-utils/type-utils)](https://www.npmjs.com/package/@zid-utils/type-utils)     | 类型守卫工具                 |
 
 ## 🎮 Playground
 

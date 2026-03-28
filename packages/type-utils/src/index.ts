@@ -18,7 +18,7 @@ export const isObject = (val: unknown): val is Record<string, unknown> => {
   return val !== null && typeof val === 'object' && !Array.isArray(val)
 }
 
-export const isFunction = (val: unknown): val is Function => {
+export const isFunction = (val: unknown): val is (...args: any[]) => any => {
   return typeof val === 'function'
 }
 

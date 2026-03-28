@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { sleep, retry, timeout, pDebounce } from '../src/index'
 
 describe('@zid-utils/async-utils', () => {
@@ -73,14 +73,12 @@ describe('@zid-utils/async-utils', () => {
       const fn = vi.fn().mockResolvedValue('result')
       const debounced = pDebounce(fn, 50)
 
-      const promise1 = debounced()
-      const promise2 = debounced()
-      const promise3 = debounced()
-
-      const results = await promise3
+      debounced()
+      debounced()
+      const result = await debounced()
 
       expect(fn).toHaveBeenCalledTimes(1)
-      expect(results).toBe('result')
+      expect(result).toBe('result')
     })
 
     it('should pass arguments to the function', async () => {
